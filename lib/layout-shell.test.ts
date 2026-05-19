@@ -34,6 +34,6 @@ describe("localized page shell", () => {
     expect(header).toContain("aria-label=\"Change language\"");
     expect(footer).toContain("rw-footer-inner");
     expect(globals).toContain(".rw-footer-inner");
-    expect(globals).toContain("padding-block: 56px 64px");
+    expect(globals).toContain("padding-block: 64px 44px");
   });
 });

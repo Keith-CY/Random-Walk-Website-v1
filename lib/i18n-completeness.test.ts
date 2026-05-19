@@ -55,6 +55,7 @@ describe("i18n completeness", () => {
       "lib/site-data.ts",
       "components/contact-form.tsx",
       "components/site-footer.tsx",
+      "app/[locale]/company/page.tsx",
       "app/[locale]/services/page.tsx",
       "app/[locale]/security/page.tsx",
       "app/[locale]/contact/page.tsx",
@@ -65,6 +66,7 @@ describe("i18n completeness", () => {
     const pageSources = [
       "components/site-footer.tsx",
       "components/redirect-page.tsx",
+      "app/[locale]/company/page.tsx",
       "app/[locale]/services/page.tsx",
       "app/[locale]/security/page.tsx",
       "app/[locale]/contact/page.tsx",

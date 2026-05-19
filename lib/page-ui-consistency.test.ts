@@ -12,6 +12,7 @@ describe("page UI consistency", () => {
   test("uses institutional grids for non-home index pages that list services, evidence, cases, or notes", () => {
     const pages = [
       "app/[locale]/security/page.tsx",
+      "app/[locale]/company/page.tsx",
       "app/[locale]/work/page.tsx",
       "app/[locale]/contact/page.tsx",
       "app/[locale]/notes/page.tsx"
@@ -27,6 +28,7 @@ describe("page UI consistency", () => {
   test("keeps remaining content pages off decorative chip rows", () => {
     const pages = [
       "app/[locale]/security/page.tsx",
+      "app/[locale]/company/page.tsx",
       "app/[locale]/work/page.tsx",
       "app/[locale]/work/[slug]/page.tsx",
       "app/[locale]/contact/page.tsx",
@@ -71,6 +73,7 @@ describe("page UI consistency", () => {
       "components/site-footer.tsx",
       "lib/metadata.ts",
       "lib/site-data.ts",
+      "app/[locale]/company/page.tsx",
       "content/work/en/finance-regulated-records.mdx",
       "content/work/en/legal-ip-private-model.mdx",
       "content/work/en/manufacturing-edge-ai.mdx",
@@ -101,6 +104,7 @@ describe("page UI consistency", () => {
 
     expect(combined).toContain("Private AI infrastructure for customer-controlled environments.");
     expect(combined).toContain("Security model for private AI workflows.");
+    expect(combined).toContain("Company for local AI infrastructure.");
     expect(combined).toContain("Applied work in private AI systems.");
     expect(combined).toContain("Example private AI engagements.");
     expect(combined).toContain("If sensitive material is needed later, we agree on an appropriate review channel before anything is shared.");
@@ -148,6 +152,25 @@ describe("page UI consistency", () => {
     expect(termsPage).toContain("rw-legal-content");
     expect(footer).toContain("rw-footer-logo");
     expect(globals).toContain(".rw-footer-logo");
+    expect(footer).toContain("rw-footer-links");
+    expect(footer).toContain("rw-footer-manifesto");
+    expect(footer).toContain("dictionary.footer.groups");
+  });
+
+  test("keeps team photography on the company page and abstract brand images elsewhere", () => {
+    const companyPage = readSource("app/[locale]/company/page.tsx");
+    const homePage = readSource("app/[locale]/page.tsx");
+    const servicesPage = readSource("app/[locale]/services/page.tsx");
+    const workPage = readSource("app/[locale]/work/page.tsx");
+    const contactPage = readSource("app/[locale]/contact/page.tsx");
+
+    expect(companyPage).toContain("company-team-panel-photo");
+    expect(companyPage).toContain("company-team-room-photo");
+    expect(companyPage).toContain("companyPhilosophyVisualItems");
+    expect(homePage).not.toContain("company-team-panel-photo");
+    expect(servicesPage).not.toContain("company-team-room-photo");
+    expect(workPage).not.toContain("company-team-panel-photo");
+    expect(contactPage).not.toContain("company-team-room-photo");
   });
 
   test("adds richer image cadence and restrained motion without new dependencies", () => {

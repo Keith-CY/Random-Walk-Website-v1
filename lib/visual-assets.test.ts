@@ -15,14 +15,14 @@ function pngDimensions(path: string) {
 
 describe("generated visual asset registry", () => {
   test("registers the full temporary visual set with files on disk", () => {
-    expect(visualAssetIds).toHaveLength(24);
-    expect(new Set(visualAssetIds).size).toBe(24);
+    expect(visualAssetIds).toHaveLength(26);
+    expect(new Set(visualAssetIds).size).toBe(26);
 
     for (const id of visualAssetIds) {
       const asset = visualAssets[id];
       const filePath = join(projectRoot, "public", asset.src);
       expect(existsSync(filePath), `${id} should point to an existing temporary visual asset`).toBe(true);
-      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset/i);
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset|neo-engraved asset/i);
       expect(asset.replacementBrief.length).toBeGreaterThan(40);
 
       const { width, height } = pngDimensions(filePath);
@@ -51,20 +51,32 @@ describe("generated visual asset registry", () => {
     }
   });
 
-  test("uses a focused set of ChatGPT generated color photo assets for warmth", () => {
-    const colorPhotoIds = [
+  test("reserves Titan-inspired photo assets for the company introduction", () => {
+    const colorPhotoIds = visualAssetIds.filter((id) => visualAssets[id].src.startsWith("photos/"));
+
+    for (const id of colorPhotoIds) {
+      const asset = visualAssets[id];
+      expect(asset.src).toMatch(/^photos\/.+\.png$/);
+      expect(id).toMatch(/^company-team-/);
+      expect(asset.alt).toMatch(/Titan-inspired|Asian technology team/i);
+      expect(asset.replacementBrief).toMatch(/Random Walk team|team culture/i);
+      expect(existsSync(join(projectRoot, "public", asset.src)), `${id} should point to an existing team photo asset`).toBe(true);
+    }
+  });
+
+  test("uses philosophical neo-engraved brand images for high-visibility non-company slots", () => {
+    const philosophicalIds = [
       "home-hero-local-ai-boundary",
       "services-support",
       "work-case-wall",
       "contact-scoping-flow"
     ] as const;
 
-    for (const id of colorPhotoIds) {
+    for (const id of philosophicalIds) {
       const asset = visualAssets[id];
-      expect(asset.src).toMatch(/^photos\/.+\.png$/);
-      expect(asset.alt).toMatch(/ChatGPT generated color editorial photo/i);
-      expect(asset.replacementBrief).toMatch(/photo|real/i);
-      expect(existsSync(join(projectRoot, "public", asset.src)), `${id} should point to an existing color photo asset`).toBe(true);
+      expect(asset.src).toMatch(/^placeholders\/brand\/.+\.png$/);
+      expect(`${asset.alt} ${asset.caption} ${asset.replacementBrief}`).toMatch(/Roman|classical|philosophical|metaphysical|sculpture|architecture/i);
+      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/business workflow|color editorial photo|support workflow|scoping table/i);
     }
   });
 

@@ -10,6 +10,7 @@ const devtoolsPort = Number(process.env.RW_VISUAL_CHECK_PORT || "9333");
 
 const pages = [
   "/en/",
+  "/en/company/",
   "/en/services/",
   "/en/melix/",
   "/en/security/",

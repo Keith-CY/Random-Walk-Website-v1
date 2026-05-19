@@ -89,7 +89,7 @@ export default async function MelixPage({ params }: { params: Promise<{ locale: 
         </div>
       </section>
 
-      <section className="rw-section rw-section-supporting">
+      <section className="rw-section rw-section-supporting" id="repository">
         <div className="rw-container">
           <p className="rw-eyebrow">{copy.repositoryEyebrow}</p>
             <div className="rw-provenance-panel mt-6">

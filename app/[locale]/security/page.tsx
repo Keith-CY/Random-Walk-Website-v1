@@ -94,7 +94,7 @@ export default async function SecurityPage({ params }: { params: Promise<{ local
         </div>
       </section>
 
-      <section className="rw-section rw-section-lined">
+      <section className="rw-section rw-section-lined" id="responsibility">
         <div className="rw-container">
           <p className="rw-eyebrow">{copy.responsibility.eyebrow}</p>
           <h2 className="rw-heading mt-4">{copy.responsibility.title}</h2>

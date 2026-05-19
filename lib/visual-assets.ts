@@ -10,10 +10,10 @@ export type VisualAsset = {
 export const visualAssets = {
   "home-hero-local-ai-boundary": {
     id: "home-hero-local-ai-boundary",
-    src: "photos/local-ai-workshop-photo.png",
-    alt: "ChatGPT generated color editorial photo of a local AI infrastructure workshop",
-    caption: "Temporary photo asset: local AI infrastructure workshop",
-    replacementBrief: "Replace with an approved real photo showing Random Walk's local AI infrastructure boundary, hardware, private data flow, and deployment environment."
+    src: "placeholders/brand/brand-judgement-under-constraint.png",
+    alt: "ChatGPT generated neo-engraved Roman sculpture image about judgement under constraint",
+    caption: "Temporary neo-engraved asset: judgement under constraint",
+    replacementBrief: "Replace with an approved philosophical brand visual using classical sculpture, Roman forms, and metaphysical symbols rather than a literal business workflow."
   },
   "home-delivery-chain": {
     id: "home-delivery-chain",
@@ -73,10 +73,10 @@ export const visualAssets = {
   },
   "services-support": {
     id: "services-support",
-    src: "photos/support-engineering-photo.png",
-    alt: "ChatGPT generated color editorial photo of on-site and remote engineering support",
-    caption: "Temporary photo asset: support operating model",
-    replacementBrief: "Replace with approved real photo imagery showing on-site introduction, remote engineering support, handoff, and optional continuous tuning."
+    src: "placeholders/brand/brand-adaptation-geometry.png",
+    alt: "ChatGPT generated neo-engraved Roman sculpture image about adaptation and translation",
+    caption: "Temporary neo-engraved asset: adaptation and translation",
+    replacementBrief: "Replace with an approved philosophical brand visual using Roman sculpture, classical geometry, and restrained metaphysical symbolism rather than a literal support workflow."
   },
   "melix-main-ui": {
     id: "melix-main-ui",
@@ -108,17 +108,17 @@ export const visualAssets = {
   },
   "work-case-wall": {
     id: "work-case-wall",
-    src: "photos/anonymized-case-materials-photo.png",
-    alt: "ChatGPT generated color editorial photo of anonymized case-study materials",
-    caption: "Temporary photo asset: anonymized case materials",
-    replacementBrief: "Replace with approved public or anonymized real photo case-study assets, keeping placeholder labels until customer names, logos, and metrics are explicitly cleared."
+    src: "placeholders/brand/brand-evidence-memory.png",
+    alt: "ChatGPT generated neo-engraved philosophical study image about evidence and memory",
+    caption: "Temporary neo-engraved asset: evidence and memory",
+    replacementBrief: "Replace with an approved classical-art brand visual about evidence, memory, and technical lineage; keep customer names, logos, and metrics out until explicitly cleared."
   },
   "contact-scoping-flow": {
     id: "contact-scoping-flow",
-    src: "photos/contact-scoping-photo.png",
-    alt: "ChatGPT generated color editorial photo of a private AI scoping table",
-    caption: "Temporary photo asset: constraint review and scoping flow",
-    replacementBrief: "Replace with an approved real photo scoping workflow image showing constraint review, deployment target, data sensitivity, support needs, and next-step process."
+    src: "placeholders/brand/brand-boundary-arch.png",
+    alt: "ChatGPT generated neo-engraved Roman colonnade image about building inside boundaries",
+    caption: "Temporary neo-engraved asset: boundary and path",
+    replacementBrief: "Replace with an approved philosophical brand visual using Roman architecture, arches, and abstract boundary symbols rather than a literal scoping diagram."
   },
   "home-constraint-matrix-board": {
     id: "home-constraint-matrix-board",
@@ -175,6 +175,20 @@ export const visualAssets = {
     alt: "ChatGPT generated placeholder image for security responsibility handoff",
     caption: "Temporary placeholder: responsibility handoff",
     replacementBrief: "Replace with approved review material showing the real split between Random Walk engineering support and customer or advisor decisions."
+  },
+  "company-team-panel-photo": {
+    id: "company-team-panel-photo",
+    src: "photos/company-team-panel-photo.png",
+    alt: "ChatGPT generated Titan-inspired color photo of an Asian technology team panel",
+    caption: "Temporary photo asset: Asian team panel discussion",
+    replacementBrief: "Replace with an approved real Random Walk team photo from a panel, salon, or company introduction setting."
+  },
+  "company-team-room-photo": {
+    id: "company-team-room-photo",
+    src: "photos/company-team-room-photo.png",
+    alt: "ChatGPT generated Titan-inspired black-and-white photo of an Asian technology team gathering",
+    caption: "Temporary photo asset: Asian team discussion room",
+    replacementBrief: "Replace with an approved real Random Walk team culture photo showing a thoughtful in-office discussion or company gathering."
   }
 } as const satisfies Record<string, VisualAsset>;
 

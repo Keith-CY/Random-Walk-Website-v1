@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { getDictionary, languageName, locales, localizePath, localizedPathForCurrentRoute, type Locale } from "@/lib/i18n";
 
 const navItems = [
+  ["company", "/company"],
   ["services", "/services"],
   ["melix", "/melix"],
   ["security", "/security"],

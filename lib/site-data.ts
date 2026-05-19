@@ -777,6 +777,176 @@ export const securityPageCopy: Localized<{
   }
 };
 
+export const companyPageCopy: Localized<{
+  hero: PageCopy;
+  team: PageCopy;
+  philosophy: PageCopy;
+  operating: PageCopy;
+  stats: { label: string; value: string }[];
+  principles: { title: string; description: string }[];
+  ctaLabel: string;
+}> = {
+  en: {
+    hero: {
+      eyebrow: "Company",
+      title: "Company for local AI infrastructure.",
+      description: "Random Walk is a small systems team building private AI infrastructure for organizations that need models, data, and evidence to remain inside customer-controlled boundaries."
+    },
+    team: {
+      eyebrow: "Team introduction",
+      title: "A working group for constrained model systems.",
+      description: "We work like an infrastructure team: close to runtime constraints, careful about operational ownership, and comfortable moving between product, security, data, and model behavior."
+    },
+    philosophy: {
+      eyebrow: "Brand values",
+      title: "Classical constraints, modern systems.",
+      description: "Our visual language is intentionally abstract. The company is not defined by one dashboard or one workflow, but by judgement, boundaries, evidence, and disciplined adaptation."
+    },
+    operating: {
+      eyebrow: "Operating style",
+      title: "Small team, explicit boundaries.",
+      description: "We keep engagements narrow enough to verify, document, and hand off. The work starts with constraints, then moves into model adaptation, evaluation, deployment, and support."
+    },
+    stats: [
+      { label: "Focus", value: "Local AI" },
+      { label: "Mode", value: "Customer-controlled" },
+      { label: "Outputs", value: "Model artifacts + evidence" }
+    ],
+    principles: [
+      { title: "Boundary before model", description: "Deployment location, data movement, access paths, and review expectations are defined before model work starts." },
+      { title: "Evidence before assertion", description: "Training runs, evaluation behavior, deployment notes, and limitations stay reviewable instead of hidden behind a claim." },
+      { title: "Support that can be handed off", description: "The result should be understandable to the customer's engineering, security, and operations teams." }
+    ],
+    ctaLabel: "Start a company conversation"
+  },
+  zh: {
+    hero: {
+      eyebrow: "公司",
+      title: "面向本地 AI 基础设施的公司。",
+      description: "Random Walk 是一个小型系统团队，为需要让模型、数据和证据留在客户控制边界内的组织构建私有 AI 基础设施。"
+    },
+    team: {
+      eyebrow: "团队介绍",
+      title: "为受约束模型系统工作的团队。",
+      description: "我们像基础设施团队一样工作：贴近运行约束，重视运营归属，并能在产品、安全、数据和模型行为之间切换。"
+    },
+    philosophy: {
+      eyebrow: "品牌价值",
+      title: "古典约束，现代系统。",
+      description: "我们的视觉语言刻意保持抽象。公司不是由某个仪表盘或某条流程定义，而是由判断、边界、证据和克制的适配定义。"
+    },
+    operating: {
+      eyebrow: "工作方式",
+      title: "小团队，清晰边界。",
+      description: "我们把合作范围控制在可以验证、记录和交接的尺度内。工作从约束开始，再进入模型适配、评估、部署和支持。"
+    },
+    stats: [
+      { label: "聚焦", value: "本地 AI" },
+      { label: "模式", value: "客户控制" },
+      { label: "输出", value: "模型工件 + 证据" }
+    ],
+    principles: [
+      { title: "先边界，后模型", description: "在模型工作开始前，先定义部署位置、数据移动、访问路径和评审预期。" },
+      { title: "先证据，后论断", description: "训练运行、评估行为、部署说明和限制都保持可评审，而不是藏在口号后面。" },
+      { title: "可交接的支持", description: "最终结果应该能被客户的工程、安全和运营团队理解并接手。" }
+    ],
+    ctaLabel: "开始公司沟通"
+  },
+  ja: {
+    hero: {
+      eyebrow: "会社",
+      title: "ローカル AI 基盤のための会社。",
+      description: "Random Walk は、モデル、データ、証拠を顧客管理境界内に保つ必要がある組織のために、プライベート AI 基盤を構築する小さなシステムチームです。"
+    },
+    team: {
+      eyebrow: "チーム紹介",
+      title: "制約のあるモデルシステムに取り組むチーム。",
+      description: "私たちはインフラチームのように働きます。ランタイム制約に近く、運用責任を明確にし、プロダクト、セキュリティ、データ、モデル挙動を横断します。"
+    },
+    philosophy: {
+      eyebrow: "ブランド価値",
+      title: "古典的な制約と、現代のシステム。",
+      description: "視覚言語は意図的に抽象的にしています。会社を一つのダッシュボードや一つの業務フローで語るのではなく、判断、境界、証拠、規律ある適応で表します。"
+    },
+    operating: {
+      eyebrow: "運用スタイル",
+      title: "小さなチーム、明確な境界。",
+      description: "エンゲージメントは検証、記録、引き継ぎが可能な範囲に保ちます。制約から始め、モデル適応、評価、配備、サポートへ進みます。"
+    },
+    stats: [
+      { label: "焦点", value: "ローカル AI" },
+      { label: "方式", value: "顧客管理" },
+      { label: "成果", value: "モデル成果物 + 証拠" }
+    ],
+    principles: [
+      { title: "モデルの前に境界", description: "配備場所、データ移動、アクセス経路、レビュー期待値をモデル作業の前に定義します。" },
+      { title: "主張の前に証拠", description: "学習実行、評価挙動、配備メモ、制限をレビュー可能な状態に残します。" },
+      { title: "引き継げる支援", description: "成果は顧客のエンジニアリング、セキュリティ、運用チームが理解し引き継げるものにします。" }
+    ],
+    ctaLabel: "会社について相談する"
+  },
+  ko: {
+    hero: {
+      eyebrow: "회사",
+      title: "로컬 AI 인프라를 위한 회사.",
+      description: "Random Walk는 모델, 데이터, 증거가 고객 통제 경계 안에 남아야 하는 조직을 위해 프라이빗 AI 인프라를 구축하는 작은 시스템 팀입니다."
+    },
+    team: {
+      eyebrow: "팀 소개",
+      title: "제약이 있는 모델 시스템을 위한 작업 그룹.",
+      description: "우리는 인프라 팀처럼 일합니다. 런타임 제약 가까이에 있고, 운영 소유권을 명확히 하며, 제품, 보안, 데이터, 모델 동작을 함께 다룹니다."
+    },
+    philosophy: {
+      eyebrow: "브랜드 가치",
+      title: "고전적 제약과 현대 시스템.",
+      description: "시각 언어는 의도적으로 추상적입니다. 회사는 하나의 대시보드나 업무 흐름이 아니라 판단, 경계, 증거, 절제된 적응으로 설명됩니다."
+    },
+    operating: {
+      eyebrow: "작업 방식",
+      title: "작은 팀, 명확한 경계.",
+      description: "참여 범위는 검증, 기록, 인수인계가 가능한 크기로 유지합니다. 제약에서 시작해 모델 적응, 평가, 배포, 지원으로 이동합니다."
+    },
+    stats: [
+      { label: "초점", value: "로컬 AI" },
+      { label: "방식", value: "고객 통제" },
+      { label: "산출", value: "모델 산출물 + 증거" }
+    ],
+    principles: [
+      { title: "모델보다 먼저 경계", description: "배포 위치, 데이터 이동, 접근 경로, 검토 기대치를 모델 작업 전에 정의합니다." },
+      { title: "주장보다 먼저 증거", description: "학습 실행, 평가 동작, 배포 메모, 한계를 검토 가능한 상태로 남깁니다." },
+      { title: "인수인계 가능한 지원", description: "결과는 고객의 엔지니어링, 보안, 운영 팀이 이해하고 이어받을 수 있어야 합니다." }
+    ],
+    ctaLabel: "회사 대화 시작하기"
+  }
+};
+
+export const companyPhilosophyVisualItems: Localized<VisualItem[]> = {
+  en: [
+    { label: "Judgement", eyebrow: "Value 01", title: "Judgement under constraint", description: "Roman sculpture, balance, and pathfinding stand in for technical decisions made inside real boundaries.", assetId: "home-hero-local-ai-boundary" },
+    { label: "Boundary", eyebrow: "Value 02", title: "Architecture as boundary", description: "A classical arch and wandering path describe controlled passage without reducing the brand to a diagram.", assetId: "contact-scoping-flow" },
+    { label: "Evidence", eyebrow: "Value 03", title: "Memory and evidence", description: "Blank codex pages and old-world study objects represent reviewable records without exposing customer material.", assetId: "work-case-wall" },
+    { label: "Adaptation", eyebrow: "Value 04", title: "Disciplined adaptation", description: "Sculpture, geometry, and stepping stones suggest careful translation from private knowledge to operating model.", assetId: "services-support" }
+  ],
+  zh: [
+    { label: "判断", eyebrow: "价值 01", title: "约束中的判断", description: "罗马雕塑、天平和路径隐喻真实边界中的技术判断。", assetId: "home-hero-local-ai-boundary" },
+    { label: "边界", eyebrow: "价值 02", title: "作为边界的架构", description: "古典拱门和路径表达受控通行，而不是把品牌降格成流程图。", assetId: "contact-scoping-flow" },
+    { label: "证据", eyebrow: "价值 03", title: "记忆与证据", description: "空白书页和旧世界书房物件代表可评审记录，同时不暴露客户材料。", assetId: "work-case-wall" },
+    { label: "适配", eyebrow: "价值 04", title: "克制的适配", description: "雕塑、几何和踏石象征从私有知识到运营模型的谨慎转译。", assetId: "services-support" }
+  ],
+  ja: [
+    { label: "判断", eyebrow: "価値 01", title: "制約下の判断", description: "ローマ彫刻、秤、道筋が、現実の境界内での技術判断を表します。", assetId: "home-hero-local-ai-boundary" },
+    { label: "境界", eyebrow: "価値 02", title: "境界としてのアーキテクチャ", description: "古典的なアーチと道筋で、ブランドを図解に還元せず制御された通過を表現します。", assetId: "contact-scoping-flow" },
+    { label: "証拠", eyebrow: "価値 03", title: "記憶と証拠", description: "白紙の写本と古い書斎の物で、顧客資料を出さずにレビュー可能な記録を表します。", assetId: "work-case-wall" },
+    { label: "適応", eyebrow: "価値 04", title: "規律ある適応", description: "彫刻、幾何、踏み石が、私的知識から運用モデルへの慎重な翻訳を示します。", assetId: "services-support" }
+  ],
+  ko: [
+    { label: "판단", eyebrow: "가치 01", title: "제약 속 판단", description: "로마 조각, 저울, 경로는 실제 경계 안에서 이뤄지는 기술 결정을 상징합니다.", assetId: "home-hero-local-ai-boundary" },
+    { label: "경계", eyebrow: "가치 02", title: "경계로서의 아키텍처", description: "고전적 아치와 길은 브랜드를 도표로 낮추지 않고 통제된 통과를 표현합니다.", assetId: "contact-scoping-flow" },
+    { label: "증거", eyebrow: "가치 03", title: "기억과 증거", description: "빈 책장과 고전적 서재 물건은 고객 자료를 드러내지 않는 검토 가능한 기록을 뜻합니다.", assetId: "work-case-wall" },
+    { label: "적응", eyebrow: "가치 04", title: "절제된 적응", description: "조각, 기하, 디딤돌은 프라이빗 지식에서 운영 모델로의 신중한 번역을 암시합니다.", assetId: "services-support" }
+  ]
+};
+
 export const contactPageCopy: Localized<{
   hero: PageCopy;
   intake: PageCopy;
