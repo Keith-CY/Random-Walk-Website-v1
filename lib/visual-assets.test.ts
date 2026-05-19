@@ -64,19 +64,19 @@ describe("generated visual asset registry", () => {
     }
   });
 
-  test("uses philosophical neo-engraved brand images for high-visibility non-company slots", () => {
-    const philosophicalIds = [
+  test("uses Titan-inspired urban neo-engraved brand images for high-visibility non-company slots", () => {
+    const titanInspiredIds = [
       "home-hero-local-ai-boundary",
       "services-support",
       "work-case-wall",
       "contact-scoping-flow"
     ] as const;
 
-    for (const id of philosophicalIds) {
+    for (const id of titanInspiredIds) {
       const asset = visualAssets[id];
       expect(asset.src).toMatch(/^placeholders\/brand\/.+\.png$/);
-      expect(`${asset.alt} ${asset.caption} ${asset.replacementBrief}`).toMatch(/Roman|classical|philosophical|metaphysical|sculpture|architecture/i);
-      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/business workflow|color editorial photo|support workflow|scoping table/i);
+      expect(`${asset.alt} ${asset.caption} ${asset.replacementBrief}`).toMatch(/Titan-inspired|city|urban|architecture|path|plaza|courtyard|threshold|institutional/i);
+      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/Roman|sculpture|bust|philosophical study|business workflow|color editorial photo|support workflow|scoping table/i);
     }
   });
 

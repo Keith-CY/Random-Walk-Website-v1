@@ -10,10 +10,10 @@ export type VisualAsset = {
 export const visualAssets = {
   "home-hero-local-ai-boundary": {
     id: "home-hero-local-ai-boundary",
-    src: "placeholders/brand/brand-judgement-under-constraint.png",
-    alt: "ChatGPT generated neo-engraved Roman sculpture image about judgement under constraint",
-    caption: "Temporary neo-engraved asset: judgement under constraint",
-    replacementBrief: "Replace with an approved philosophical brand visual using classical sculpture, Roman forms, and metaphysical symbols rather than a literal business workflow."
+    src: "placeholders/brand/brand-city-walk.png",
+    alt: "ChatGPT generated Titan-inspired neo-engraved city street image about systems paths",
+    caption: "Temporary neo-engraved asset: city path and infrastructure",
+    replacementBrief: "Replace with an approved abstract brand visual using city architecture, public space, and pathfinding metaphors rather than a literal business workflow."
   },
   "home-delivery-chain": {
     id: "home-delivery-chain",
@@ -73,10 +73,10 @@ export const visualAssets = {
   },
   "services-support": {
     id: "services-support",
-    src: "placeholders/brand/brand-adaptation-geometry.png",
-    alt: "ChatGPT generated neo-engraved Roman sculpture image about adaptation and translation",
-    caption: "Temporary neo-engraved asset: adaptation and translation",
-    replacementBrief: "Replace with an approved philosophical brand visual using Roman sculpture, classical geometry, and restrained metaphysical symbolism rather than a literal support workflow."
+    src: "placeholders/brand/brand-navigation-plaza.png",
+    alt: "ChatGPT generated Titan-inspired neo-engraved city plaza image about disciplined navigation",
+    caption: "Temporary neo-engraved asset: navigation plaza",
+    replacementBrief: "Replace with an approved abstract brand visual using paths, plazas, and institutional city forms rather than a literal support workflow."
   },
   "melix-main-ui": {
     id: "melix-main-ui",
@@ -108,17 +108,17 @@ export const visualAssets = {
   },
   "work-case-wall": {
     id: "work-case-wall",
-    src: "placeholders/brand/brand-evidence-memory.png",
-    alt: "ChatGPT generated neo-engraved philosophical study image about evidence and memory",
-    caption: "Temporary neo-engraved asset: evidence and memory",
-    replacementBrief: "Replace with an approved classical-art brand visual about evidence, memory, and technical lineage; keep customer names, logos, and metrics out until explicitly cleared."
+    src: "placeholders/brand/brand-archive-courtyard.png",
+    alt: "ChatGPT generated Titan-inspired neo-engraved archive courtyard image about evidence and memory",
+    caption: "Temporary neo-engraved asset: archive courtyard",
+    replacementBrief: "Replace with an approved abstract brand visual about evidence, memory, and durable technical records; keep customer names, logos, and metrics out until explicitly cleared."
   },
   "contact-scoping-flow": {
     id: "contact-scoping-flow",
-    src: "placeholders/brand/brand-boundary-arch.png",
-    alt: "ChatGPT generated neo-engraved Roman colonnade image about building inside boundaries",
-    caption: "Temporary neo-engraved asset: boundary and path",
-    replacementBrief: "Replace with an approved philosophical brand visual using Roman architecture, arches, and abstract boundary symbols rather than a literal scoping diagram."
+    src: "placeholders/brand/brand-institutional-threshold.png",
+    alt: "ChatGPT generated Titan-inspired neo-engraved institutional building image about boundary and passage",
+    caption: "Temporary neo-engraved asset: institutional threshold",
+    replacementBrief: "Replace with an approved abstract brand visual using urban architecture, thresholds, and controlled-passage metaphors rather than a literal scoping diagram."
   },
   "home-constraint-matrix-board": {
     id: "home-constraint-matrix-board",

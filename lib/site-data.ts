@@ -922,28 +922,28 @@ export const companyPageCopy: Localized<{
 
 export const companyPhilosophyVisualItems: Localized<VisualItem[]> = {
   en: [
-    { label: "Judgement", eyebrow: "Value 01", title: "Judgement under constraint", description: "Roman sculpture, balance, and pathfinding stand in for technical decisions made inside real boundaries.", assetId: "home-hero-local-ai-boundary" },
-    { label: "Boundary", eyebrow: "Value 02", title: "Architecture as boundary", description: "A classical arch and wandering path describe controlled passage without reducing the brand to a diagram.", assetId: "contact-scoping-flow" },
-    { label: "Evidence", eyebrow: "Value 03", title: "Memory and evidence", description: "Blank codex pages and old-world study objects represent reviewable records without exposing customer material.", assetId: "work-case-wall" },
-    { label: "Adaptation", eyebrow: "Value 04", title: "Disciplined adaptation", description: "Sculpture, geometry, and stepping stones suggest careful translation from private knowledge to operating model.", assetId: "services-support" }
+    { label: "Judgement", eyebrow: "Value 01", title: "Judgement under constraint", description: "A quiet city path stands in for technical decisions made inside real boundaries.", assetId: "home-hero-local-ai-boundary" },
+    { label: "Boundary", eyebrow: "Value 02", title: "Architecture as boundary", description: "An institutional threshold describes controlled passage without reducing the brand to a diagram.", assetId: "contact-scoping-flow" },
+    { label: "Evidence", eyebrow: "Value 03", title: "Memory and evidence", description: "A civic archive courtyard represents reviewable records without exposing customer material.", assetId: "work-case-wall" },
+    { label: "Adaptation", eyebrow: "Value 04", title: "Disciplined adaptation", description: "A branching city plaza suggests careful navigation from private knowledge to operating model.", assetId: "services-support" }
   ],
   zh: [
-    { label: "判断", eyebrow: "价值 01", title: "约束中的判断", description: "罗马雕塑、天平和路径隐喻真实边界中的技术判断。", assetId: "home-hero-local-ai-boundary" },
-    { label: "边界", eyebrow: "价值 02", title: "作为边界的架构", description: "古典拱门和路径表达受控通行，而不是把品牌降格成流程图。", assetId: "contact-scoping-flow" },
-    { label: "证据", eyebrow: "价值 03", title: "记忆与证据", description: "空白书页和旧世界书房物件代表可评审记录，同时不暴露客户材料。", assetId: "work-case-wall" },
-    { label: "适配", eyebrow: "价值 04", title: "克制的适配", description: "雕塑、几何和踏石象征从私有知识到运营模型的谨慎转译。", assetId: "services-support" }
+    { label: "判断", eyebrow: "价值 01", title: "约束中的判断", description: "安静的城市路径隐喻真实边界中的技术判断。", assetId: "home-hero-local-ai-boundary" },
+    { label: "边界", eyebrow: "价值 02", title: "作为边界的架构", description: "机构建筑的门槛表达受控通行，而不是把品牌降格成流程图。", assetId: "contact-scoping-flow" },
+    { label: "证据", eyebrow: "价值 03", title: "记忆与证据", description: "公共档案庭院代表可评审记录，同时不暴露客户材料。", assetId: "work-case-wall" },
+    { label: "适配", eyebrow: "价值 04", title: "克制的适配", description: "分岔的城市广场象征从私有知识到运营模型的谨慎导航。", assetId: "services-support" }
   ],
   ja: [
-    { label: "判断", eyebrow: "価値 01", title: "制約下の判断", description: "ローマ彫刻、秤、道筋が、現実の境界内での技術判断を表します。", assetId: "home-hero-local-ai-boundary" },
-    { label: "境界", eyebrow: "価値 02", title: "境界としてのアーキテクチャ", description: "古典的なアーチと道筋で、ブランドを図解に還元せず制御された通過を表現します。", assetId: "contact-scoping-flow" },
-    { label: "証拠", eyebrow: "価値 03", title: "記憶と証拠", description: "白紙の写本と古い書斎の物で、顧客資料を出さずにレビュー可能な記録を表します。", assetId: "work-case-wall" },
-    { label: "適応", eyebrow: "価値 04", title: "規律ある適応", description: "彫刻、幾何、踏み石が、私的知識から運用モデルへの慎重な翻訳を示します。", assetId: "services-support" }
+    { label: "判断", eyebrow: "価値 01", title: "制約下の判断", description: "静かな都市の道筋が、現実の境界内での技術判断を表します。", assetId: "home-hero-local-ai-boundary" },
+    { label: "境界", eyebrow: "価値 02", title: "境界としてのアーキテクチャ", description: "機関建築のしきいが、ブランドを図解に還元せず制御された通過を表現します。", assetId: "contact-scoping-flow" },
+    { label: "証拠", eyebrow: "価値 03", title: "記憶と証拠", description: "公共的なアーカイブ中庭で、顧客資料を出さずにレビュー可能な記録を表します。", assetId: "work-case-wall" },
+    { label: "適応", eyebrow: "価値 04", title: "規律ある適応", description: "分岐する都市広場が、私的知識から運用モデルへの慎重な進路選択を示します。", assetId: "services-support" }
   ],
   ko: [
-    { label: "판단", eyebrow: "가치 01", title: "제약 속 판단", description: "로마 조각, 저울, 경로는 실제 경계 안에서 이뤄지는 기술 결정을 상징합니다.", assetId: "home-hero-local-ai-boundary" },
-    { label: "경계", eyebrow: "가치 02", title: "경계로서의 아키텍처", description: "고전적 아치와 길은 브랜드를 도표로 낮추지 않고 통제된 통과를 표현합니다.", assetId: "contact-scoping-flow" },
-    { label: "증거", eyebrow: "가치 03", title: "기억과 증거", description: "빈 책장과 고전적 서재 물건은 고객 자료를 드러내지 않는 검토 가능한 기록을 뜻합니다.", assetId: "work-case-wall" },
-    { label: "적응", eyebrow: "가치 04", title: "절제된 적응", description: "조각, 기하, 디딤돌은 프라이빗 지식에서 운영 모델로의 신중한 번역을 암시합니다.", assetId: "services-support" }
+    { label: "판단", eyebrow: "가치 01", title: "제약 속 판단", description: "조용한 도시 경로는 실제 경계 안에서 이뤄지는 기술 결정을 상징합니다.", assetId: "home-hero-local-ai-boundary" },
+    { label: "경계", eyebrow: "가치 02", title: "경계로서의 아키텍처", description: "기관 건축의 문턱은 브랜드를 도표로 낮추지 않고 통제된 통과를 표현합니다.", assetId: "contact-scoping-flow" },
+    { label: "증거", eyebrow: "가치 03", title: "기억과 증거", description: "공공 아카이브 안뜰은 고객 자료를 드러내지 않는 검토 가능한 기록을 뜻합니다.", assetId: "work-case-wall" },
+    { label: "적응", eyebrow: "가치 04", title: "절제된 적응", description: "갈라지는 도시 광장은 프라이빗 지식에서 운영 모델로 가는 신중한 길 찾기를 암시합니다.", assetId: "services-support" }
   ]
 };
 
