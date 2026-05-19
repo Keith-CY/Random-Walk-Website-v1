@@ -10,10 +10,10 @@ export type VisualAsset = {
 export const visualAssets = {
   "home-hero-local-ai-boundary": {
     id: "home-hero-local-ai-boundary",
-    src: "placeholders/home-hero-local-ai-boundary.png",
-    alt: "Generated placeholder image for an enterprise local AI infrastructure boundary",
-    caption: "Temporary placeholder: local AI infrastructure boundary",
-    replacementBrief: "Replace with an approved hero visual showing Random Walk's real local AI infrastructure boundary, hardware, private data flow, and deployment environment."
+    src: "photos/local-ai-workshop-photo.png",
+    alt: "ChatGPT generated color editorial photo of a local AI infrastructure workshop",
+    caption: "Temporary photo asset: local AI infrastructure workshop",
+    replacementBrief: "Replace with an approved real photo showing Random Walk's local AI infrastructure boundary, hardware, private data flow, and deployment environment."
   },
   "home-delivery-chain": {
     id: "home-delivery-chain",
@@ -73,10 +73,10 @@ export const visualAssets = {
   },
   "services-support": {
     id: "services-support",
-    src: "placeholders/services-support.png",
-    alt: "Generated placeholder image for on-site and remote support operations",
-    caption: "Temporary placeholder: support operating model",
-    replacementBrief: "Replace with approved support process imagery showing on-site introduction, remote engineering support, handoff, and optional continuous tuning."
+    src: "photos/support-engineering-photo.png",
+    alt: "ChatGPT generated color editorial photo of on-site and remote engineering support",
+    caption: "Temporary photo asset: support operating model",
+    replacementBrief: "Replace with approved real photo imagery showing on-site introduction, remote engineering support, handoff, and optional continuous tuning."
   },
   "melix-main-ui": {
     id: "melix-main-ui",
@@ -108,17 +108,17 @@ export const visualAssets = {
   },
   "work-case-wall": {
     id: "work-case-wall",
-    src: "placeholders/work-case-wall.png",
-    alt: "Generated placeholder image for an anonymized case study archive wall",
-    caption: "Temporary placeholder: anonymized case archive",
-    replacementBrief: "Replace with approved public or anonymized case-study assets, keeping placeholder labels until customer names, logos, and metrics are explicitly cleared."
+    src: "photos/anonymized-case-materials-photo.png",
+    alt: "ChatGPT generated color editorial photo of anonymized case-study materials",
+    caption: "Temporary photo asset: anonymized case materials",
+    replacementBrief: "Replace with approved public or anonymized real photo case-study assets, keeping placeholder labels until customer names, logos, and metrics are explicitly cleared."
   },
   "contact-scoping-flow": {
     id: "contact-scoping-flow",
-    src: "placeholders/contact-scoping-flow.png",
-    alt: "Generated placeholder image for a constraint review and technical scoping flow",
-    caption: "Temporary placeholder: constraint review and scoping flow",
-    replacementBrief: "Replace with an approved scoping workflow image showing constraint review, deployment target, data sensitivity, support needs, and next-step process."
+    src: "photos/contact-scoping-photo.png",
+    alt: "ChatGPT generated color editorial photo of a private AI scoping table",
+    caption: "Temporary photo asset: constraint review and scoping flow",
+    replacementBrief: "Replace with an approved real photo scoping workflow image showing constraint review, deployment target, data sensitivity, support needs, and next-step process."
   },
   "home-constraint-matrix-board": {
     id: "home-constraint-matrix-board",

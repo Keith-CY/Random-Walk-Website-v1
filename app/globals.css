@@ -5,6 +5,8 @@
   --rw-black: #000000;
   --rw-paper: #fdfcfc;
   --rw-ivory: #ffffff;
+  --rw-cream: #f7efe3;
+  --rw-cream-soft: rgba(247, 239, 227, 0.58);
   --rw-line: rgba(0, 0, 0, 0.075);
   --rw-line-light: rgba(0, 0, 0, 0.04);
   --rw-line-card: rgba(0, 0, 0, 0.07);
@@ -14,6 +16,7 @@
   --rw-inset-edge: inset 0 0 0 0.5px rgb(0 0 0 / 7.5%);
   --rw-inset-edge-strong: inset 0 0 0 0.5px rgb(0 0 0 / 16%);
   --rw-inset-edge-dark: inset 0 0 0 0.5px rgb(255 255 255 / 12%);
+  --rw-warm-shadow: 0 16px 42px rgb(92 59 27 / 6%);
   --rw-section-rule-color: rgb(0 0 0 / 6%);
   --rw-section-rail-color: rgb(0 0 0 / 3.5%);
   --rw-section-marker-background: var(--rw-paper);
@@ -398,7 +401,7 @@ main > .rw-section-marked > .rw-container::after {
   min-width: 188px;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--rw-paper);
+  background: var(--rw-cream);
   box-shadow: var(--rw-inset-edge), 0 18px 55px rgb(5 5 5 / 8%);
 }
 
@@ -432,8 +435,8 @@ main > .rw-section-marked > .rw-container::after {
 .rw-card {
   border: 0;
   border-radius: 8px;
-  background: var(--rw-ivory);
-  box-shadow: var(--rw-inset-edge), 0 2px 4px rgb(0 0 0 / 4%);
+  background: var(--rw-cream-soft);
+  box-shadow: var(--rw-inset-edge), var(--rw-warm-shadow);
   padding: 24px;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
@@ -455,7 +458,7 @@ main > .rw-section-marked > .rw-container::after {
 .rw-form-status {
   border: 0;
   border-radius: 8px;
-  background: var(--rw-ivory);
+  background: var(--rw-cream-soft);
   box-shadow: var(--rw-inset-edge);
 }
 
@@ -564,14 +567,18 @@ main > .rw-section-marked > .rw-container::after {
   overflow: hidden;
   border: 0;
   border-radius: 8px;
-  background: var(--rw-ivory);
-  box-shadow: var(--rw-inset-edge), 0 2px 4px rgb(0 0 0 / 4%);
+  background: var(--rw-cream);
+  box-shadow: var(--rw-inset-edge), var(--rw-warm-shadow);
   isolation: isolate;
 }
 
 .rw-image-frame img {
   filter: saturate(0.72) contrast(1.04) brightness(1.02);
   transition: transform 520ms ease, filter 220ms ease;
+}
+
+.rw-image-frame-photo img {
+  filter: saturate(0.96) contrast(1.02) brightness(1.01);
 }
 
 .rw-image-frame:hover img {
@@ -601,7 +608,7 @@ main > .rw-section-marked > .rw-container::after {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--rw-ivory);
+  background: var(--rw-cream-soft);
   box-shadow: var(--rw-inset-edge), 0 2px 4px rgb(0 0 0 / 4%);
   color: var(--rw-ink);
 }
@@ -916,7 +923,7 @@ main > .rw-section-marked > .rw-container::after {
   overflow: hidden;
   border: 0;
   border-radius: 8px;
-  background: var(--rw-ivory);
+  background: var(--rw-cream-soft);
   box-shadow: var(--rw-inset-edge);
 }
 

@@ -14,15 +14,15 @@ function pngDimensions(path: string) {
 }
 
 describe("generated visual asset registry", () => {
-  test("registers the full temporary placeholder set with files on disk", () => {
+  test("registers the full temporary visual set with files on disk", () => {
     expect(visualAssetIds).toHaveLength(24);
     expect(new Set(visualAssetIds).size).toBe(24);
 
     for (const id of visualAssetIds) {
       const asset = visualAssets[id];
       const filePath = join(projectRoot, "public", asset.src);
-      expect(existsSync(filePath), `${id} should point to an existing generated placeholder`).toBe(true);
-      expect(asset.alt).toMatch(/placeholder/i);
+      expect(existsSync(filePath), `${id} should point to an existing temporary visual asset`).toBe(true);
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset/i);
       expect(asset.replacementBrief.length).toBeGreaterThan(40);
 
       const { width, height } = pngDimensions(filePath);
@@ -48,6 +48,23 @@ describe("generated visual asset registry", () => {
       const asset = visualAssets[id as keyof typeof visualAssets];
       expect(asset.alt).toMatch(/ChatGPT generated placeholder/i);
       expect(asset.replacementBrief).toMatch(/approved|reviewed|real/i);
+    }
+  });
+
+  test("uses a focused set of ChatGPT generated color photo assets for warmth", () => {
+    const colorPhotoIds = [
+      "home-hero-local-ai-boundary",
+      "services-support",
+      "work-case-wall",
+      "contact-scoping-flow"
+    ] as const;
+
+    for (const id of colorPhotoIds) {
+      const asset = visualAssets[id];
+      expect(asset.src).toMatch(/^photos\/.+\.png$/);
+      expect(asset.alt).toMatch(/ChatGPT generated color editorial photo/i);
+      expect(asset.replacementBrief).toMatch(/photo|real/i);
+      expect(existsSync(join(projectRoot, "public", asset.src)), `${id} should point to an existing color photo asset`).toBe(true);
     }
   });
 

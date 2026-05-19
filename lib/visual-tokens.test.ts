@@ -16,6 +16,20 @@ describe("visual tokens", () => {
     expect(globals).not.toContain("rgba(255, 253, 248");
   });
 
+  test("adds a restrained cream accent without turning the site beige", () => {
+    const globals = readFileSync(join(projectRoot, "app", "globals.css"), "utf8");
+
+    expect(globals).toContain("--rw-cream: #f7efe3");
+    expect(globals).toContain("--rw-cream-soft: rgba(247, 239, 227, 0.58)");
+    expect(globals).toContain("--rw-warm-shadow: 0 16px 42px rgb(92 59 27 / 6%)");
+    expect(globals).toContain("background: var(--rw-cream-soft)");
+    expect(globals).toContain("background: var(--rw-cream)");
+
+    const creamUsageCount = (globals.match(/var\(--rw-cream/g) ?? []).length;
+    expect(creamUsageCount).toBeGreaterThanOrEqual(4);
+    expect(creamUsageCount).toBeLessThanOrEqual(14);
+  });
+
   test("applies the generated placeholders through a neo-engraved image treatment", () => {
     const globals = readFileSync(join(projectRoot, "app", "globals.css"), "utf8");
     const component = readFileSync(join(projectRoot, "components", "placeholder-image.tsx"), "utf8");
@@ -23,6 +37,17 @@ describe("visual tokens", () => {
     expect(globals).toContain(".rw-engraving-lines");
     expect(globals).toContain("repeating-linear-gradient");
     expect(component).toContain("rw-engraving-lines");
+  });
+
+  test("does not force engraving overlays onto color photo assets", () => {
+    const globals = readFileSync(join(projectRoot, "app", "globals.css"), "utf8");
+    const component = readFileSync(join(projectRoot, "components", "placeholder-image.tsx"), "utf8");
+
+    expect(component).toContain("const isPhoto = asset?.src.startsWith(\"photos/\") ?? false");
+    expect(component).toContain("!isPhoto ? <div className=\"rw-engraving-lines\"");
+    expect(component).toContain("rw-image-frame-photo");
+    expect(globals).toContain(".rw-image-frame-photo img");
+    expect(globals).toContain("filter: saturate(0.96) contrast(1.02)");
   });
 
   test("keeps placeholder labels out of the visible production image frame", () => {

@@ -13,6 +13,7 @@ type PlaceholderImageProps = {
 export function PlaceholderImage({ assetId, label, description, variant = "stone", ratio = "16 / 10", priority = false }: PlaceholderImageProps) {
   const isInk = variant === "ink";
   const asset = assetId ? visualAssets[assetId] : null;
+  const isPhoto = asset?.src.startsWith("photos/") ?? false;
   const displayLabel = label ?? asset?.caption ?? "Placeholder visual";
   const displayDescription = description;
 
@@ -21,7 +22,7 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
 
     return (
       <figure
-        className={`rw-image-frame rw-hover-lift ${isInk ? "rw-image-frame-ink" : ""}`}
+        className={`rw-image-frame rw-hover-lift ${isInk ? "rw-image-frame-ink" : ""} ${isPhoto ? "rw-image-frame-photo" : ""}`}
         style={{ aspectRatio: ratio }}
       >
         <Image
@@ -32,7 +33,7 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
           {...loadingProps}
           className="object-cover"
         />
-        <div className="rw-engraving-lines" aria-hidden="true" />
+        {!isPhoto ? <div className="rw-engraving-lines" aria-hidden="true" /> : null}
         <div className="rw-image-shimmer" aria-hidden="true" />
       </figure>
     );
