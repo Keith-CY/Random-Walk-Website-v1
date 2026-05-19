@@ -1,0 +1,24 @@
+---
+title: "How to evaluate a local LoRA adapter before deployment"
+locale: "en"
+date: "2026-05-16"
+author: "Random Walk"
+tags:
+  - "local-ai"
+  - "evaluation"
+  - "lora"
+summary: "What to review before a fine-tuned adapter is used inside a customer-controlled environment."
+---
+
+## Evaluation is an artifact problem
+
+A local adapter should not be delivered as a naked file. It should include the training configuration, base model reference, dataset version, task tests, regression results, limitation notes, and activation instructions.
+
+## Minimum evidence pack
+
+- Dataset manifest
+- Training run record
+- Task evaluation suite
+- Regression report
+- Known limitations
+- Deployment notes

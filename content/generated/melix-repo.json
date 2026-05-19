@@ -1,0 +1,26 @@
+{
+  "name": "Keith-CY/melix",
+  "description": "Local-first AI runtime for Apple Silicon with CLI and macOS operator workflows for LoRA training, benchmarking, and evaluation.",
+  "stars": 5,
+  "forks": 0,
+  "topics": [
+    "ai-runtime",
+    "apple-silicon",
+    "inference-server",
+    "local-ai",
+    "local-llm",
+    "lora",
+    "lora-training",
+    "macos",
+    "mlx",
+    "mlx-lora",
+    "model-ops",
+    "qlora",
+    "swift"
+  ],
+  "latestRelease": null,
+  "lastPushedAt": "2026-05-18T09:04:38Z",
+  "readmeUrl": "https://github.com/Keith-CY/melix#readme",
+  "githubUrl": "https://github.com/Keith-CY/melix",
+  "source": "github"
+}
