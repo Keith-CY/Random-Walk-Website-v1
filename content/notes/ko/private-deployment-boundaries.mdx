@@ -1,15 +1,137 @@
 ---
-title: "모델 선택 전에 배포 경계를 정의하기"
+title: "model을 선택하기 전에 배포 경계를 정의하세요"
 locale: "ko"
 date: "2026-05-16"
 author: "Random Walk"
 tags:
   - "local-ai"
   - "security"
-  - "deployment"
-summary: "프라이빗 모델 작업이 데이터 이동, 런타임 위치, 접근 경로에서 시작되는 이유입니다."
+  - "배포"
+summary: "private 모델 작업가 data movement, 런타임 location, 접근 경로에서 시작되는 이유."
 ---
 
-## 경계가 모델보다 먼저입니다
+## Boundary before model
 
-모델 선택도 중요하지만 운영 경계가 승인 가능성을 결정합니다. 데이터 위치, 적응 위치, 추론 위치, 남길 증거를 먼저 정의해야 합니다.
+Model choice는 배포 경계를 따라야 합니다.
+
+model이 단독으로는 강해 보여도, 워크플로가 있어야 할 곳에서 실행될 수 없거나, 허용된 data path를 사용할 수 없거나, 고객 팀에 유지 가능한 방식으로 hand over될 수 없다면 실제 system에는 맞지 않을 수 있습니다.
+
+models를 평가하기 전에 operating shape를 정의합니다:
+
+- model이 어디에서 실행될 수 있는지
+- 어떤 data가 런타임에 들어가거나 나올 수 있는지
+- 누가 워크플로를 trigger, 검토, 또는 maintain할 수 있는지
+- environment가 어떤 re소스 ceiling을 부과하는지
+- delivery 이후 어떤 증거와 인수인계 메모가 남아야 하는지
+
+Boundary는 paperwork가 아닙니다. technical design의 일부입니다.
+
+## Boundary에 포함되는 것
+
+### Data movement
+
+어떤 자료을 복사, 변환, 캐시, 내보내기, 또는 로컬에 유지할 수 있는지 정의합니다.
+
+- 모델 작업에 허용된 소스 자료
+- Temporary files 및 intermediate 결과물
+- Logs, prompts, 출력, 검토 자료
+- Deletion, return, 또는 retention expectations
+
+### Runtime location
+
+model과 supporting 워크플로가 실제로 어디에서 실행될 수 있는지 정의합니다.
+
+- Local workstation
+- On-premise machine
+- Customer-제어led private environment
+- Restricted 또는 disconnected environment
+- 허용된 경우 scoped remote 런타임
+
+### Access path
+
+누가 워크플로를 운영할 수 있고, 어떤 화면를 통해 가능한지 정의합니다.
+
+- Operator access
+- Admin access
+- Review access
+- sensitive actions 전에 필요한 approval points
+- first delivery 이후의 handoff responsibility
+
+### Re소스 ceiling
+
+model을 선택하기 전에 실제 operating limits를 정의합니다.
+
+- Available memory 또는 VRAM
+- Acceptable latency
+- Context length requirements
+- Storage 및 cache limits
+- Batch, queue, 또는 concurrency assumptions
+
+### Handoff and 증거 path
+
+implementation 이후에도 이해 가능한 상태로 남아야 하는 것을 정의합니다.
+
+- Evaluation 예시
+- Run records
+- Known-limit notes
+- Rollback path
+- Operator notes 및 next-step constraints
+
+## Boundary가 model choice를 바꾸는 방식
+
+Boundary는 benchmark result보다 model decision을 더 크게 바꿀 수 있습니다.
+
+model이 기술적으로 매력적일 수는 있지만, environment를 operating limits 밖으로 밀어내거나, 고객이 사용할 수 없는 data path를 요구하거나, 팀이 유지할 수 없는 handoff complexity를 만든다면 적합하지 않습니다.
+
+Boundary decisions는 다음에 영향을 줍니다:
+
+- model이 로컬에서 실행되어야 하는지, scoped remote 런타임에서 실행되어야 하는지
+- quantization이 필요한지 여부
+- 어댑터-based work가 full model replacement보다 나은지 여부
+- 평가이 latency, behavior, format stability, 검토ability 중 무엇에 집중해야 하는지
+- 배포가 user-facing activation 전에 rollback path를 필요로 하는지
+
+경계 안에서 존재할 수 있는 models 중에서 선택하세요. model을 선택한 뒤 경계를 정의하지 마세요.
+
+## Review questions
+
+- model은 어디에서 실행될 수 있는가?
+- 어떤 소스 자료이 런타임에 들어갈 수 있는가?
+- 어떤 출력, logs, 또는 temporary files가 environment를 벗어날 수 있는가?
+- 누가 inference, 평가, 또는 적응을 trigger할 수 있는가?
+- 어떤 hardware, memory, latency limits가 중요한가?
+- reuse 또는 배포 전에 무엇이 고객 검토를 필요로 하는가?
+- behavior가 바뀌면 rollback path는 무엇인가?
+- handoff 이후 operation은 누가 소유하는가?
+
+이 답들이 불분명하다면 model shortlist는 이릅니다.
+
+## 유용한 패턴
+
+### 1. Boundary
+
+배포 environment, data movement limits, 접근 경로, re소스 ceiling, handoff expectations를 정의합니다.
+
+### 2. Candidate model path
+
+그 경계 안에 들어맞는 models, 어댑터, 런타임s, quantization choices를 shortlist합니다.
+
+### 3. Evaluation 증거
+
+작업 예시, known-limit 사례, latency expectations, 검토 criteria를 기준으로 candidate path를 테스트합니다.
+
+이렇게 하면 모델 작업가 실제로 operated될 수 있는 environment에 연결된 상태를 유지합니다.
+
+## Takeaway
+
+"the best model"에서 시작하지 마세요.
+
+배포 경계에서 시작하세요:
+
+- Data movement
+- Runtime location
+- Access path
+- Re소스 ceiling
+- Evidence 및 handoff
+
+그다음 그 shape 안에서 실행되고, 검토되며, maintained될 수 있는 model path를 선택하세요.

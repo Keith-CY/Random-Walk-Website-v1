@@ -1,15 +1,143 @@
 ---
-title: "配備前にローカル LoRA アダプターを評価する"
+title: "配備 前にローカル LoRA アダプター を評価する方法"
 locale: "ja"
 date: "2026-05-16"
 author: "Random Walk"
 tags:
   - "local-ai"
-  - "evaluation"
+  - "評価"
   - "lora"
-summary: "微調整済みアダプターを顧客管理環境で使う前に確認すべきこと。"
+summary: "fine-tuned アダプター が顧客管理 environment の中で使われる前に レビュー すべきこと。"
 ---
 
-## 評価は証拠の問題
+## Evaluation は 成果物 の問題である
 
-ローカルアダプターは単体ファイルとして渡すべきではありません。学習設定、ベースモデル、データセットバージョン、タスクテスト、回帰結果、制限事項、利用手順が必要です。
+training が完了しただけでは、trained アダプター は 配備 の準備ができたことにはなりません。
+
+LoRA アダプター が顧客管理 environment の中で使われる前に、それは delivery 成果物 として レビュー されるべきです。behavior、limits、activation path、rollback assumptions が見える状態でなければなりません。
+
+アダプター には、小さな 証拠 pack を添えるべきです：
+
+- どの タスク を改善するためのものか
+- レビュー に使われた 例 は何か
+- base behavior と比べて何が変わったか
+- どの weak ケース が残っているか
+- どのように activated、disabled、または replaced されるか
+
+アダプター が レビュー できないなら、customer-facing use の準備はできていません。
+
+## 何を評価すべきか
+
+### Target behavior
+
+generic 出力 quality ではなく、実際の ワークフロー に対して アダプター を確認します。
+
+- Intended タスク behavior
+- Expected input and 出力 shape
+- 実際の use を代表する 例
+- 改善が見えるべき ケース
+
+### Regression behavior
+
+アダプター が、base model がすでに許容可能に扱えていた behavior を損ねていないか確認します。
+
+- Baseline comparison 例
+- Output format stability
+- Refusal または over-answering パターン
+- 適応 によって導入された weak ケース
+
+### Boundary fit
+
+アダプター が intended 配備境界 の中で動作できるか確認します。
+
+- Local または private ランタイム fit
+- Memory と latency expectations
+- 許可された model と アダプター movement
+- Review 資料 が 成果物 の近くに保たれていること
+
+### Activation path
+
+アダプター がどのように active になり、どのように取り除かれるかを確認します。
+
+- Loading path
+- Adapter selection
+- Disable path
+- Replacement または rollback path
+
+### Known limits
+
+さらなる レビュー なしには アダプター を信頼すべきでない場所を記録します。
+
+- Unsupported input types
+- Unstable 出力 パターン
+- Weak タスク 例
+- operator レビュー が必要な ケース
+
+## 最小限の 証拠 pack
+
+deployable アダプター は、loose file として hand over されるべきではありません。
+
+成果物 とともに、コンパクトな 証拠 pack を保ちます：
+
+- Adapter identity
+- Base model reference
+- Training data scope または dataset package reference
+- Configuration summary
+- Task 例 と expected behavior
+- baseline behavior に対する comparison 例
+- Failure または weak-case 例
+- Activation と ロールバックメモ
+- Reviewer notes または acceptance status
+
+目的は アダプター をより良く見せることではありません。目的は、その behavior を inspectable にすることです。
+
+## Review questions
+
+配備 前に、次の問いに答えます：
+
+- この アダプター はどの タスク を改善するためのものか？
+- どの 例 がその改善を示しているか？
+- どの 例 が改善なし、または regression を示しているか？
+- レビュー に使われた base model と ランタイム は何か？
+- アダプター を形づくった ソース scope または dataset package は何か？
+- アダプター はどのように activated されるか？
+- アダプター はどのように disabled または replaced されるか？
+- 何が rollback の trigger になるべきか？
+- customer-facing use を誰が承認するか？
+
+これらの答えが欠けているなら、配備 は時期尚早です。
+
+## 有用な 評価 order
+
+### 1. Task 例
+
+intended ワークフロー を代表する 例 から始めます。
+
+アダプター が、訓練によって影響を与えるべき specific behavior を改善しているか レビュー します。
+
+### 2. Regression checks
+
+baseline behavior と比較します。
+
+formatting drift、弱くなった answers、不安定な 構造、または レビュー しにくくなった behavior を探します。
+
+### 3. Activation レビュー
+
+アダプター が intended ランタイム の中で loaded、disabled、replaced、rolled back できることを確認します。
+
+operational path が明確になるまで、レビュー は完了しません。
+
+## Takeaway
+
+アダプター だけを 配備 してはいけません。
+
+アダプター を 証拠 pack とともに 配備 します：
+
+- Target behavior
+- Comparison 例
+- Weak ケース
+- Activation notes
+- Rollback path
+- Review status
+
+ローカル LoRA アダプター は、顧客管理 environment の中で レビュー、activated、reversed できるようになって初めて準備完了です。

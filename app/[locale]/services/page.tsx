@@ -2,6 +2,7 @@ import Link from "next/link";
 import { InstitutionalCell, InstitutionalGrid } from "@/components/institutional-grid";
 import { PlaceholderImage } from "@/components/placeholder-image";
 import { VisualTabs } from "@/components/visual-tabs";
+import { serviceDetailPages, serviceDetailSlugs } from "@/lib/footer-detail-pages";
 import { getDictionary, isLocale, localizePath, type Locale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
 import {
@@ -34,6 +35,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   const industryItems = localizedIndustries[locale];
   const modules = localizedServiceModules[locale];
   const visualItems = serviceVisualItems[locale];
+  const serviceAreas = serviceDetailSlugs.map((slug) => ({ slug, copy: serviceDetailPages[locale][slug] }));
 
   return (
     <main>
@@ -54,6 +56,24 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
               priority
             />
           </div>
+        </div>
+      </section>
+
+      <section className="rw-section rw-section-lined">
+        <div className="rw-container">
+          <p className="rw-eyebrow">{copy.modules.eyebrow}</p>
+          <h2 className="rw-heading mt-4">{copy.modules.title}</h2>
+          <p className="rw-body-large mt-5 max-w-3xl">{copy.modules.description}</p>
+          <InstitutionalGrid columns={3} className="mt-10">
+            {serviceAreas.map(({ slug, copy: area }) => (
+              <InstitutionalCell key={slug}>
+                <p className="rw-caption">{area.taxonomy.slice(0, 2).join(" / ")}</p>
+                <h3 className="rw-subheading mt-4">{area.title}</h3>
+                <p className="rw-body mt-4">{area.description}</p>
+                <Link className="rw-text-link mt-5" href={localizePath(locale, `/services/${slug}`)}>{dictionary.common.readMore} -&gt;</Link>
+              </InstitutionalCell>
+            ))}
+          </InstitutionalGrid>
         </div>
       </section>
 
@@ -88,11 +108,12 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
         <div className="rw-container">
           <p className="rw-eyebrow">{copy.delivery.eyebrow}</p>
           <h2 className="rw-heading mt-4">{copy.delivery.title}</h2>
-          <InstitutionalGrid columns={7} className="mt-10">
+          <p className="rw-body-large mt-5 max-w-3xl">{copy.delivery.description}</p>
+          <InstitutionalGrid columns={7} className="rw-delivery-chain mt-10">
             {chain.map((step, index) => (
               <InstitutionalCell key={step}>
                 <p className="rw-artifact-index">{index === chain.length - 1 ? "OPS" : `0${index + 1}`}</p>
-                <h3 className="mt-3 text-base font-medium text-[var(--rw-text-primary)]">{step}</h3>
+                <h3 className="rw-chain-title mt-3 text-base font-medium text-[var(--rw-text-primary)]">{step}</h3>
               </InstitutionalCell>
             ))}
           </InstitutionalGrid>

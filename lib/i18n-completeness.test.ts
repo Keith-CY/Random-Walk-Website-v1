@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import { dictionaries, locales } from "./i18n";
+import { legalContent } from "./legal-content";
 
 const projectRoot = process.cwd();
 const localizedLocales = ["zh", "ja", "ko"] as const;
@@ -36,9 +37,20 @@ describe("i18n completeness", () => {
       expect(legal).toContain(`${locale}:`);
     }
 
-    expect(legal).toContain("contact-form confidentiality");
-    expect(legal).toContain("separate written agreements");
-    expect(legal).toContain("customer-controlled deployment");
+    const localizedLegal = localizedLocales.map((locale) => JSON.stringify({
+      privacy: legalContent.privacy[locale],
+      terms: legalContent.terms[locale]
+    })).join("\n");
+    const staleEnglishLegalPhrases = [
+      "contact-form confidentiality",
+      "separate written agreements",
+      "customer-controlled deployment"
+    ];
+
+    for (const phrase of staleEnglishLegalPhrases) {
+      expect(localizedLegal).not.toContain(phrase);
+    }
+
     expect(privacyPage).toContain("legalContent.privacy[locale]");
     expect(termsPage).toContain("legalContent.terms[locale]");
   });
@@ -89,9 +101,9 @@ describe("i18n completeness", () => {
       "What happens next",
       "Industry entry points for private model systems.",
       "Scope a security review",
-      "Local AI runtime for controlled workstations.",
-      "Notes on local AI infrastructure.",
-      "Applied work in private AI systems."
+      "Local AI runtime and model workbench for Apple Silicon.",
+      "Notes on private AI, model workflows, and engineering evidence.",
+      "Private AI projects with boundaries and evidence."
     ];
 
     for (const phrase of hardcodedPhrases) {

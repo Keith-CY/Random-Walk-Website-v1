@@ -221,6 +221,9 @@ async function main() {
         deviceScaleFactor: 1,
         mobile: viewport.mobile
       }, sessionId);
+      await cdp.send("Emulation.setEmulatedMedia", {
+        features: [{ name: "prefers-reduced-motion", value: "reduce" }]
+      }, sessionId);
 
       for (const page of pages) {
         const url = `${baseUrl}${page}`;

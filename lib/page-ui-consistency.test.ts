@@ -102,14 +102,15 @@ describe("page UI consistency", () => {
       expect(combined.toLowerCase()).not.toContain(phrase.toLowerCase());
     }
 
-    expect(combined).toContain("Private AI infrastructure for customer-controlled environments.");
-    expect(combined).toContain("Security model for private AI workflows.");
-    expect(combined).toContain("Company for local AI infrastructure.");
-    expect(combined).toContain("Applied work in private AI systems.");
-    expect(combined).toContain("Example private AI engagements.");
-    expect(combined).toContain("If sensitive material is needed later, we agree on an appropriate review channel before anything is shared.");
-    expect(combined).toContain("Notes on local AI infrastructure.");
-    expect(combined).toContain("Scope a private AI workflow.");
+    expect(combined).toContain("Controlled infrastructure for private AI systems.");
+    expect(combined).toContain("Security is delivery structure, not an add-on.");
+    expect(combined).toContain("Build AI systems that stay under your control.");
+    expect(combined).toContain("FDE (Forward Deployed Engineering, on-site engineering collaboration)");
+    expect(combined).toContain("Private AI projects with boundaries and evidence.");
+    expect(combined).toContain("Example patterns, not customer disclosures.");
+    expect(combined).toContain("Bring a concrete model problem.");
+    expect(combined).toContain("Technical notes from private AI systems work.");
+    expect(combined).toContain("Define the project before we decide to work together.");
   });
 
   test("describes unpublished work as approval-pending engagement material", () => {
@@ -139,8 +140,8 @@ describe("page UI consistency", () => {
     expect(globals).toContain("color: var(--rw-text-inverse-primary)");
     expect(visualTabs).toContain("showVisual = true");
     expect(visualTabs).toContain("showVisual ? <PlaceholderImage");
-    expect(melixPage).toContain("showVisual={false}");
-    expect(melixPage).toContain("rw-workflow-chain");
+    expect(melixPage).toContain("RedirectPage");
+    expect(melixPage).toContain("/creations/melix/");
     expect(workDetail).toContain("rw-metadata-strip");
     expect(workDetail).toContain("copy.detailLabels.disclosure");
     expect(noteDetail).toContain("rw-metadata-strip");

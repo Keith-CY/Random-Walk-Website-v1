@@ -1,5 +1,5 @@
 import { RedirectPage } from "@/components/redirect-page";
 
 export default function AiMlRedirect() {
-  return <RedirectPage to="/en/services/" label="Go to services" />;
+  return <RedirectPage to="/en/services/ai-ml/" label="Go to AI / ML adaptation" />;
 }

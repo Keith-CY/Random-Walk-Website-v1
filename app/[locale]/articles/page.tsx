@@ -1,9 +1,20 @@
 import { notFound } from "next/navigation";
 import { RedirectPage } from "@/components/redirect-page";
-import { isLocale, type Locale } from "@/lib/i18n";
+import { isLocale } from "@/lib/i18n";
 
-export default async function LocalizedArticlesRedirect({ params }: { params: Promise<{ locale: string }> }) {
+export const dynamic = "force-static";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return <RedirectPage to={`/${locale as Locale}/notes/`} />;
+  return {
+    title: "Notes | Random Walk",
+    description: "Articles have moved into Notes."
+  };
+}
+
+export default async function ArticlesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  return <RedirectPage to={`/${locale}/notes/`} label="Go to notes" />;
 }

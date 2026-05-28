@@ -4,6 +4,9 @@ import { InstitutionalCell, InstitutionalGrid } from "@/components/institutional
 import { PlaceholderImage } from "@/components/placeholder-image";
 import { SectionHeading } from "@/components/section-heading";
 import { VisualTabs } from "@/components/visual-tabs";
+import { WorkflowStepper } from "@/components/workflow-stepper";
+import { getContentEntries, getString, getStringArray } from "@/lib/content";
+import { creationDetailPages, creationDetailSlugs, creationsIndexPages } from "@/lib/footer-detail-pages";
 import { getDictionary, isLocale, localizePath, type Locale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
 import {
@@ -14,6 +17,7 @@ import {
   localizedEvidenceArtifacts,
   localizedServiceModules,
   localizedTechnicalHeritage,
+  notesPageCopy,
   workPageCopy
 } from "@/lib/site-data";
 import { notFound } from "next/navigation";
@@ -50,6 +54,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const constraints = homeConstraintItems[locale];
   const workflowVisualItems = homeWorkflowVisualItems[locale];
   const deliverablesLabel = workPageCopy[locale].deliverablesLabel;
+  const featuredCreations = creationDetailSlugs.slice(0, 3).map((slug) => ({ slug, copy: creationDetailPages[locale][slug] }));
+  const featuredWork = getContentEntries("work", locale).slice(0, 3);
+  const latestNotes = getContentEntries("notes", locale).slice(0, 2);
 
   return (
     <main>
@@ -61,15 +68,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <p className="rw-body-large mt-6 max-w-2xl">{copy.hero.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link className="rw-button rw-button-primary" href={localizePath(locale, "/contact")}>{dictionary.cta.primary}</Link>
-              <Link className="rw-button rw-button-secondary" href={localizePath(locale, "/melix")}>{dictionary.cta.secondaryMelix}</Link>
+              <Link className="rw-button rw-button-secondary" href={localizePath(locale, "/creations")}>{dictionary.nav.creations}</Link>
             </div>
             <p className="rw-caption mt-6">{dictionary.common.proofLine}</p>
           </div>
           <div className="col-span-12 lg:col-span-6">
             <PlaceholderImage
               assetId="home-hero-local-ai-boundary"
-              label="Placeholder: local AI infrastructure boundary"
-              description="Engraved boundary, private data nodes, adapter, evaluation report, and deployment target."
+              label="Placeholder: classical figure and judgement visual"
+              description="Single classical figure with a sphere as a brand-level research and judgement metaphor."
+              variant="paper"
               priority
             />
           </div>
@@ -77,7 +85,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="rw-visual-strip mt-12">
               <PlaceholderImage assetId="home-evidence-archive-scene" ratio="16 / 9" />
               <PlaceholderImage assetId="services-deployment-topology" ratio="16 / 9" />
-              <PlaceholderImage assetId="contact-first-review-tray" ratio="16 / 9" />
+              <PlaceholderImage assetId="home-first-review-reference" ratio="16 / 9" variant="paper" />
             </div>
           </div>
         </div>
@@ -112,11 +120,47 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="mt-10">
             <VisualTabs items={workflowVisualItems} />
           </div>
-          <InstitutionalGrid columns={7} className="rw-workflow-chain mt-10">
-            {chain.map((step, index) => (
-              <InstitutionalCell key={step}>
-                <p className="rw-artifact-index">{index === chain.length - 1 ? "OPS" : `0${index + 1}`}</p>
-                <h3 className="mt-4 text-base font-medium text-[var(--rw-text-primary)]">{step}</h3>
+          <WorkflowStepper className="mt-10" steps={chain} />
+        </div>
+      </section>
+
+      <section className="rw-section rw-section-lined">
+        <div className="rw-container">
+          <div className="rw-section-header-row">
+            <SectionHeading copy={creationsIndexPages[locale]} />
+            <Link className="rw-text-link" href={localizePath(locale, "/creations")}>{dictionary.common.readMore} -&gt;</Link>
+          </div>
+          <InstitutionalGrid columns={3} className="mt-10">
+            {featuredCreations.map(({ slug, copy: creation }) => (
+              <InstitutionalCell key={slug}>
+                {creation.statusTag ? <p className="rw-status-tag">{creation.statusTag}</p> : null}
+                <h3 className="rw-subheading mt-4">{creation.title}</h3>
+                <p className="rw-body mt-4">{creation.description}</p>
+                <p className="rw-caption mt-5">{creation.taxonomy.slice(0, 3).join(" / ")}</p>
+                <Link className="rw-text-link mt-5" href={localizePath(locale, `/creations/${slug}`)}>{dictionary.common.readMore} -&gt;</Link>
+              </InstitutionalCell>
+            ))}
+          </InstitutionalGrid>
+        </div>
+      </section>
+
+      <section className="rw-section rw-section-supporting">
+        <div className="rw-container">
+          <div className="rw-section-header-row">
+            <SectionHeading copy={workPageCopy[locale].hero} />
+            <Link className="rw-text-link" href={localizePath(locale, "/work")}>{dictionary.common.readMore} -&gt;</Link>
+          </div>
+          <InstitutionalGrid columns={3} className="mt-10">
+            {featuredWork.map((entry) => (
+              <InstitutionalCell key={entry.slug}>
+                <p className="rw-caption">{getString(entry.frontmatter, "industry")}</p>
+                <h3 className="rw-subheading mt-4">{getString(entry.frontmatter, "title")}</h3>
+                <p className="rw-body mt-4">{getString(entry.frontmatter, "summary")}</p>
+                <div className="rw-card-meta-grid mt-5">
+                  <span>{getStringArray(entry.frontmatter, "deployment_modes").slice(0, 1).join(" / ")}</span>
+                  <span>{getStringArray(entry.frontmatter, "deliverables").slice(0, 1).join(" / ")}</span>
+                </div>
+                <Link className="rw-text-link mt-5" href={localizePath(locale, `/work/${entry.slug}`)}>{dictionary.common.readMore} -&gt;</Link>
               </InstitutionalCell>
             ))}
           </InstitutionalGrid>
@@ -129,7 +173,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="col-span-12 lg:col-span-5">
               <SectionHeading copy={copy.melix} inverse />
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link className="rw-button rw-button-inverse" href={localizePath(locale, "/melix")}>{dictionary.cta.secondaryMelix}</Link>
+                <Link className="rw-button rw-button-inverse" href={localizePath(locale, "/creations/melix")}>{dictionary.cta.secondaryMelix}</Link>
                 <Link className="rw-button rw-button-secondary border-[rgba(255,255,255,0.24)] text-[var(--rw-paper)]" href={localizePath(locale, "/contact")}>{dictionary.cta.primary}</Link>
               </div>
             </div>
@@ -152,7 +196,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {services.map((service, index) => (
               <InstitutionalCell key={service.title}>
                 <div className="rw-card-media">
-                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio="16 / 8" />
+                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio="16 / 8" variant="paper" />
                 </div>
                 <h3 className="rw-subheading">{service.title}</h3>
                 <p className="rw-body mt-4">{service.description}</p>
@@ -181,11 +225,31 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="rw-container">
           <SectionHeading copy={copy.heritage} />
           <div className="mt-10">
-            <PlaceholderImage assetId="home-technical-heritage-plate" ratio="16 / 7" />
+            <PlaceholderImage assetId="home-technical-heritage-plate" ratio="16 / 7" variant="paper" />
           </div>
           <p className="rw-taxonomy-line mt-8">{heritage.join(" / ")}</p>
         </div>
       </section>
+
+      <section className="rw-section rw-section-lined">
+        <div className="rw-container">
+          <div className="rw-section-header-row">
+            <SectionHeading copy={notesPageCopy[locale].hero} />
+            <Link className="rw-text-link" href={localizePath(locale, "/notes")}>{dictionary.common.readMore} -&gt;</Link>
+          </div>
+          <InstitutionalGrid columns={2} className="mt-10">
+            {latestNotes.map((entry) => (
+              <InstitutionalCell key={entry.slug}>
+                <p className="rw-caption">{getString(entry.frontmatter, "topic")}</p>
+                <h3 className="rw-subheading mt-4">{getString(entry.frontmatter, "title")}</h3>
+                <p className="rw-body mt-4">{getString(entry.frontmatter, "summary")}</p>
+                <Link className="rw-text-link mt-5" href={localizePath(locale, `/notes/${entry.slug}`)}>{dictionary.common.readMore} -&gt;</Link>
+              </InstitutionalCell>
+            ))}
+          </InstitutionalGrid>
+        </div>
+      </section>
+
 
       <section className="rw-section rw-section-marked rw-section-major">
         <div className="rw-container">

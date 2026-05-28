@@ -69,7 +69,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ locale
             {visualItems.map((item) => (
               <InstitutionalCell key={item.label}>
                 <div className="rw-card-media">
-                  <PlaceholderImage assetId={item.assetId} ratio="16 / 10" />
+                  <PlaceholderImage assetId={item.assetId} ratio="16 / 10" variant="paper" />
                 </div>
                 <p className="rw-eyebrow">{item.eyebrow}</p>
                 <h3 className="rw-subheading mt-4">{item.title}</h3>

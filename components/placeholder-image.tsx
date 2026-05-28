@@ -12,8 +12,12 @@ type PlaceholderImageProps = {
 
 export function PlaceholderImage({ assetId, label, description, variant = "stone", ratio = "16 / 10", priority = false }: PlaceholderImageProps) {
   const isInk = variant === "ink";
+  const isPaper = variant === "paper";
   const asset = assetId ? visualAssets[assetId] : null;
+  const isExternal = asset?.src.startsWith("http://") || asset?.src.startsWith("https://") || false;
   const isPhoto = asset?.src.startsWith("photos/") ?? false;
+  const isProductCover = asset?.src.startsWith("images/product-covers/") ?? false;
+  const usesNaturalImageTreatment = isPhoto || isProductCover || isExternal;
   const displayLabel = label ?? asset?.caption ?? "Placeholder visual";
   const displayDescription = description;
 
@@ -22,18 +26,18 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
 
     return (
       <figure
-        className={`rw-image-frame rw-hover-lift ${isInk ? "rw-image-frame-ink" : ""} ${isPhoto ? "rw-image-frame-photo" : ""}`}
+        className={`rw-image-frame rw-hover-lift ${isInk ? "rw-image-frame-ink" : ""} ${isPaper ? "rw-image-frame-paper" : ""} ${usesNaturalImageTreatment ? "rw-image-frame-photo" : ""}`}
         style={{ aspectRatio: ratio }}
       >
         <Image
-          src={`/${asset.src}`}
+          src={isExternal ? asset.src : `/${asset.src}`}
           alt={asset.alt}
           fill
           sizes="(max-width: 900px) 100vw, 50vw"
           {...loadingProps}
-          className="object-cover"
+          className={isExternal ? "object-contain" : "object-cover"}
         />
-        {!isPhoto ? <div className="rw-engraving-lines" aria-hidden="true" /> : null}
+        {!usesNaturalImageTreatment ? <div className="rw-engraving-lines" aria-hidden="true" /> : null}
         <div className="rw-image-shimmer" aria-hidden="true" />
       </figure>
     );

@@ -12,11 +12,126 @@ summary: "Why private model work starts with data movement, runtime location, an
 
 ## Boundary before model
 
-The model choice matters, but the operating boundary decides whether the system can be approved. Define where data lives, where adaptation happens, where inference runs, and what evidence remains.
+Model choice should follow the deployment boundary.
+
+A model that looks strong in isolation may be wrong for the actual system if it cannot run where the workflow needs to live, cannot use the permitted data path, or cannot be handed over to the customer team in a maintainable way.
+
+Before evaluating models, define the operating shape:
+
+- Where the model is allowed to run
+- What data can enter or leave the runtime
+- Who can trigger, review, or maintain the workflow
+- What resource ceiling the environment imposes
+- What evidence and handoff notes must remain after delivery
+
+The boundary is not paperwork. It is part of the technical design.
+
+## What the boundary includes
+
+### Data movement
+
+Define what material can be copied, transformed, cached, exported, or kept local.
+
+- Source material allowed for model work
+- Temporary files and intermediate artifacts
+- Logs, prompts, outputs, and review material
+- Deletion, return, or retention expectations
+
+### Runtime location
+
+Define where the model and supporting workflow can actually run.
+
+- Local workstation
+- On-premise machine
+- Customer-controlled private environment
+- Restricted or disconnected environment
+- Scoped remote runtime, if allowed
+
+### Access path
+
+Define who can operate the workflow and through which surface.
+
+- Operator access
+- Admin access
+- Review access
+- Approval points before sensitive actions
+- Handoff responsibility after first delivery
+
+### Resource ceiling
+
+Define the practical operating limits before choosing the model.
+
+- Available memory or VRAM
+- Acceptable latency
+- Context length requirements
+- Storage and cache limits
+- Batch, queue, or concurrency assumptions
+
+### Handoff and evidence path
+
+Define what must remain understandable after implementation.
+
+- Evaluation examples
+- Run records
+- Known-limit notes
+- Rollback path
+- Operator notes and next-step constraints
+
+## How the boundary changes model choice
+
+The boundary can change the model decision more than a benchmark result.
+
+A model may be technically attractive but unsuitable if it pushes the environment beyond its operating limits, requires a data path the customer cannot use, or creates handoff complexity the team cannot maintain.
+
+Boundary decisions affect:
+
+- Whether the model should run locally or in a scoped remote runtime
+- Whether quantization is necessary
+- Whether adapter-based work is preferable to full model replacement
+- Whether evaluation should focus on latency, behavior, format stability, or reviewability
+- Whether the deployment needs a rollback path before user-facing activation
+
+Choose from the models that can live inside the boundary. Do not define the boundary after choosing the model.
 
 ## Review questions
 
-- What cannot leave the environment?
-- Who can access prompts, outputs, models, and adapters?
-- Where are logs retained?
-- How is evaluation evidence stored?
+- Where is the model allowed to run?
+- What source material can enter the runtime?
+- What outputs, logs, or temporary files may leave the environment?
+- Who can trigger inference, evaluation, or adaptation?
+- What hardware, memory, and latency limits matter?
+- What needs customer review before reuse or deployment?
+- What is the rollback path if behavior changes?
+- Who owns operation after handoff?
+
+If these answers are unclear, the model shortlist is premature.
+
+## A useful pattern
+
+### 1. Boundary
+
+Define the deployment environment, data movement limits, access path, resource ceiling, and handoff expectations.
+
+### 2. Candidate model path
+
+Shortlist models, adapters, runtimes, and quantization choices that can fit inside that boundary.
+
+### 3. Evaluation evidence
+
+Test the candidate path against task examples, known-limit cases, latency expectations, and review criteria.
+
+This keeps model work tied to an environment that can actually be operated.
+
+## Takeaway
+
+Do not start with "the best model."
+
+Start with the deployment boundary:
+
+- Data movement
+- Runtime location
+- Access path
+- Resource ceiling
+- Evidence and handoff
+
+Then choose the model path that can run, be reviewed, and be maintained inside that shape.

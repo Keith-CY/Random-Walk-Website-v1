@@ -15,19 +15,27 @@ function pngDimensions(path: string) {
 
 describe("generated visual asset registry", () => {
   test("registers the full temporary visual set with files on disk", () => {
-    expect(visualAssetIds).toHaveLength(26);
-    expect(new Set(visualAssetIds).size).toBe(26);
+    expect(visualAssetIds).toHaveLength(32);
+    expect(new Set(visualAssetIds).size).toBe(32);
 
     for (const id of visualAssetIds) {
       const asset = visualAssets[id];
+      const isExternal = asset.src.startsWith("http://") || asset.src.startsWith("https://");
+      if (isExternal) {
+        expect(`${asset.alt} ${asset.caption}`).toMatch(/neo-engraved asset/i);
+        expect(asset.replacementBrief.length).toBeGreaterThan(40);
+        continue;
+      }
+
       const filePath = join(projectRoot, "public", asset.src);
       expect(existsSync(filePath), `${id} should point to an existing temporary visual asset`).toBe(true);
-      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset|neo-engraved asset/i);
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset|product cover asset|neo-engraved asset/i);
       expect(asset.replacementBrief.length).toBeGreaterThan(40);
 
       const { width, height } = pngDimensions(filePath);
-      expect(width / height).toBeGreaterThan(1.49);
-      expect(width / height).toBeLessThan(1.61);
+      const aspectRatio = width / height;
+      expect(aspectRatio).toBeGreaterThan(1.49);
+      expect(aspectRatio).toBeLessThan(asset.src.startsWith("images/product-covers/") ? 1.85 : 1.61);
     }
   });
 
@@ -64,7 +72,7 @@ describe("generated visual asset registry", () => {
     }
   });
 
-  test("uses Titan-inspired urban neo-engraved brand images for high-visibility non-company slots", () => {
+  test("uses Titan-inspired classical neo-engraved brand images for high-visibility non-company slots", () => {
     const titanInspiredIds = [
       "home-hero-local-ai-boundary",
       "services-support",
@@ -75,8 +83,21 @@ describe("generated visual asset registry", () => {
     for (const id of titanInspiredIds) {
       const asset = visualAssets[id];
       expect(asset.src).toMatch(/^placeholders\/brand\/.+\.png$/);
-      expect(`${asset.alt} ${asset.caption} ${asset.replacementBrief}`).toMatch(/Titan-inspired|city|urban|architecture|path|plaza|courtyard|threshold|institutional/i);
-      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/Roman|sculpture|bust|philosophical study|business workflow|color editorial photo|support workflow|scoping table/i);
+      expect(`${asset.alt} ${asset.caption} ${asset.replacementBrief}`).toMatch(/Titan-inspired|neo-engraved|classical|philosopher|bust|ledger|archive|vault|column|Ionic|facade|building|enterprise|institutional|judgement|evidence|confidentiality/i);
+      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/city path|urban|plaza|business workflow|color editorial photo|support workflow|scoping table/i);
+    }
+  });
+
+  test("uses the single-object neo-engraved direction for every non-media placeholder", () => {
+    const nonMediaPlaceholderIds = visualAssetIds.filter((id) => {
+      const src = visualAssets[id].src;
+      return !src.startsWith("photos/") && !src.startsWith("images/product-covers/") && !src.startsWith("http://") && !src.startsWith("https://");
+    });
+
+    for (const id of nonMediaPlaceholderIds) {
+      const asset = visualAssets[id];
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/neo-engraved/i);
+      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/scene|composite|dashboard|full building|city street|workflow illustration/i);
     }
   });
 

@@ -53,6 +53,10 @@ export default async function WorkDetailPage({ params }: { params: Promise<{ loc
                 <p className="rw-body mt-3">{getStringArray(entry.frontmatter, "deployment_modes").join(" / ")}</p>
               </div>
               <div>
+                <p className="rw-eyebrow">{copy.deliverablesLabel}</p>
+                <p className="rw-body mt-3">{getStringArray(entry.frontmatter, "deliverables").slice(0, 3).join(" / ")}</p>
+              </div>
+              <div>
                 <p className="rw-eyebrow">{copy.detailLabels.disclosure}</p>
                 <p className="rw-body mt-3">{copy.detailLabels.disclosureBody}</p>
               </div>
@@ -62,7 +66,7 @@ export default async function WorkDetailPage({ params }: { params: Promise<{ loc
             <PlaceholderImage
               assetId="work-case-wall"
               label={`Placeholder: ${getString(entry.frontmatter, "title")} visual`}
-              description="Anonymized project records and technical artifacts until public material is approved."
+              description="Archival ledger metaphor until public project material is approved."
             />
           </div>
           <div className="col-span-12 mt-10 lg:col-span-8">

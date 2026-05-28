@@ -12,13 +12,132 @@ summary: "What to review before a fine-tuned adapter is used inside a customer-c
 
 ## Evaluation is an artifact problem
 
-A local adapter should not be delivered as a naked file. It should include the training configuration, base model reference, dataset version, task tests, regression results, limitation notes, and activation instructions.
+A trained adapter is not ready for deployment just because training completed.
+
+Before a LoRA adapter is used inside a customer-controlled environment, it should be reviewed as a delivery artifact: behavior, limits, activation path, and rollback assumptions should be visible.
+
+The adapter should travel with a small evidence pack:
+
+- What task it is meant to improve
+- What examples were used for review
+- What changed compared with the base behavior
+- What weak cases remain
+- How it is activated, disabled, or replaced
+
+If the adapter cannot be reviewed, it is not ready for customer-facing use.
+
+## What should be evaluated
+
+### Target behavior
+
+Check the adapter against the actual workflow, not against generic output quality.
+
+- Intended task behavior
+- Expected input and output shape
+- Examples that represent real use
+- Cases where improvement should be visible
+
+### Regression behavior
+
+Check whether the adapter damages behavior the base model already handled acceptably.
+
+- Baseline comparison examples
+- Output format stability
+- Refusal or over-answering patterns
+- Weak cases introduced by adaptation
+
+### Boundary fit
+
+Check whether the adapter can run inside the intended deployment boundary.
+
+- Local or private runtime fit
+- Memory and latency expectations
+- Allowed model and adapter movement
+- Review material kept near the artifact
+
+### Activation path
+
+Check how the adapter becomes active and how it is removed.
+
+- Loading path
+- Adapter selection
+- Disable path
+- Replacement or rollback path
+
+### Known limits
+
+Record where the adapter should not be trusted without further review.
+
+- Unsupported input types
+- Unstable output patterns
+- Weak task examples
+- Cases requiring operator review
 
 ## Minimum evidence pack
 
-- Dataset manifest
-- Training run record
-- Task evaluation suite
-- Regression report
-- Known limitations
-- Deployment notes
+A deployable adapter should not be handed over as a loose file.
+
+Keep a compact evidence pack with the artifact:
+
+- Adapter identity
+- Base model reference
+- Training data scope or dataset package reference
+- Configuration summary
+- Task examples and expected behavior
+- Comparison examples against baseline behavior
+- Failure or weak-case examples
+- Activation and rollback notes
+- Reviewer notes or acceptance status
+
+The point is not to make the adapter look better. The point is to make its behavior inspectable.
+
+## Review questions
+
+Before deployment, answer these questions:
+
+- What task is this adapter supposed to improve?
+- Which examples show that improvement?
+- Which examples show no improvement or regression?
+- What base model and runtime were used for review?
+- What source scope or dataset package shaped the adapter?
+- How is the adapter activated?
+- How is the adapter disabled or replaced?
+- What should trigger rollback?
+- Who approves customer-facing use?
+
+If these answers are missing, deployment is premature.
+
+## A useful evaluation order
+
+### 1. Task examples
+
+Start with examples that represent the intended workflow.
+
+Review whether the adapter improves the specific behavior it was trained to affect.
+
+### 2. Regression checks
+
+Compare against baseline behavior.
+
+Look for formatting drift, weaker answers, unstable structure, or behavior that becomes harder to review.
+
+### 3. Activation review
+
+Confirm that the adapter can be loaded, disabled, replaced, and rolled back inside the intended runtime.
+
+Review is not complete until the operational path is clear.
+
+## Takeaway
+
+Do not deploy the adapter alone.
+
+Deploy the adapter with its evidence pack:
+
+- Target behavior
+- Comparison examples
+- Weak cases
+- Activation notes
+- Rollback path
+- Review status
+
+A local LoRA adapter is ready only when it can be reviewed, activated, and reversed inside the customer-controlled environment.

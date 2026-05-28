@@ -36,8 +36,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div className="col-span-12 lg:col-span-6">
             <PlaceholderImage
               assetId="contact-scoping-flow"
-              label="Placeholder: contact flow visual"
-              description="Constraint review, technical scoping call, engagement proposal."
+              label="Placeholder: vault door and confidentiality visual"
+              description="Single vault door as a brand-level controlled-access metaphor."
               priority
             />
           </div>

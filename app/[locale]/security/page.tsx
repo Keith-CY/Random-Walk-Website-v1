@@ -103,7 +103,7 @@ export default async function SecurityPage({ params }: { params: Promise<{ local
             <PlaceholderImage
               assetId="security-responsibility-handoff"
               label="Placeholder: security responsibility handoff"
-              description="Engineering support and customer review responsibility shown as separate controlled work areas."
+              description="Engineering support and customer review responsibility shown as a controlled handoff."
               ratio="16 / 7"
             />
           </div>

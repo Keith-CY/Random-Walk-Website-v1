@@ -19,15 +19,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const dictionary = getDictionary(locale);
 
   return {
-    title: "Private AI infrastructure for customer-controlled environments",
-    description: "Random Walk builds private and local AI infrastructure for organizations that need model workflows inside customer-controlled environments.",
+    title: "Controlled infrastructure for private AI systems",
+    description: "Random Walk builds private AI infrastructure, model workflows, private deployment, evaluation evidence, and FDE support for controlled environments.",
     alternates: {
       canonical: `/${locale}/`,
       languages: Object.fromEntries(locales.map((item) => [item, `/${item}/`]))
     },
     openGraph: {
       title: "Random Walk - Private AI Infrastructure",
-      description: "Private and local AI infrastructure for customer-controlled environments.",
+      description: "Controlled infrastructure for private AI systems.",
       type: "website",
       locale
     },

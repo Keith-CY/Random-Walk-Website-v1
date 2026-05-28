@@ -41,8 +41,8 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
           <div className="col-span-12 lg:col-span-6">
             <PlaceholderImage
               assetId="work-case-wall"
-              label="Placeholder: work archive wall"
-              description="Local model artifacts, private boundary, and anonymized technical records."
+              label="Placeholder: archival ledger and evidence visual"
+              description="Single archival ledger as a brand-level evidence and memory metaphor."
               priority
             />
           </div>
@@ -57,7 +57,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
               <p className="rw-eyebrow">{copy.melixFeature.eyebrow}</p>
               <h2 className="rw-subheading mt-4">{copy.melixFeature.title}</h2>
               <p className="rw-body mt-4">{copy.melixFeature.description}</p>
-              <Link className="rw-button rw-button-secondary mt-5" href={localizePath(locale, "/melix")}>{dictionary.cta.secondaryMelix}</Link>
+              <Link className="rw-button rw-button-secondary mt-5" href={localizePath(locale, "/creations/melix")}>{dictionary.cta.secondaryMelix}</Link>
             </InstitutionalCell>
             <InstitutionalCell>
               <p className="rw-eyebrow">{copy.sayitFeature.eyebrow}</p>
@@ -80,8 +80,12 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
                 <p className="rw-caption">{workStatusLabel(locale, getString(entry.frontmatter, "status", "placeholder"))} · {getString(entry.frontmatter, "industry")}</p>
                 <h3 className="rw-subheading mt-3">{getString(entry.frontmatter, "title")}</h3>
                 <p className="rw-body mt-4">{getString(entry.frontmatter, "summary")}</p>
-                <p className="rw-caption mt-4">{copy.deliverablesLabel}: {getStringArray(entry.frontmatter, "deliverables").join(" · ")}</p>
-                <Link className="rw-button rw-button-secondary mt-5" href={localizePath(locale, `/work/${entry.slug}`)}>{dictionary.common.readMore}</Link>
+                <div className="rw-card-meta-grid mt-5">
+                  <span>{copy.detailLabels.deployment}: {getStringArray(entry.frontmatter, "deployment_modes").slice(0, 2).join(" / ")}</span>
+                  <span>{copy.deliverablesLabel}: {getStringArray(entry.frontmatter, "deliverables").slice(0, 2).join(" / ")}</span>
+                  <span>{copy.detailLabels.disclosure}: {copy.detailLabels.disclosureBody}</span>
+                </div>
+                <Link className="rw-text-link mt-5" href={localizePath(locale, `/work/${entry.slug}`)}>{dictionary.common.readMore} -&gt;</Link>
               </InstitutionalCell>
             ))}
           </InstitutionalGrid>
