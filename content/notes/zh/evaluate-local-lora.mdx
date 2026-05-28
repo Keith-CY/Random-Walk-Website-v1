@@ -1,0 +1,143 @@
+---
+title: "如何在部署前评估本地 LoRA 适配器"
+locale: "zh"
+date: "2026-05-16"
+author: "Random Walk"
+tags:
+  - "local-ai"
+  - "评估"
+  - "lora"
+summary: "fine-tuned 适配器 被用于客户可控环境之前，应当 评审 的内容。"
+---
+
+## Evaluation 是一个 工件 问题
+
+训练完成，并不意味着一个 trained 适配器 已经可以部署。
+
+在 LoRA 适配器 被用于客户可控环境之前，它应被作为 delivery 工件 来 评审：behavior、limits、activation path 与 rollback assumptions 都应保持可见。
+
+适配器 应随附一个小型 证据 pack：
+
+- 它旨在改进什么 task
+- 哪些 examples 被用于 评审
+- 与 base behavior 相比发生了什么变化
+- 仍然存在哪些 weak cases
+- 它如何被 activated、disabled 或 replaced
+
+如果 适配器 无法被 评审，它就还不适合 customer-facing use。
+
+## 应评估什么
+
+### Target behavior
+
+根据真实 工作流 检查 适配器，而不是用泛泛的 输出 quality 来衡量。
+
+- Intended task behavior
+- Expected input and 输出 shape
+- 能代表真实使用的 examples
+- 应当能看见改进的 cases
+
+### Regression behavior
+
+检查 适配器 是否损害了 base model 原本已经能 acceptable 处理的 behavior。
+
+- Baseline comparison examples
+- Output format stability
+- Refusal 或 over-answering 模式
+- 适配 引入的 weak cases
+
+### Boundary fit
+
+检查 适配器 是否能在预期的 部署边界 内运行。
+
+- Local 或 private 运行时 fit
+- Memory 与 latency expectations
+- 允许的 model 与 适配器 movement
+- Review 材料 保持靠近 工件
+
+### Activation path
+
+检查 适配器 如何变为 active，以及如何被移除。
+
+- Loading path
+- Adapter selection
+- Disable path
+- Replacement 或 rollback path
+
+### Known limits
+
+记录在哪些情况下，适配器 不应在没有进一步 评审 的前提下被信任。
+
+- Unsupported input types
+- Unstable 输出 模式
+- Weak task examples
+- 需要 operator 评审 的 cases
+
+## 最小 证据 pack
+
+可部署的 适配器 不应作为一个 loose file 被 hand over。
+
+随 工件 保留一份紧凑的 证据 pack：
+
+- Adapter identity
+- Base model reference
+- Training data scope 或 dataset package reference
+- Configuration summary
+- Task examples 与 expected behavior
+- 与 baseline behavior 对照的 comparison examples
+- Failure 或 weak-case examples
+- Activation 与 回滚说明
+- Reviewer notes 或 acceptance status
+
+重点不是让 适配器 看起来更好。重点是让它的 behavior 可以被检查。
+
+## Review questions
+
+部署前，回答这些问题：
+
+- 这个 适配器 预计改进什么 task？
+- 哪些 examples 展示了这种改进？
+- 哪些 examples 显示没有改进或出现 regression？
+- Review 使用了什么 base model 与 运行时？
+- 哪个 来源 scope 或 dataset package 塑造了这个 适配器？
+- 适配器 如何被 activated？
+- 适配器 如何被 disabled 或 replaced？
+- 什么情况应触发 rollback？
+- 谁批准 customer-facing use？
+
+如果这些答案缺失，部署 就为时过早。
+
+## 一个有用的 评估 顺序
+
+### 1. Task examples
+
+从能代表 intended 工作流 的 examples 开始。
+
+Review 适配器 是否改进了它被训练所针对的 specific behavior。
+
+### 2. Regression checks
+
+与 baseline behavior 进行比较。
+
+寻找 formatting drift、更弱的 answers、不稳定的 结构，或让 评审 变得更困难的 behavior。
+
+### 3. Activation 评审
+
+确认 适配器 可以在预期 运行时 内被 loaded、disabled、replaced 与 rolled back。
+
+只有当 operational path 清晰时，评审 才算完成。
+
+## Takeaway
+
+不要单独部署 适配器。
+
+将 适配器 与它的 证据 pack 一起部署：
+
+- Target behavior
+- Comparison examples
+- Weak cases
+- Activation notes
+- Rollback path
+- Review status
+
+只有当一个本地 LoRA 适配器 能在客户可控环境内被 评审、activated，并且可 reversed 时，它才算准备就绪。

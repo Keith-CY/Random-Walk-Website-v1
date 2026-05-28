@@ -1,0 +1,36 @@
+{
+  "name": "random-walk-website-v1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "browserslist": [
+    "defaults",
+    "not dead",
+    "supports es6-module"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "refresh:melix": "node scripts/fetch-melix-metadata.mjs",
+    "prebuild": "bun run refresh:melix",
+    "build": "next build",
+    "lint": "eslint .",
+    "test": "bun test lib/contact-schema.test.ts lib/content.test.ts lib/visual-assets.test.ts lib/layout-shell.test.ts lib/visual-tokens.test.ts lib/page-ui-consistency.test.ts lib/i18n-completeness.test.ts lib/footer-links.test.ts",
+    "visual:check": "node scripts/visual-check.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.16",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.5",
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "20.19.31",
+    "@types/react": "19.2.11",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.1",
+    "eslint-config-next": "15.5.16",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,137 @@
+---
+title: "model を選ぶ前に 配備境界 を定義する"
+locale: "ja"
+date: "2026-05-16"
+author: "Random Walk"
+tags:
+  - "local-ai"
+  - "security"
+  - "配備"
+summary: "private モデル作業 が data movement、ランタイム location、アクセス経路 から始まる理由。"
+---
+
+## Boundary before model
+
+Model choice は 配備境界 に従うべきです。
+
+単体では強く見える model でも、ワークフロー が置かれるべき場所で動かせず、許可された data path を使えず、顧客チームへ保守可能な形で hand over できないなら、実際の system には適さない場合があります。
+
+models を評価する前に、operating shape を定義します：
+
+- model がどこで実行を許可されるか
+- どの data が ランタイム に入り、または ランタイム から出られるか
+- 誰が ワークフロー を trigger、レビュー、maintain できるか
+- environment がどの reソース ceiling を課すか
+- delivery 後にどの 証拠 と 引き継ぎメモ を残す必要があるか
+
+Boundary は paperwork ではありません。technical design の一部です。
+
+## Boundary に含まれるもの
+
+### Data movement
+
+どの 資料 をコピー、変換、キャッシュ、エクスポート、またはローカル保持できるかを定義します。
+
+- モデル作業 に許可された ソース 資料
+- Temporary files と intermediate 成果物
+- Logs、prompts、出力、レビュー 資料
+- Deletion、return、または retention expectations
+
+### Runtime location
+
+model と supporting ワークフロー が実際にどこで動作できるかを定義します。
+
+- Local workstation
+- On-premise machine
+- Customer-制御led private environment
+- Restricted または disconnected environment
+- 許可される場合の scoped remote ランタイム
+
+### Access path
+
+誰が ワークフロー を操作できるか、どの 画面 を通じて操作できるかを定義します。
+
+- Operator access
+- Admin access
+- Review access
+- sensitive actions の前の approval points
+- first delivery 後の handoff responsibility
+
+### Reソース ceiling
+
+model を選ぶ前に、実際の operating limits を定義します。
+
+- Available memory または VRAM
+- Acceptable latency
+- Context length requirements
+- Storage と cache limits
+- Batch、queue、または concurrency assumptions
+
+### Handoff and 証拠 path
+
+implementation 後も理解可能でなければならないものを定義します。
+
+- Evaluation 例
+- Run records
+- Known-limit notes
+- Rollback path
+- Operator notes と next-step constraints
+
+## Boundary が model choice をどう変えるか
+
+Boundary は、benchmark result よりも model decision を大きく変えることがあります。
+
+model が技術的に魅力的であっても、environment を operating limits の外へ押し出す、顧客が使えない data path を要求する、またはチームが保守できない handoff complexity を生むなら、不適切です。
+
+Boundary decisions は次に影響します：
+
+- model をローカルで動かすべきか、scoped remote ランタイム で動かすべきか
+- quantization が必要かどうか
+- アダプター-based work が full model replacement より望ましいかどうか
+- 評価 が latency、behavior、format stability、レビューability のどれに焦点を置くべきか
+- 配備 に user-facing activation 前の rollback path が必要かどうか
+
+境界 の内側で生きられる models から選びます。model を選んだ後に 境界 を定義してはいけません。
+
+## Review questions
+
+- model はどこで実行を許可されるか？
+- どの ソース 資料 が ランタイム に入れるか？
+- どの 出力、logs、または temporary files が environment から出られるか？
+- 誰が inference、評価、または 適応 を trigger できるか？
+- どの hardware、memory、latency limits が重要か？
+- reuse または 配備 前に何が 顧客レビュー を必要とするか？
+- behavior が変わった場合の rollback path は何か？
+- handoff 後の operation は誰が所有するか？
+
+これらの答えが不明確なら、model shortlist は時期尚早です。
+
+## 有用な パターン
+
+### 1. Boundary
+
+配備 environment、data movement limits、アクセス経路、reソース ceiling、handoff expectations を定義します。
+
+### 2. Candidate model path
+
+その 境界 の内側に収まる models、アダプター、ランタイムs、quantization choices を shortlist します。
+
+### 3. Evaluation 証拠
+
+タスク 例、known-limit ケース、latency expectations、レビュー criteria に対して candidate path をテストします。
+
+これにより、モデル作業 は実際に operated できる environment に結びついたままになります。
+
+## Takeaway
+
+「the best model」から始めないでください。
+
+配備境界 から始めます：
+
+- Data movement
+- Runtime location
+- Access path
+- Reソース ceiling
+- Evidence と handoff
+
+そして、その shape の内側で動き、レビュー され、maintained できる model path を選びます。

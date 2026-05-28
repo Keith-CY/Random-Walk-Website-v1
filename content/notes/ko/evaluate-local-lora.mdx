@@ -1,0 +1,143 @@
+---
+title: "배포 전에 로컬 LoRA 어댑터를 평가하는 방법"
+locale: "ko"
+date: "2026-05-16"
+author: "Random Walk"
+tags:
+  - "local-ai"
+  - "평가"
+  - "lora"
+summary: "fine-tuned 어댑터가 고객이 제어하는 environment 안에서 사용되기 전에 검토해야 할 것."
+---
+
+## Evaluation은 결과물 문제입니다
+
+training이 완료되었다고 해서 trained 어댑터가 배포 준비를 마친 것은 아닙니다.
+
+LoRA 어댑터가 고객이 제어하는 environment 안에서 사용되기 전에, 그것은 delivery 결과물로 검토되어야 합니다. behavior, limits, activation path, rollback assumptions가 보이는 상태여야 합니다.
+
+어댑터에는 작은 증거 pack이 함께 있어야 합니다:
+
+- 어떤 작업를 개선하려는 것인지
+- 검토에 어떤 예시가 사용되었는지
+- base behavior와 비교해 무엇이 바뀌었는지
+- 어떤 weak 사례가 남아 있는지
+- 어떻게 activated, disabled, 또는 replaced되는지
+
+어댑터를 검토할 수 없다면, customer-facing use 준비가 된 것이 아닙니다.
+
+## 무엇을 평가해야 하는가
+
+### Target behavior
+
+generic 출력 quality가 아니라 실제 워크플로를 기준으로 어댑터를 확인합니다.
+
+- Intended 작업 behavior
+- Expected input and 출력 shape
+- 실제 use를 대표하는 예시
+- 개선이 보여야 하는 사례
+
+### Regression behavior
+
+어댑터가 base model이 이미 수용 가능한 수준으로 처리하던 behavior를 손상시키는지 확인합니다.
+
+- Baseline comparison 예시
+- Output format stability
+- Refusal 또는 over-answering 패턴
+- 적응으로 도입된 weak 사례
+
+### Boundary fit
+
+어댑터가 intended 배포 경계 안에서 실행될 수 있는지 확인합니다.
+
+- Local 또는 private 런타임 fit
+- Memory 및 latency expectations
+- 허용된 model 및 어댑터 movement
+- Review 자료이 결과물 가까이에 유지됨
+
+### Activation path
+
+어댑터가 어떻게 active가 되고, 어떻게 제거되는지 확인합니다.
+
+- Loading path
+- Adapter selection
+- Disable path
+- Replacement 또는 rollback path
+
+### Known limits
+
+추가 검토 없이 어댑터를 신뢰해서는 안 되는 지점을 기록합니다.
+
+- Unsupported input types
+- Unstable 출력 패턴
+- Weak 작업 예시
+- operator 검토가 필요한 사례
+
+## 최소 증거 pack
+
+deployable 어댑터는 loose file로 hand over되어서는 안 됩니다.
+
+결과물와 함께 간결한 증거 pack을 유지합니다:
+
+- Adapter identity
+- Base model reference
+- Training data scope 또는 dataset package reference
+- Configuration summary
+- Task 예시 및 expected behavior
+- baseline behavior와 비교한 comparison 예시
+- Failure 또는 weak-case 예시
+- Activation 및 롤백 메모
+- Reviewer notes 또는 acceptance status
+
+핵심은 어댑터를 더 좋아 보이게 만드는 것이 아닙니다. 핵심은 그 behavior를 inspectable하게 만드는 것입니다.
+
+## Review questions
+
+배포 전에 다음 질문에 답합니다:
+
+- 이 어댑터는 어떤 작업를 개선하기 위한 것인가?
+- 어떤 예시가 그 개선을 보여주는가?
+- 어떤 예시가 개선 없음 또는 regression을 보여주는가?
+- 검토에 사용된 base model과 런타임은 무엇인가?
+- 어떤 소스 scope 또는 dataset package가 어댑터를 형성했는가?
+- 어댑터는 어떻게 activated되는가?
+- 어댑터는 어떻게 disabled 또는 replaced되는가?
+- 무엇이 rollback을 trigger해야 하는가?
+- 누가 customer-facing use를 승인하는가?
+
+이 답들이 없다면 배포는 이릅니다.
+
+## 유용한 평가 order
+
+### 1. Task 예시
+
+intended 워크플로를 대표하는 예시로 시작합니다.
+
+어댑터가 훈련을 통해 영향을 주려던 specific behavior를 개선하는지 검토합니다.
+
+### 2. Regression checks
+
+baseline behavior와 비교합니다.
+
+formatting drift, 더 약해진 answers, 불안정한 구조, 또는 검토하기 더 어려워진 behavior를 찾습니다.
+
+### 3. Activation 검토
+
+어댑터가 intended 런타임 안에서 loaded, disabled, replaced, rolled back될 수 있는지 확인합니다.
+
+operational path가 명확해지기 전까지 검토는 완료되지 않습니다.
+
+## Takeaway
+
+어댑터만 배포하지 마세요.
+
+어댑터를 증거 pack과 함께 배포하세요:
+
+- Target behavior
+- Comparison 예시
+- Weak 사례
+- Activation notes
+- Rollback path
+- Review status
+
+로컬 LoRA 어댑터는 고객이 제어하는 environment 안에서 검토, activated, reversed될 수 있을 때에만 준비된 것입니다.
