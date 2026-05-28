@@ -45,6 +45,11 @@ describe("page UI consistency", () => {
 
     expect(form).toContain("rw-field");
     expect(form).toContain("rw-fieldset");
+    expect(form).toContain("rw-field-error");
+    expect(form).toContain("aria-invalid");
+    expect(form).toContain("rw-form-toast");
+    expect(form).toContain('role="status"');
+    expect(form).not.toContain("rw-form-status-ok");
     expect(form).not.toContain("rw-card bg-[var(--rw-ivory)]");
     expect(form).not.toContain("rw-card min-h");
   });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { contactFieldOptions, validateContactPayload } from "@/lib/contact-schema";
 import type { Locale } from "@/lib/i18n";
 
@@ -98,6 +98,7 @@ const contactFormCopy: Record<Locale, {
   inlineWarning: string;
   sent: string;
   error: string;
+  fieldError: string;
   sending: string;
   submitConfigured: string;
   submitFallback: string;
@@ -139,6 +140,7 @@ const contactFormCopy: Record<Locale, {
     inlineWarning: "Do not include confidential files, records, source code, or privileged material in this message.",
     sent: "Thank you. We received your request and will review the deployment environment, data sensitivity category, and support needs before responding.",
     error: "The form could not be submitted. Please check",
+    fieldError: "Please check this field.",
     sending: "Sending...",
     submitConfigured: "Submit project constraints",
     submitFallback: "Prepare project inquiry",
@@ -175,6 +177,7 @@ const contactFormCopy: Record<Locale, {
     inlineWarning: "请勿在消息中包含机密文件、记录、源代码或受特权保护的材料。",
     sent: "谢谢。我们已收到请求，会在回复前评审部署环境、数据敏感度类别和支持需求。",
     error: "表单未能提交。请检查",
+    fieldError: "请检查此项。",
     sending: "发送中...",
     submitConfigured: "提交项目约束",
     submitFallback: "准备项目咨询",
@@ -220,6 +223,7 @@ const contactFormCopy: Record<Locale, {
     inlineWarning: "このメッセージに機密ファイル、記録、ソースコード、秘匿特権のある資料を含めないでください。",
     sent: "ありがとうございます。配備環境、データ感度区分、サポート要件を確認したうえで返信します。",
     error: "フォームを送信できませんでした。確認してください",
+    fieldError: "この項目を確認してください。",
     sending: "送信中...",
     submitConfigured: "プロジェクト制約を送信",
     submitFallback: "プロジェクト相談を準備",
@@ -265,6 +269,7 @@ const contactFormCopy: Record<Locale, {
     inlineWarning: "이 메시지에 기밀 파일, 기록, 소스 코드 또는 특권 자료를 포함하지 마세요.",
     sent: "감사합니다. 배포 환경, 데이터 민감도 범주, 지원 요구를 검토한 후 응답하겠습니다.",
     error: "양식을 제출할 수 없습니다. 확인하세요",
+    fieldError: "이 항목을 확인하세요.",
     sending: "전송 중...",
     submitConfigured: "프로젝트 제약 제출",
     submitFallback: "프로젝트 문의 준비",
@@ -294,6 +299,39 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<string[]>([]);
   const canPost = useMemo(() => Boolean(endpoint), [endpoint]);
+  const errorSet = useMemo(() => new Set(errors), [errors]);
+  const globalError = errorSet.has("form") || errorSet.has("file") || errorSet.has("locale") || errorSet.has("page_origin");
+
+  useEffect(() => {
+    if (status !== "sent") return;
+    const timeout = window.setTimeout(() => setStatus("idle"), 5200);
+    return () => window.clearTimeout(timeout);
+  }, [status]);
+
+  function fieldErrorId(field: string) {
+    return `contact-${field.replaceAll("_", "-")}-error`;
+  }
+
+  function fieldErrorProps(field: string) {
+    if (!errorSet.has(field)) {
+      return {};
+    }
+
+    return {
+      "aria-describedby": fieldErrorId(field),
+      "aria-invalid": true
+    };
+  }
+
+  function FieldError({ field }: { field: string }) {
+    if (!errorSet.has(field)) return null;
+
+    return (
+      <p className="rw-field-error" id={fieldErrorId(field)}>
+        {copy.fieldError}
+      </p>
+    );
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -328,6 +366,8 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
     }
 
     if (!canPost || !endpoint) {
+      setErrors([]);
+      setStatus("idle");
       const subject = encodeURIComponent(copy.emailSubject);
       const useCaseLabel = (copy.options.use_case as Record<string, string>)[payload.use_case] ?? payload.use_case;
       const deploymentLabels = payload.deployment_target.map((target) => {
@@ -349,6 +389,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
     });
 
     if (response.ok) {
+      setErrors([]);
       setStatus("sent");
       form.reset();
     } else {
@@ -359,6 +400,12 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
 
   return (
     <form className="grid gap-4" onSubmit={onSubmit} noValidate>
+      {status === "sent" ? (
+        <div className="rw-form-toast" role="status" aria-live="polite">
+          <p>{copy.sent}</p>
+        </div>
+      ) : null}
+
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="page_origin" value={pageOrigin} />
       <input type="hidden" name="utm_source" value="" />
@@ -375,15 +422,18 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.name}</span>
-            <input className="rw-field" name="name" required />
+            <input className="rw-field" name="name" required {...fieldErrorProps("name")} />
+            <FieldError field="name" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.email}</span>
-            <input className="rw-field" name="email" type="email" required />
+            <input className="rw-field" name="email" type="email" required {...fieldErrorProps("email")} />
+            <FieldError field="email" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.company}</span>
-            <input className="rw-field" name="company" required />
+            <input className="rw-field" name="company" required {...fieldErrorProps("company")} />
+            <FieldError field="company" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.role}</span>
@@ -397,25 +447,28 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.industry}</span>
-            <select className="rw-field" name="industry" required defaultValue="">
+            <select className="rw-field" name="industry" required defaultValue="" {...fieldErrorProps("industry")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.industry.map((option) => <option key={option} value={option}>{copy.options.industry[option]}</option>)}
             </select>
+            <FieldError field="industry" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.useCase}</span>
-            <select className="rw-field" name="use_case" required defaultValue="">
+            <select className="rw-field" name="use_case" required defaultValue="" {...fieldErrorProps("use_case")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.use_case.map((option) => <option key={option} value={option}>{copy.options.use_case[option]}</option>)}
             </select>
+            <FieldError field="use_case" />
           </label>
         </div>
       </div>
 
       <div className="rw-form-section">
         <p className="rw-form-section-label">{copy.sections.deploymentTarget}</p>
-        <fieldset className="rw-fieldset grid gap-3">
-          <legend className="font-medium">{copy.fields.deploymentTarget}</legend>
+        <fieldset className="rw-fieldset grid gap-3" {...fieldErrorProps("deployment_target")}>
+          <legend className="sr-only">{copy.fields.deploymentTarget}</legend>
+          <span className="rw-fieldset-title" aria-hidden="true">{copy.fields.deploymentTarget}</span>
           <div className="grid gap-2 md:grid-cols-2">
             {contactFieldOptions.deployment_target.map((option) => (
               <label key={option} className="flex items-center gap-2">
@@ -424,6 +477,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
               </label>
             ))}
           </div>
+          <FieldError field="deployment_target" />
         </fieldset>
       </div>
 
@@ -432,28 +486,31 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
         <div className="grid gap-4 md:grid-cols-3">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.dataSensitivity}</span>
-            <select className="rw-field" name="data_sensitivity" required defaultValue="">
+            <select className="rw-field" name="data_sensitivity" required defaultValue="" {...fieldErrorProps("data_sensitivity")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.data_sensitivity.map((option) => <option key={option} value={option}>{copy.options.data_sensitivity[option]}</option>)}
             </select>
+            <FieldError field="data_sensitivity" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.airGappedRequired}</span>
-            <select className="rw-field" name="air_gapped_required" required defaultValue="">
+            <select className="rw-field" name="air_gapped_required" required defaultValue="" {...fieldErrorProps("air_gapped_required")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.air_gapped_required.map((option) => <option key={option} value={option}>{copy.options.air_gapped_required[option]}</option>)}
             </select>
+            <FieldError field="air_gapped_required" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.onsiteIntro}</span>
-            <select className="rw-field" name="onsite_intro" required defaultValue="">
+            <select className="rw-field" name="onsite_intro" required defaultValue="" {...fieldErrorProps("onsite_intro")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.onsite_intro.map((option) => <option key={option} value={option}>{copy.options.onsite_intro[option]}</option>)}
             </select>
+            <FieldError field="onsite_intro" />
           </label>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid items-start gap-4 md:grid-cols-2">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.timeline}</span>
             <select className="rw-field" name="timeline" defaultValue="exploratory">
@@ -461,7 +518,8 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
             </select>
           </label>
           <fieldset className="rw-fieldset grid gap-2">
-            <legend className="font-medium">{copy.fields.supportPreference}</legend>
+            <legend className="sr-only">{copy.fields.supportPreference}</legend>
+            <span className="rw-fieldset-title" aria-hidden="true">{copy.fields.supportPreference}</span>
             {contactFieldOptions.support_preference.map((option) => (
               <label key={option} className="flex items-center gap-2">
                 <input type="checkbox" name="support_preference" value={option} />
@@ -481,18 +539,21 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
 
         <label className="mt-4 grid gap-2">
           <span className="font-medium">{copy.fields.message}</span>
-          <textarea className="rw-field min-h-32" name="message" required placeholder={copy.placeholders.message} />
+          <textarea className="rw-field min-h-32" name="message" required placeholder={copy.placeholders.message} {...fieldErrorProps("message")} />
+          <FieldError field="message" />
         </label>
         <p className="rw-form-inline-warning rw-caption mt-3">{copy.inlineWarning}</p>
       </div>
 
-      <label className="flex items-start gap-3">
-        <input className="mt-1" type="checkbox" name="consent" required />
-        <span>{copy.fields.consent}</span>
-      </label>
+      <div className="grid gap-2">
+        <label className="flex items-start gap-3">
+          <input className="mt-1" type="checkbox" name="consent" required {...fieldErrorProps("consent")} />
+          <span>{copy.fields.consent}</span>
+        </label>
+        <FieldError field="consent" />
+      </div>
 
-      {status === "sent" ? <p className="rw-form-status rw-form-status-ok">{copy.sent}</p> : null}
-      {status === "error" ? <p className="rw-form-status rw-form-status-error">{copy.error}: {errors.join(", ")}.</p> : null}
+      {status === "error" && globalError ? <p className="rw-form-status rw-form-status-error">{copy.error}.</p> : null}
 
       <button className="rw-button rw-button-primary justify-self-start" type="submit" disabled={status === "sending"}>
         {status === "sending" ? copy.sending : canPost ? copy.submitConfigured : copy.submitFallback}
