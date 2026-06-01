@@ -181,7 +181,7 @@ describe("page UI consistency", () => {
 
   test("adds richer image cadence and restrained motion without new dependencies", () => {
     const globals = readSource("app/globals.css");
-    const homePage = readSource("app/[locale]/page.tsx");
+    const homePage = readSource("components/home-page-content.tsx");
     const layout = readSource("app/[locale]/layout.tsx");
     const motionController = readSource("components/motion-controller.tsx");
     const servicesPage = readSource("app/[locale]/services/page.tsx");

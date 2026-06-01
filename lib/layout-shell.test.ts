@@ -14,6 +14,17 @@ describe("localized page shell", () => {
     expect(layout).toContain("flex-1");
   });
 
+  test("renders the root route as the English home page instead of a moved redirect", () => {
+    const rootPage = readFileSync(join(projectRoot, "app", "page.tsx"), "utf8");
+
+    expect(rootPage).toContain("HomePageContent");
+    expect(rootPage).toContain("SiteHeader");
+    expect(rootPage).toContain("SiteFooter");
+    expect(rootPage).not.toContain("RedirectPage");
+    expect(rootPage).not.toContain("httpEquiv=\"refresh\"");
+    expect(rootPage).not.toContain("to=\"/en/\"");
+  });
+
   test("keeps language switching on the current localized path", () => {
     const i18n = readFileSync(join(projectRoot, "lib", "i18n.ts"), "utf8");
     const header = readFileSync(join(projectRoot, "components", "site-header.tsx"), "utf8");

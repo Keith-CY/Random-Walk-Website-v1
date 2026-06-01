@@ -65,6 +65,7 @@ describe("visual tokens", () => {
     const evidenceMatrix = readFileSync(join(projectRoot, "components", "evidence-matrix.tsx"), "utf8");
     const placeholderImage = readFileSync(join(projectRoot, "components", "placeholder-image.tsx"), "utf8");
     const pageSources = [
+      "components/home-page-content.tsx",
       "app/[locale]/page.tsx",
       "app/[locale]/services/page.tsx",
       "app/[locale]/melix/page.tsx",
@@ -96,7 +97,7 @@ describe("visual tokens", () => {
 
   test("uses restrained tiered block-section markers instead of every-section ornaments", () => {
     const globals = readFileSync(join(projectRoot, "app", "globals.css"), "utf8");
-    const homePage = readFileSync(join(projectRoot, "app", "[locale]", "page.tsx"), "utf8");
+    const homePage = readFileSync(join(projectRoot, "components", "home-page-content.tsx"), "utf8");
     const servicesPage = readFileSync(join(projectRoot, "app", "[locale]", "services", "page.tsx"), "utf8");
     const institutionalGrid = readFileSync(join(projectRoot, "components", "institutional-grid.tsx"), "utf8");
     const evidenceMatrix = readFileSync(join(projectRoot, "components", "evidence-matrix.tsx"), "utf8");
