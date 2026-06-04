@@ -1,5 +1,14 @@
-import { RedirectPage } from "@/components/redirect-page";
+import { EnglishFooterDetailRoute } from "@/components/english-footer-detail-route";
+import { creationDetailPages } from "@/lib/footer-detail-pages";
+import { defaultLocale } from "@/lib/i18n";
+import { localizedMetadata } from "@/lib/metadata";
 
-export default function OneTokRedirect() {
-  return <RedirectPage to="/en/creations/1-tok/" label="Go to 1-TOK" />;
+export const dynamic = "force-static";
+
+const copy = creationDetailPages[defaultLocale]["1-tok"];
+
+export const metadata = localizedMetadata(defaultLocale, "/creations/1-tok", copy.title, copy.description);
+
+export default function OneTokAliasPage() {
+  return <EnglishFooterDetailRoute copy={copy} />;
 }

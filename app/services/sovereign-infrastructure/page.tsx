@@ -1,5 +1,14 @@
-import { RedirectPage } from "@/components/redirect-page";
+import { EnglishFooterDetailRoute } from "@/components/english-footer-detail-route";
+import { serviceDetailPages } from "@/lib/footer-detail-pages";
+import { defaultLocale } from "@/lib/i18n";
+import { localizedMetadata } from "@/lib/metadata";
 
-export default function SovereignInfrastructureRedirect() {
-  return <RedirectPage to="/en/services/sovereign-infrastructure/" label="Go to sovereign infrastructure" />;
+export const dynamic = "force-static";
+
+const copy = serviceDetailPages[defaultLocale]["sovereign-infrastructure"];
+
+export const metadata = localizedMetadata(defaultLocale, "/services/sovereign-infrastructure", copy.title, copy.description);
+
+export default function SovereignInfrastructureAliasPage() {
+  return <EnglishFooterDetailRoute copy={copy} />;
 }

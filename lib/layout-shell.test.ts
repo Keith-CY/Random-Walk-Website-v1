@@ -16,10 +16,12 @@ describe("localized page shell", () => {
 
   test("renders the root route as the English home page instead of a moved redirect", () => {
     const rootPage = readFileSync(join(projectRoot, "app", "page.tsx"), "utf8");
+    const shell = readFileSync(join(projectRoot, "components", "localized-page-shell.tsx"), "utf8");
 
     expect(rootPage).toContain("HomePageContent");
-    expect(rootPage).toContain("SiteHeader");
-    expect(rootPage).toContain("SiteFooter");
+    expect(rootPage).toContain("LocalizedPageShell");
+    expect(shell).toContain("SiteHeader");
+    expect(shell).toContain("SiteFooter");
     expect(rootPage).not.toContain("RedirectPage");
     expect(rootPage).not.toContain("httpEquiv=\"refresh\"");
     expect(rootPage).not.toContain("to=\"/en/\"");

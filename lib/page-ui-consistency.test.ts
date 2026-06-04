@@ -145,8 +145,8 @@ describe("page UI consistency", () => {
     expect(globals).toContain("color: var(--rw-text-inverse-primary)");
     expect(visualTabs).toContain("showVisual = true");
     expect(visualTabs).toContain("showVisual ? <PlaceholderImage");
-    expect(melixPage).toContain("RedirectPage");
-    expect(melixPage).toContain("/creations/melix/");
+    expect(melixPage).not.toContain("RedirectPage");
+    expect(melixPage).toContain("creationDetailPages");
     expect(workDetail).toContain("rw-metadata-strip");
     expect(workDetail).toContain("copy.detailLabels.disclosure");
     expect(noteDetail).toContain("rw-metadata-strip");

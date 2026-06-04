@@ -1,20 +1,21 @@
 import { notFound } from "next/navigation";
-import { RedirectPage } from "@/components/redirect-page";
-import { isLocale } from "@/lib/i18n";
+import { FooterDetailPage } from "@/components/footer-detail-page";
+import { creationDetailPages } from "@/lib/footer-detail-pages";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { localizedMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-static";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) notFound();
-  return {
-    title: "Melix | Random Walk",
-    description: "Melix has moved into Creations."
-  };
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) notFound();
+  const copy = creationDetailPages[rawLocale].melix;
+  return localizedMetadata(rawLocale, "/creations/melix", copy.title, copy.description);
 }
 
 export default async function MelixPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) notFound();
-  return <RedirectPage to={`/${locale}/creations/melix/`} label="Go to Melix" />;
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) notFound();
+  const locale = rawLocale as Locale;
+  return <FooterDetailPage copy={creationDetailPages[locale].melix} locale={locale} />;
 }

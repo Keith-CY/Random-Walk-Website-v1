@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import { describe, expect, test } from "bun:test";
 import {
   creationDetailSlugs,
@@ -19,6 +19,14 @@ const dynamicFooterRoutes = new Map<string, readonly string[]>([
 
 function readSource(path: string) {
   return readFileSync(join(projectRoot, ...path.split("/")), "utf8");
+}
+
+function appPageSources(dir = join(projectRoot, "app")): string[] {
+  return readdirSync(dir).flatMap((entry) => {
+    const fullPath = join(dir, entry);
+    if (statSync(fullPath).isDirectory()) return appPageSources(fullPath);
+    return entry === "page.tsx" ? [fullPath] : [];
+  });
 }
 
 function footerHrefs(locale: keyof typeof dictionaries) {
@@ -86,13 +94,16 @@ describe("footer links", () => {
     }
   });
 
-  test("keeps retired writing routes as explicit compatibility redirects", () => {
-    const articlesRedirect = readSource("app/[locale]/articles/page.tsx");
-    const melixRedirect = readSource("app/[locale]/melix/page.tsx");
+  test("renders compatibility routes directly instead of moved-page redirects", () => {
+    const rootHome = readSource("app/home/page.tsx");
+    const localizedHomePath = join(projectRoot, "app", "[locale]", "home", "page.tsx");
 
-    expect(articlesRedirect).toContain("RedirectPage");
-    expect(articlesRedirect).toContain("/notes/");
-    expect(melixRedirect).toContain("RedirectPage");
-    expect(melixRedirect).toContain("/creations/melix/");
+    expect(rootHome).toContain("HomePageContent");
+    expect(existsSync(localizedHomePath)).toBe(true);
+    expect(readFileSync(localizedHomePath, "utf8")).toContain("HomePageContent");
+
+    for (const path of appPageSources()) {
+      expect(readFileSync(path, "utf8"), relative(projectRoot, path)).not.toContain("RedirectPage");
+    }
   });
 });

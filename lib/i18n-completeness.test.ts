@@ -77,7 +77,6 @@ describe("i18n completeness", () => {
     ].map(readSource).join("\n");
     const pageSources = [
       "components/site-footer.tsx",
-      "components/redirect-page.tsx",
       "app/[locale]/company/page.tsx",
       "app/[locale]/services/page.tsx",
       "app/[locale]/security/page.tsx",
@@ -95,7 +94,7 @@ describe("i18n completeness", () => {
     expect(sources).toContain("copy.options.timeline");
     expect(sources).toContain("dictionary.footer");
     expect(sources).toContain("dictionary.legal.privacy");
-    expect(pageSources).toContain("redirectCopy");
+    expect(pageSources).not.toContain("redirectCopy");
 
     const hardcodedPhrases = [
       "What happens next",
