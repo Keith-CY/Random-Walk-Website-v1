@@ -812,12 +812,16 @@ select.rw-field {
 }
 
 .rw-creation-side {
-  grid-template-columns: minmax(132px, 0.48fr) minmax(0, 1fr);
-  align-items: center;
+  align-content: start;
 }
 
 .rw-creation-side .rw-image-frame {
-  min-height: 100%;
+  min-height: 0;
+  background: var(--rw-ivory);
+}
+
+.rw-creation-side .rw-image-frame img {
+  object-fit: contain;
 }
 
 .rw-work-ledger {
