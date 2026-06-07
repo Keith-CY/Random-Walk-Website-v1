@@ -15,8 +15,8 @@ function pngDimensions(path: string) {
 
 describe("generated visual asset registry", () => {
   test("registers the full temporary visual set with files on disk", () => {
-    expect(visualAssetIds).toHaveLength(34);
-    expect(new Set(visualAssetIds).size).toBe(34);
+    expect(visualAssetIds).toHaveLength(32);
+    expect(new Set(visualAssetIds).size).toBe(32);
 
     for (const id of visualAssetIds) {
       const asset = visualAssets[id];
@@ -34,9 +34,8 @@ describe("generated visual asset registry", () => {
 
       const { width, height } = pngDimensions(filePath);
       const aspectRatio = width / height;
-      const isWorkflowTrack = asset.src.includes("workflow-track");
       expect(aspectRatio).toBeGreaterThan(1.49);
-      expect(aspectRatio).toBeLessThan(isWorkflowTrack ? 5.1 : asset.src.startsWith("images/product-covers/") ? 1.85 : 1.61);
+      expect(aspectRatio).toBeLessThan(asset.src.startsWith("images/product-covers/") ? 1.85 : 1.61);
     }
   });
 
@@ -45,8 +44,6 @@ describe("generated visual asset registry", () => {
       "home-constraint-matrix-board",
       "home-evidence-archive-scene",
       "home-technical-heritage-plate",
-      "home-melix-workflow-track",
-      "home-services-workflow-track",
       "services-deployment-topology",
       "services-industry-patterns",
       "contact-first-review-tray",
@@ -91,24 +88,16 @@ describe("generated visual asset registry", () => {
     }
   });
 
-  test("uses the single-object neo-engraved direction for non-workflow placeholders", () => {
+  test("uses the single-object neo-engraved direction for every non-media placeholder", () => {
     const nonMediaPlaceholderIds = visualAssetIds.filter((id) => {
       const src = visualAssets[id].src;
-      return !src.includes("workflow-track") && !src.startsWith("photos/") && !src.startsWith("images/product-covers/") && !src.startsWith("http://") && !src.startsWith("https://");
+      return !src.startsWith("photos/") && !src.startsWith("images/product-covers/") && !src.startsWith("http://") && !src.startsWith("https://");
     });
 
     for (const id of nonMediaPlaceholderIds) {
       const asset = visualAssets[id];
       expect(`${asset.alt} ${asset.caption}`).toMatch(/neo-engraved/i);
       expect(`${asset.alt} ${asset.caption}`).not.toMatch(/scene|composite|dashboard|full building|city street|workflow illustration/i);
-    }
-  });
-
-  test("uses flat silicon-trace diagrams for workflow rail placeholders", () => {
-    for (const id of ["home-melix-workflow-track", "home-services-workflow-track"] as const) {
-      const asset = visualAssets[id];
-      expect(`${asset.alt} ${asset.caption}`).toMatch(/flat|silicon-trace|workflow trace/i);
-      expect(`${asset.alt} ${asset.caption}`).not.toMatch(/neo-engraved|classical|stone/i);
     }
   });
 
