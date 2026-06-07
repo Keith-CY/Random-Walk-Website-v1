@@ -29,6 +29,15 @@ const homeServiceAssetIds = [
   "services-support"
 ] as const;
 
+const creationAssetIds = {
+  melix: "home-melix-product-panel",
+  "distributed-paradigm": "creation-distributed-paradigm-cover",
+  neuron: "creation-neuron-cover",
+  "fiber-link": "creation-fiber-link-cover",
+  "utxo-data": "creation-utxo-data-cover",
+  "1-tok": "creation-1-tok-cover"
+} as const;
+
 export function HomePageContent({ locale }: { locale: Locale }) {
   const dictionary = getDictionary(locale);
   const copy = homeCopy[locale];
@@ -39,15 +48,16 @@ export function HomePageContent({ locale }: { locale: Locale }) {
   const constraints = homeConstraintItems[locale];
   const workflowVisualItems = homeWorkflowVisualItems[locale];
   const deliverablesLabel = workPageCopy[locale].deliverablesLabel;
+  const proofItems = dictionary.common.proofLine.split(" · ");
   const featuredCreations = creationDetailSlugs.slice(0, 3).map((slug) => ({ slug, copy: creationDetailPages[locale][slug] }));
   const featuredWork = getContentEntries("work", locale).slice(0, 3);
   const latestNotes = getContentEntries("notes", locale).slice(0, 2);
 
   return (
     <main>
-      <section className="rw-section rw-section-major">
+      <section className="rw-section rw-section-major rw-home-hero">
         <div className="rw-container rw-grid items-center">
-          <div className="col-span-12 lg:col-span-6">
+          <div className="col-span-12 lg:col-span-7">
             <p className="rw-eyebrow">{copy.hero.eyebrow}</p>
             <h1 className="rw-display mt-5">{copy.hero.title}</h1>
             <p className="rw-body-large mt-6 max-w-2xl">{copy.hero.description}</p>
@@ -55,9 +65,8 @@ export function HomePageContent({ locale }: { locale: Locale }) {
               <Link className="rw-button rw-button-primary" href={localizePath(locale, "/contact")}>{dictionary.cta.primary}</Link>
               <Link className="rw-button rw-button-secondary" href={localizePath(locale, "/creations")}>{dictionary.nav.creations}</Link>
             </div>
-            <p className="rw-caption mt-6">{dictionary.common.proofLine}</p>
           </div>
-          <div className="col-span-12 lg:col-span-6">
+          <div className="col-span-12 lg:col-span-5">
             <PlaceholderImage
               assetId="home-hero-local-ai-boundary"
               label="Placeholder: classical figure and judgement visual"
@@ -66,12 +75,20 @@ export function HomePageContent({ locale }: { locale: Locale }) {
               priority
             />
           </div>
-          <div className="col-span-12">
-            <div className="rw-visual-strip mt-12">
-              <PlaceholderImage assetId="home-evidence-archive-scene" ratio="16 / 9" />
-              <PlaceholderImage assetId="services-deployment-topology" ratio="16 / 9" />
-              <PlaceholderImage assetId="home-first-review-reference" ratio="16 / 9" variant="paper" />
-            </div>
+        </div>
+      </section>
+
+      <section className="rw-section rw-section-tight rw-home-proof">
+        <div className="rw-container">
+          <div className="rw-proof-grid" aria-label={dictionary.common.proofLine}>
+            {proofItems.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+          <div className="rw-visual-strip mt-7">
+            <PlaceholderImage assetId="home-evidence-archive-scene" ratio="16 / 9" />
+            <PlaceholderImage assetId="services-deployment-topology" ratio="16 / 9" />
+            <PlaceholderImage assetId="home-first-review-reference" ratio="16 / 9" variant="paper" />
           </div>
         </div>
       </section>
@@ -79,7 +96,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
       <section className="rw-section rw-section-supporting">
         <div className="rw-container rw-grid">
           <div className="col-span-12 lg:col-span-5">
-            <SectionHeading copy={copy.constraint} />
+            <SectionHeading copy={copy.constraint} showEyebrow={false} />
             <div className="mt-8">
               <PlaceholderImage assetId="home-constraint-matrix-board" ratio="16 / 10" />
             </div>
@@ -100,10 +117,10 @@ export function HomePageContent({ locale }: { locale: Locale }) {
       <section className="rw-section rw-section-supporting">
         <div className="rw-container">
           <div className="max-w-4xl">
-            <SectionHeading copy={copy.workflow} />
+            <SectionHeading copy={copy.workflow} showEyebrow={false} />
           </div>
           <div className="mt-10">
-            <VisualTabs items={workflowVisualItems} />
+            <VisualTabs items={workflowVisualItems} showEyebrow={false} />
           </div>
           <WorkflowStepper className="mt-10" steps={chain} />
         </div>
@@ -111,44 +128,49 @@ export function HomePageContent({ locale }: { locale: Locale }) {
 
       <section className="rw-section rw-section-lined">
         <div className="rw-container">
-          <div className="rw-section-header-row">
-            <SectionHeading copy={creationsIndexPages[locale]} />
+          <div className="rw-home-section-header">
+            <SectionHeading copy={creationsIndexPages[locale]} showEyebrow={false} />
             <Link className="rw-text-link" href={localizePath(locale, "/creations")}>{dictionary.common.readMore} -&gt;</Link>
           </div>
-          <InstitutionalGrid columns={3} className="mt-10">
-            {featuredCreations.map(({ slug, copy: creation }) => (
-              <InstitutionalCell key={slug}>
-                {creation.statusTag ? <p className="rw-status-tag">{creation.statusTag}</p> : null}
-                <h3 className="rw-subheading mt-4">{creation.title}</h3>
-                <p className="rw-body mt-4">{creation.description}</p>
-                <p className="rw-caption mt-5">{creation.taxonomy.slice(0, 3).join(" / ")}</p>
-                <Link className="rw-text-link mt-5" href={localizePath(locale, `/creations/${slug}`)}>{dictionary.common.readMore} -&gt;</Link>
-              </InstitutionalCell>
+          <div className="rw-creation-mosaic mt-10">
+            {featuredCreations.map(({ slug, copy: creation }, index) => (
+              <article className={index === 0 ? "rw-creation-feature" : "rw-creation-side"} key={slug}>
+                <PlaceholderImage assetId={creationAssetIds[slug]} ratio={index === 0 ? "16 / 9" : "16 / 10"} variant="paper" />
+                <div>
+                  {creation.statusTag ? <p className="rw-status-tag">{creation.statusTag}</p> : null}
+                  <h3 className="rw-subheading mt-4">{creation.title}</h3>
+                  <p className="rw-body mt-4">{creation.description}</p>
+                  <p className="rw-caption mt-5">{creation.taxonomy.slice(0, 3).join(" / ")}</p>
+                  <Link className="rw-text-link mt-5" href={localizePath(locale, `/creations/${slug}`)}>{dictionary.common.readMore} -&gt;</Link>
+                </div>
+              </article>
             ))}
-          </InstitutionalGrid>
+          </div>
         </div>
       </section>
 
       <section className="rw-section rw-section-supporting">
         <div className="rw-container">
-          <div className="rw-section-header-row">
-            <SectionHeading copy={workPageCopy[locale].hero} />
+          <div className="rw-home-section-header">
+            <SectionHeading copy={workPageCopy[locale].hero} showEyebrow={false} />
             <Link className="rw-text-link" href={localizePath(locale, "/work")}>{dictionary.common.readMore} -&gt;</Link>
           </div>
-          <InstitutionalGrid columns={3} className="mt-10">
+          <div className="rw-work-ledger mt-10">
             {featuredWork.map((entry) => (
-              <InstitutionalCell key={entry.slug}>
+              <article className="rw-work-ledger-row" key={entry.slug}>
                 <p className="rw-caption">{getString(entry.frontmatter, "industry")}</p>
-                <h3 className="rw-subheading mt-4">{getString(entry.frontmatter, "title")}</h3>
-                <p className="rw-body mt-4">{getString(entry.frontmatter, "summary")}</p>
-                <div className="rw-card-meta-grid mt-5">
+                <div>
+                  <h3 className="rw-subheading">{getString(entry.frontmatter, "title")}</h3>
+                  <p className="rw-body mt-3">{getString(entry.frontmatter, "summary")}</p>
+                </div>
+                <div className="rw-card-meta-grid">
                   <span>{getStringArray(entry.frontmatter, "deployment_modes").slice(0, 1).join(" / ")}</span>
                   <span>{getStringArray(entry.frontmatter, "deliverables").slice(0, 1).join(" / ")}</span>
+                  <Link className="rw-text-link mt-4" href={localizePath(locale, `/work/${entry.slug}`)}>{dictionary.common.readMore} -&gt;</Link>
                 </div>
-                <Link className="rw-text-link mt-5" href={localizePath(locale, `/work/${entry.slug}`)}>{dictionary.common.readMore} -&gt;</Link>
-              </InstitutionalCell>
+              </article>
             ))}
-          </InstitutionalGrid>
+          </div>
         </div>
       </section>
 
@@ -176,26 +198,26 @@ export function HomePageContent({ locale }: { locale: Locale }) {
 
       <section className="rw-section rw-section-lined">
         <div className="rw-container">
-          <SectionHeading copy={copy.services} />
-          <InstitutionalGrid columns={3} className="mt-10">
+          <SectionHeading copy={copy.services} showEyebrow={false} />
+          <div className="rw-service-bento mt-10">
             {services.map((service, index) => (
-              <InstitutionalCell key={service.title}>
+              <article className={index === 0 ? "rw-service-bento-feature" : ""} key={service.title}>
                 <div className="rw-card-media">
-                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio="16 / 8" variant="paper" />
+                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio={index === 0 ? "16 / 9" : "16 / 8"} variant="paper" />
                 </div>
                 <h3 className="rw-subheading">{service.title}</h3>
                 <p className="rw-body mt-4">{service.description}</p>
-                <p className="rw-caption mt-5">{deliverablesLabel}: {service.deliverables.slice(0, 3).join(" · ")}</p>
-              </InstitutionalCell>
+                <p className="rw-caption mt-5">{deliverablesLabel}: {service.deliverables.slice(0, 3).join(" / ")}</p>
+              </article>
             ))}
-          </InstitutionalGrid>
+          </div>
         </div>
       </section>
 
       <section className="rw-section rw-section-lined">
         <div className="rw-container rw-grid">
           <div className="col-span-12 lg:col-span-5">
-            <SectionHeading copy={copy.security} />
+            <SectionHeading copy={copy.security} showEyebrow={false} />
             <div className="mt-8">
               <PlaceholderImage assetId="security-access-control-diagram" ratio="16 / 10" />
             </div>
@@ -208,7 +230,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
 
       <section className="rw-section rw-section-supporting">
         <div className="rw-container">
-          <SectionHeading copy={copy.heritage} />
+          <SectionHeading copy={copy.heritage} showEyebrow={false} />
           <div className="mt-10">
             <PlaceholderImage assetId="home-technical-heritage-plate" ratio="16 / 7" variant="paper" />
           </div>
@@ -218,8 +240,8 @@ export function HomePageContent({ locale }: { locale: Locale }) {
 
       <section className="rw-section rw-section-lined">
         <div className="rw-container">
-          <div className="rw-section-header-row">
-            <SectionHeading copy={notesPageCopy[locale].hero} />
+          <div className="rw-home-section-header">
+            <SectionHeading copy={notesPageCopy[locale].hero} showEyebrow={false} />
             <Link className="rw-text-link" href={localizePath(locale, "/notes")}>{dictionary.common.readMore} -&gt;</Link>
           </div>
           <InstitutionalGrid columns={2} className="mt-10">

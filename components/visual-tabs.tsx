@@ -16,9 +16,10 @@ type VisualTabsProps = {
   items: VisualTabItem[];
   variant?: "paper" | "ink";
   showVisual?: boolean;
+  showEyebrow?: boolean;
 };
 
-export function VisualTabs({ items, variant = "paper", showVisual = true }: VisualTabsProps) {
+export function VisualTabs({ items, variant = "paper", showVisual = true, showEyebrow = true }: VisualTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = items[activeIndex] ?? items[0];
   const isInk = variant === "ink";
@@ -69,8 +70,8 @@ export function VisualTabs({ items, variant = "paper", showVisual = true }: Visu
         role="tabpanel"
       >
         <div>
-          {active.eyebrow ? <p className="rw-eyebrow">{active.eyebrow}</p> : null}
-          <h3 className="rw-subheading mt-3">{active.title}</h3>
+          {showEyebrow && active.eyebrow ? <p className="rw-eyebrow">{active.eyebrow}</p> : null}
+          <h3 className={`rw-subheading ${showEyebrow && active.eyebrow ? "mt-3" : ""}`}>{active.title}</h3>
           <p className="rw-body mt-4">{active.description}</p>
         </div>
         {showVisual ? <PlaceholderImage assetId={active.assetId} variant={isInk ? "ink" : "paper"} /> : null}

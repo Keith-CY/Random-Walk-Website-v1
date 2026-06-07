@@ -49,7 +49,7 @@ export const homeCopy: Localized<{
     hero: {
       eyebrow: "Local AI Infrastructure",
       title: "Controlled infrastructure for private AI systems.",
-      description: "Random Walk is a private AI technology studio for professional teams, independent studios, and companies that need model workflows to stay inside their own security, data, and deployment boundaries."
+      description: "We build private AI workflows that keep data, models, evaluation, and deployment inside customer-controlled boundaries."
     },
     constraint: {
       eyebrow: "The boundary",
@@ -91,7 +91,7 @@ export const homeCopy: Localized<{
         "hero": {
           "eyebrow": "本地 AI 基础设施",
           "title": "为私有 AI 系统而设的可控基础设施。",
-          "description": "Random Walk 是一家私有 AI 技术工作室，服务于专业团队、独立工作室，以及需要将模型工作流留在自身安全、数据与部署边界之内的公司。"
+          "description": "我们构建私有 AI 工作流，让数据、模型、评估与部署始终留在客户可控边界之内。"
         },
         "constraint": {
           "eyebrow": "边界",
@@ -133,7 +133,7 @@ export const homeCopy: Localized<{
         "hero": {
           "eyebrow": "ローカル AI インフラストラクチャ",
           "title": "プライベート AI システムのための、制御されたインフラストラクチャ。",
-          "description": "Random Walk は、プロフェッショナルチーム、独立系スタジオ、そしてモデルワークフローを自社のセキュリティ、データ、デプロイ境界の内側に保つ必要がある企業のための、プライベート AI テクノロジースタジオです。"
+          "description": "データ、モデル、評価、デプロイを顧客管理の境界内に保つ、プライベート AI ワークフローを構築します。"
         },
         "constraint": {
           "eyebrow": "境界",
@@ -175,7 +175,7 @@ export const homeCopy: Localized<{
         "hero": {
           "eyebrow": "로컬 AI 인프라스트럭처",
           "title": "프라이빗 AI 시스템을 위한 통제된 인프라스트럭처.",
-          "description": "Random Walk는 전문 팀, 독립 스튜디오, 그리고 모델 워크플로를 자체 보안, 데이터, 배포 경계 안에 유지해야 하는 회사를 위한 프라이빗 AI 기술 스튜디오입니다."
+          "description": "데이터, 모델, 평가, 배포를 고객이 통제하는 경계 안에 두는 프라이빗 AI 워크플로를 구축합니다."
         },
         "constraint": {
           "eyebrow": "경계",
@@ -2212,7 +2212,7 @@ export const workPageCopy: Localized<{
         "hero": {
           "eyebrow": "作品",
           "title": "有边界、有证据的私有 AI 项目。",
-          "description": "当模型工程从真实约束出发——敏感数据、清晰的模型路径、受控部署、评估需求，以及不应被简单交给通用平台的工作流——Random Walk 正是合适的选择。"
+          "description": "当模型工程从真实约束出发，例如敏感数据、清晰的模型路径、受控部署、评估需求，以及不应被简单交给通用平台的工作流，Random Walk 正是合适的选择。"
         },
         "featured": {
           "eyebrow": "精选作品",
@@ -2596,8 +2596,8 @@ const finalPositioningCopy = {
   en: {
     homeHero: {
       eyebrow: "Local AI Infrastructure",
-      title: "Private AI systems for teams that need control.",
-      description: "Random Walk designs and implements local AI infrastructure, private data workflows, and customer-controlled deployments for small teams, studios, and companies working with sensitive systems."
+      title: "Private AI systems under control.",
+      description: "Local infrastructure, private data workflows, and customer-controlled deployments for teams working with sensitive systems."
     },
     homeConstraint: {
       eyebrow: "Technical focus",
@@ -2641,7 +2641,7 @@ const finalPositioningCopy = {
     }
   },
   zh: {
-    homeHero: { eyebrow: "本地 AI 基础设施", title: "为需要掌控边界的团队构建私有 AI 系统。", description: "Random Walk 为小型团队、专业工作室和需要掌控数据边界的公司，构建运行在自己环境中的私有 AI 系统、数据工作流与客户可控部署。" },
+    homeHero: { eyebrow: "本地 AI 基础设施", title: "可控边界内的私有 AI 系统。", description: "为处理敏感系统的团队构建本地基础设施、私有数据工作流与客户可控部署。" },
     homeConstraint: { eyebrow: "技术焦点", title: "本地 AI、私有数据与实施支持。", description: "我们贴近真实实施面开展工作：架构、原型、部署、评审与交接。" },
     homeServices: { eyebrow: "服务", title: "面向受约束系统的能力领域。", description: "私有 AI 系统、本地数据基础设施、部署架构、隐私边界，以及客户可控基础设施。" },
     homeFinal: { eyebrow: "下一步", title: "带来一个有约束的系统。", description: "如果你正在处理私有数据、本地基础设施、模型工作流或部署边界，请发送项目上下文。我们会判断 Random Walk 是否适合参与。" },
@@ -2652,7 +2652,7 @@ const finalPositioningCopy = {
     contactIntake: { eyebrow: "项目上下文", title: "发送边界，不要发送机密材料。", description: "有用的上下文包括工作流、数据类别、当前技术栈、部署目标、评估需求、支持方式和时间计划。" }
   },
   ja: {
-    homeHero: { eyebrow: "ローカル AI 基盤", title: "制御が必要なチームのためのプライベート AI システム。", description: "Random Walk は、小規模チーム、専門スタジオ、データ境界を管理する必要がある企業に向けて、自社環境で動くプライベート AI システム、データワークフロー、顧客管理型デプロイを設計・実装します。" },
+    homeHero: { eyebrow: "ローカル AI 基盤", title: "制御下に置くプライベート AI システム。", description: "機密性の高いシステムに向けた、ローカル基盤、プライベートデータワークフロー、顧客管理型デプロイ。" },
     homeConstraint: { eyebrow: "技術フォーカス", title: "ローカル AI、プライベートデータ、実装支援。", description: "私たちは実装面に近い場所で作業します。アーキテクチャ、プロトタイプ、デプロイ、レビュー、引き継ぎです。" },
     homeServices: { eyebrow: "サービス", title: "制約のあるシステムのための能力領域。", description: "プライベート AI システム、ローカルデータ基盤、デプロイ設計、プライバシー境界、顧客管理型インフラ。" },
     homeFinal: { eyebrow: "次のステップ", title: "制約のあるシステムを持ち込む。", description: "プライベートデータ、ローカル基盤、モデルワークフロー、デプロイ境界に取り組んでいる場合は、その文脈を共有してください。Random Walk が適しているか確認します。" },
@@ -2663,7 +2663,7 @@ const finalPositioningCopy = {
     contactIntake: { eyebrow: "プロジェクト文脈", title: "機密資料ではなく、境界を共有する。", description: "有用な文脈は、ワークフロー、データ分類、現在のスタック、デプロイ先、評価ニーズ、支援形態、タイムラインです。" }
   },
   ko: {
-    homeHero: { eyebrow: "로컬 AI 인프라", title: "제어가 필요한 팀을 위한 프라이빗 AI 시스템.", description: "Random Walk는 소규모 팀, 전문 스튜디오, 데이터 경계를 통제해야 하는 회사를 위해 자체 환경에서 작동하는 프라이빗 AI 시스템, 데이터 워크플로, 고객 제어 배포를 설계하고 구현합니다." },
+    homeHero: { eyebrow: "로컬 AI 인프라", title: "통제 경계 안의 프라이빗 AI 시스템.", description: "민감한 시스템을 다루는 팀을 위한 로컬 인프라, 프라이빗 데이터 워크플로, 고객 제어 배포." },
     homeConstraint: { eyebrow: "기술 초점", title: "로컬 AI, 프라이빗 데이터, 구현 지원.", description: "우리는 구현 표면 가까이에서 일합니다. 아키텍처, 프로토타입, 배포, 리뷰, 인수인계입니다." },
     homeServices: { eyebrow: "서비스", title: "제약이 있는 시스템을 위한 역량 영역.", description: "프라이빗 AI 시스템, 로컬 데이터 인프라, 배포 아키텍처, 프라이버시 경계, 고객 제어 인프라." },
     homeFinal: { eyebrow: "다음 단계", title: "제약이 있는 시스템을 가져오세요.", description: "프라이빗 데이터, 로컬 인프라, 모델 워크플로, 배포 경계를 다루고 있다면 맥락을 보내 주세요. Random Walk가 해당 작업에 적합한지 검토합니다." },
