@@ -135,7 +135,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
           <div className="rw-creation-mosaic mt-10">
             {featuredCreations.map(({ slug, copy: creation }, index) => (
               <article className={index === 0 ? "rw-creation-feature" : "rw-creation-side"} key={slug}>
-                <PlaceholderImage assetId={creationAssetIds[slug]} ratio={index === 0 ? "16 / 9" : "16 / 10"} variant="paper" />
+                <PlaceholderImage assetId={creationAssetIds[slug]} ratio={index === 0 ? "3 / 2" : "16 / 10"} variant="paper" />
                 <div>
                   {creation.statusTag ? <p className="rw-status-tag">{creation.statusTag}</p> : null}
                   <h3 className="rw-subheading mt-4">{creation.title}</h3>

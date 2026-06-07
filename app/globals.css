@@ -800,9 +800,11 @@ select.rw-field {
   padding: 18px;
 }
 
-.rw-creation-feature {
+.rw-creation-mosaic .rw-creation-feature {
   grid-row: span 2;
   align-content: start;
+  align-self: start;
+  min-height: auto;
 }
 
 .rw-creation-feature .rw-subheading {
@@ -1931,7 +1933,7 @@ select.rw-field {
       inset 0 -0.5px 0 rgb(0 0 0 / 5%);
   }
 
-  .rw-creation-feature {
+  .rw-creation-mosaic .rw-creation-feature {
     grid-row: auto;
   }
 
