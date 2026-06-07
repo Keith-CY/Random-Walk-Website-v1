@@ -179,11 +179,13 @@ describe("page UI consistency", () => {
     expect(contactPage).not.toContain("company-team-room-photo");
   });
 
-  test("adds richer image cadence and restrained motion without new dependencies", () => {
+  test("adds richer image cadence and Magic UI beam motion", () => {
     const globals = readSource("app/globals.css");
+    const animatedBeam = readSource("components/ui/animated-beam.tsx");
     const homePage = readSource("components/home-page-content.tsx");
     const layout = readSource("app/[locale]/layout.tsx");
     const motionController = readSource("components/motion-controller.tsx");
+    const workflowBeamVisual = readSource("components/workflow-beam-visual.tsx");
     const servicesPage = readSource("app/[locale]/services/page.tsx");
     const securityPage = readSource("app/[locale]/security/page.tsx");
     const contactPage = readSource("app/[locale]/contact/page.tsx");
@@ -205,6 +207,9 @@ describe("page UI consistency", () => {
     expect(contactPage).toContain("contact-first-review-tray");
     expect(contactPage).toContain("rw-contact-review-band");
     expect(visualAssets).toContain("ChatGPT generated placeholder");
+    expect(animatedBeam).toContain("motion/react");
+    expect(animatedBeam).toContain("motion.linearGradient");
+    expect(workflowBeamVisual).toContain("@phosphor-icons/react");
     expect(layout).toContain("<MotionController />");
     expect(motionController).toContain("IntersectionObserver");
     expect(motionController).toContain("prefers-reduced-motion: reduce");

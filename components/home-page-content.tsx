@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { EvidenceMatrix } from "@/components/evidence-matrix";
 import { InstitutionalCell, InstitutionalGrid } from "@/components/institutional-grid";
 import { PlaceholderImage } from "@/components/placeholder-image";
 import { SectionHeading } from "@/components/section-heading";
 import { VisualTabs } from "@/components/visual-tabs";
+import { WorkflowBeamVisual } from "@/components/workflow-beam-visual";
 import { WorkflowStepper } from "@/components/workflow-stepper";
 import { getContentEntries, getString, getStringArray } from "@/lib/content";
 import { creationDetailPages, creationDetailSlugs, creationsIndexPages } from "@/lib/footer-detail-pages";
@@ -20,7 +20,6 @@ import {
   notesPageCopy,
   workPageCopy
 } from "@/lib/site-data";
-import { visualAssets, type VisualAssetId } from "@/lib/visual-assets";
 
 const homeServiceAssetIds = [
   "services-dataset-package",
@@ -40,8 +39,7 @@ const creationAssetIds = {
   "1-tok": "creation-1-tok-cover"
 } as const;
 
-function FeaturedWorkflowRail({ assetId, label, stages }: { assetId: VisualAssetId; label: string; stages: string[] }) {
-  const asset = visualAssets[assetId];
+function FeaturedWorkflowRail({ label, stages, variant }: { label: string; stages: string[]; variant: "product" | "service" }) {
   const visibleStages = stages.slice(0, 3);
 
   return (
@@ -50,12 +48,7 @@ function FeaturedWorkflowRail({ assetId, label, stages }: { assetId: VisualAsset
         <span>{label}</span>
       </div>
       <figure className="rw-feature-workflow-art">
-        <Image
-          src={`/${asset.src}`}
-          alt={asset.alt}
-          fill
-          sizes="(max-width: 900px) 100vw, 42vw"
-        />
+        <WorkflowBeamVisual variant={variant} />
       </figure>
       <ol className="rw-feature-workflow-track">
         {visibleStages.map((stage, index) => (
@@ -174,7 +167,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
                   {index === 0 ? null : <p className="rw-caption mt-5">{creation.taxonomy.slice(0, 3).join(" / ")}</p>}
                   <Link className="rw-text-link mt-5" href={localizePath(locale, `/creations/${slug}`)}>{dictionary.common.readMore} -&gt;</Link>
                 </div>
-                {index === 0 ? <FeaturedWorkflowRail assetId="home-melix-workflow-track" label={creation.taxonomy.slice(0, 3).join(" / ")} stages={creation.taxonomy} /> : null}
+                {index === 0 ? <FeaturedWorkflowRail label={creation.taxonomy.slice(0, 3).join(" / ")} stages={creation.taxonomy} variant="product" /> : null}
               </article>
             ))}
           </div>
@@ -240,7 +233,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
                 <h3 className="rw-subheading">{service.title}</h3>
                 <p className="rw-body mt-4">{service.description}</p>
                 <p className="rw-caption mt-5">{deliverablesLabel}: {service.deliverables.slice(0, 3).join(" / ")}</p>
-                {index === 0 ? <FeaturedWorkflowRail assetId="home-services-workflow-track" label={deliverablesLabel} stages={service.deliverables} /> : null}
+                {index === 0 ? <FeaturedWorkflowRail label={deliverablesLabel} stages={service.deliverables} variant="service" /> : null}
               </article>
             ))}
           </div>
