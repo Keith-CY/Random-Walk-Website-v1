@@ -822,6 +822,8 @@ select.rw-field {
 
 .rw-creation-side .rw-image-frame img {
   object-fit: contain;
+  object-position: center;
+  padding: clamp(10px, 1.1vw, 16px);
 }
 
 .rw-work-ledger {
