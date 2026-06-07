@@ -29,6 +29,13 @@ export const visualAssets = {
     caption: "Product cover asset: Melix Apple Silicon",
     replacementBrief: "Replace with an updated approved Melix product cover or screenshot when the product surface changes."
   },
+  "home-melix-workflow-track": {
+    id: "home-melix-workflow-track",
+    src: "placeholders/home-melix-workflow-track.png",
+    alt: "ChatGPT generated placeholder flat local model workflow trace for runtime, benchmark evidence, and private deployment",
+    caption: "Temporary silicon-trace asset: local model workflow",
+    replacementBrief: "Replace with an approved abstract workflow trace for local runtime, benchmark evidence, and private deployment without readable metrics, logos, or private UI content."
+  },
   "creation-1-tok-cover": {
     id: "creation-1-tok-cover",
     src: "images/product-covers/1-tok.png",
@@ -77,6 +84,13 @@ export const visualAssets = {
     alt: "ChatGPT generated placeholder Titan-inspired heavy neo-engraved modular dataset package block image",
     caption: "Temporary neo-engraved asset: modular dataset package",
     replacementBrief: "Replace with a real anonymized dataset package photo or approved single-object package visual without customer identifiers."
+  },
+  "home-services-workflow-track": {
+    id: "home-services-workflow-track",
+    src: "placeholders/home-services-workflow-track.png",
+    alt: "ChatGPT generated placeholder flat private delivery workflow trace for package, adapter evidence, and deployment runbook",
+    caption: "Temporary silicon-trace asset: dataset delivery workflow",
+    replacementBrief: "Replace with an approved abstract delivery workflow trace for dataset packaging, adapter evidence, and deployment handoff without readable customer identifiers or fake metrics."
   },
   "services-lora-adapter": {
     id: "services-lora-adapter",
