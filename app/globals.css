@@ -1097,15 +1097,15 @@ select.rw-field {
 
 .rw-presence-feature {
   display: grid;
-  grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 18px;
   align-content: start;
   align-items: start;
   padding: 18px;
 }
 
 .rw-presence-feature .rw-card-media {
-  margin-bottom: 0;
+  margin: -4px -4px 0;
 }
 
 .rw-presence-proof-list {

@@ -192,7 +192,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
           <div className="rw-presence-showcase mt-10">
             <article className="rw-presence-feature">
               <div className="rw-card-media">
-                <PlaceholderImage assetId={featuredPresence.assetId} ratio="4 / 3" variant="paper" />
+                <PlaceholderImage assetId={featuredPresence.assetId} ratio="16 / 10" variant="paper" />
               </div>
               <div>
                 <p className="rw-eyebrow">{eventsCopy.featuredLabel}</p>
