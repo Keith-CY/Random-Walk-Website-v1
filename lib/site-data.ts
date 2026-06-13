@@ -35,6 +35,20 @@ export type VisualItem = {
   assetId: VisualAssetId;
 };
 
+export type EventPresence = {
+  slug: string;
+  title: string;
+  role: string;
+  date: string;
+  location: string;
+  summary: string;
+  pullLine: string;
+  tags: string[];
+  assetId: VisualAssetId;
+  href: string;
+  linkLabel: string;
+};
+
 export const homeCopy: Localized<{
   hero: PageCopy;
   constraint: PageCopy;
@@ -212,7 +226,488 @@ export const homeCopy: Localized<{
           "title": "하나의 명확한 모델 워크플로에서 시작합니다.",
           "description": "데이터 카테고리, 대상 모델, 배포 경계, 평가 요구사항, 기대 산출물을 공유해 주세요. 프로젝트가 적합한지 판단하겠습니다."
         }
-      }
+  }
+};
+
+export const eventsPageCopy: Localized<{
+  home: PageCopy;
+  hero: PageCopy;
+  featuredLabel: string;
+  proofLabel: string;
+  archive: PageCopy;
+  viewAllLabel: string;
+  inviteLabel: string;
+  eventLinkLabel: string;
+}> = {
+  en: {
+    home: {
+      eyebrow: "Public presence",
+      title: "Where Random Walk meets people.",
+      description: "Talks, panels, meetups, and community rooms where Random Walk brings its work into conversation with builders, customers, and technical communities."
+    },
+    hero: {
+      eyebrow: "Events",
+      title: "Where Random Walk meets people.",
+      description: "Talks, panels, meetups, and community rooms where we test ideas in public, learn from real operators, and stay close to the people building with AI."
+    },
+    featuredLabel: "Featured presence",
+    proofLabel: "Recent rooms",
+    archive: {
+      eyebrow: "Archive",
+      title: "Public appearances, recordings, and community rooms.",
+      description: "A record of places where Random Walk has joined the conversation: conferences, panels, meetups, and recorded sessions."
+    },
+    viewAllLabel: "View all events",
+    inviteLabel: "Invite us to speak",
+    eventLinkLabel: "Event link"
+  },
+  zh: {
+    home: {
+      eyebrow: "公开交流",
+      title: "Random Walk 与人相遇的地方。",
+      description: "演讲、圆桌、meetup 与社区现场：Random Walk 在这些地方把正在做的工作带入真实对话。"
+    },
+    hero: {
+      eyebrow: "活动",
+      title: "Random Walk 与人相遇的地方。",
+      description: "演讲、圆桌、meetup 与社区现场，让我们在公开场合验证想法，向真实使用者学习，并靠近正在用 AI 构建产品的人。"
+    },
+    featuredLabel: "重点活动",
+    proofLabel: "近期现场",
+    archive: {
+      eyebrow: "记录",
+      title: "公开亮相、录制内容与社区现场。",
+      description: "这里记录 Random Walk 参与过的会议、圆桌、meetup 与公开录制。"
+    },
+    viewAllLabel: "查看全部活动",
+    inviteLabel: "邀请我们分享",
+    eventLinkLabel: "活动链接"
+  },
+  ja: {
+    home: {
+      eyebrow: "Public presence",
+      title: "Random Walk が人と出会う場所。",
+      description: "トーク、パネル、meetup、コミュニティの場。Random Walk はそこで、取り組みを実際の会話へ持ち込みます。"
+    },
+    hero: {
+      eyebrow: "Events",
+      title: "Random Walk が人と出会う場所。",
+      description: "トーク、パネル、meetup、コミュニティの場を通じて、アイデアを公開の場で確かめ、実際の運用者から学び、AI でつくる人たちに近づきます。"
+    },
+    featuredLabel: "Featured presence",
+    proofLabel: "Recent rooms",
+    archive: {
+      eyebrow: "Archive",
+      title: "登壇、録画、コミュニティ参加の記録。",
+      description: "Random Walk が会話に参加してきたカンファレンス、パネル、meetup、録画セッションの記録です。"
+    },
+    viewAllLabel: "すべてのイベントを見る",
+    inviteLabel: "登壇を相談する",
+    eventLinkLabel: "イベントリンク"
+  },
+  ko: {
+    home: {
+      eyebrow: "Public presence",
+      title: "Random Walk가 사람들과 만나는 곳.",
+      description: "토크, 패널, meetup, 커뮤니티 현장에서 Random Walk는 진행 중인 작업을 실제 대화로 가져갑니다."
+    },
+    hero: {
+      eyebrow: "Events",
+      title: "Random Walk가 사람들과 만나는 곳.",
+      description: "토크, 패널, meetup, 커뮤니티 현장에서 아이디어를 공개적으로 검증하고 실제 운영자에게 배우며 AI로 만드는 사람들과 가까이 있습니다."
+    },
+    featuredLabel: "Featured presence",
+    proofLabel: "Recent rooms",
+    archive: {
+      eyebrow: "Archive",
+      title: "공개 참여, 녹화, 커뮤니티 현장의 기록.",
+      description: "Random Walk가 대화에 참여한 컨퍼런스, 패널, meetup, 녹화 세션의 기록입니다."
+    },
+    viewAllLabel: "모든 이벤트 보기",
+    inviteLabel: "발표 초대하기",
+    eventLinkLabel: "이벤트 링크"
+  }
+};
+
+export const eventPresenceItems: Localized<EventPresence[]> = {
+  en: [
+    {
+      slug: "clawcon-tokyo-2026",
+      title: "ClawCon Tokyo",
+      role: "Community event",
+      date: "March 30, 2026",
+      location: "Tokyo, Japan",
+      summary: "A Tokyo gathering for people building AI they can shape, run, and make their own.",
+      pullLine: "Personal AI should feel close enough to touch, tune, and trust.",
+      tags: ["Personal AI", "Local models", "Community"],
+      assetId: "event-clawcon-tokyo-2026",
+      href: "https://luma.com/clawcontokyo",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "ai-web3-online-panel-2026",
+      title: "AI x Web3 Online Panel",
+      role: "Speaker / online panel",
+      date: "January 26, 2026",
+      location: "Online",
+      summary: "A recorded conversation about making AI products easier for people to understand, direct, and use with confidence.",
+      pullLine: "Useful AI becomes stronger when people can see how it fits their world.",
+      tags: ["AI products", "User ownership", "Recorded panel"],
+      assetId: "event-online-panel-youtube-2025",
+      href: "https://www.youtube.com/watch?v=2X5ZcL1zfmo",
+      linkLabel: "Watch Recording"
+    },
+    {
+      slug: "devcon-sea-2025",
+      title: "DevCon SEA 2025",
+      role: "Conference attendee",
+      date: "November 12, 2025",
+      location: "Bangkok, Thailand",
+      summary: "Meeting builders across Asia who care about durable tools, new networks, and user-owned systems.",
+      pullLine: "Good infrastructure earns trust in rooms where people compare notes.",
+      tags: ["Builders", "Infrastructure", "Asia"],
+      assetId: "event-devcon-sea-2025",
+      href: "https://devcon.org/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2025",
+      title: "WebX Tokyo 2025",
+      role: "Conference attendee",
+      date: "August 28, 2025",
+      location: "Tokyo, Japan",
+      summary: "A Tokyo forum where product, finance, and creator communities meet new infrastructure ideas.",
+      pullLine: "The best product signals often come from conversations outside the product page.",
+      tags: ["Tokyo", "Products", "Community"],
+      assetId: "event-webx-tokyo-2025",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2024",
+      title: "WebX Tokyo 2024",
+      role: "Conference attendee",
+      date: "August 25, 2024",
+      location: "Tokyo, Japan",
+      summary: "Early conversations with founders and communities experimenting with new internet products.",
+      pullLine: "A young product direction becomes clearer when it meets real communities.",
+      tags: ["Tokyo", "Founders", "New products"],
+      assetId: "event-webx-tokyo-2024",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "eth-tokyo-2024",
+      title: "ETH Tokyo 2024",
+      role: "Conference attendee",
+      date: "April 15, 2024",
+      location: "Tokyo, Japan",
+      summary: "A local builder gathering that helped shape Random Walk's view of community-owned software.",
+      pullLine: "Community software starts with people who are willing to build in the open.",
+      tags: ["Tokyo", "Builders", "Open systems"],
+      assetId: "event-eth-tokyo-2024",
+      href: "https://ethtokyo.com/",
+      linkLabel: "Event Website"
+    }
+  ],
+  zh: [
+    {
+      slug: "clawcon-tokyo-2026",
+      title: "ClawCon Tokyo",
+      role: "社区活动",
+      date: "2026 年 3 月 30 日",
+      location: "日本东京",
+      summary: "一场东京聚会，面向那些希望亲手塑造、运行并拥有自己 AI 的人。",
+      pullLine: "个人 AI 应该近到可以触摸、调整，并值得信任。",
+      tags: ["个人 AI", "本地模型", "社区"],
+      assetId: "event-clawcon-tokyo-2026",
+      href: "https://luma.com/clawcontokyo",
+      linkLabel: "活动网站"
+    },
+    {
+      slug: "ai-web3-online-panel-2026",
+      title: "AI x Web3 Online Panel",
+      role: "线上圆桌嘉宾",
+      date: "2026 年 1 月 26 日",
+      location: "线上",
+      summary: "一场关于如何让 AI 产品更容易被普通用户理解、指挥和放心使用的录制对话。",
+      pullLine: "当人们看得懂 AI 如何进入自己的生活，它才真正变得有用。",
+      tags: ["AI 产品", "用户拥有", "录制圆桌"],
+      assetId: "event-online-panel-youtube-2025",
+      href: "https://www.youtube.com/watch?v=2X5ZcL1zfmo",
+      linkLabel: "观看录制"
+    },
+    {
+      slug: "devcon-sea-2025",
+      title: "DevCon SEA 2025",
+      role: "会议参与",
+      date: "2025 年 11 月 12 日",
+      location: "泰国曼谷",
+      summary: "与亚洲各地关注长期工具、新网络和用户自主系统的建设者交流。",
+      pullLine: "好的基础设施，必须在真实交流中赢得信任。",
+      tags: ["建设者", "基础设施", "亚洲"],
+      assetId: "event-devcon-sea-2025",
+      href: "https://devcon.org/",
+      linkLabel: "活动网站"
+    },
+    {
+      slug: "webx-tokyo-2025",
+      title: "WebX Tokyo 2025",
+      role: "会议参与",
+      date: "2025 年 8 月 28 日",
+      location: "日本东京",
+      summary: "一个让产品、金融与创作者社区接触新基础设施想法的东京现场。",
+      pullLine: "很多最有价值的产品信号，来自产品页面之外的对话。",
+      tags: ["东京", "产品", "社区"],
+      assetId: "event-webx-tokyo-2025",
+      href: "https://webx-asia.com/",
+      linkLabel: "活动网站"
+    },
+    {
+      slug: "webx-tokyo-2024",
+      title: "WebX Tokyo 2024",
+      role: "会议参与",
+      date: "2024 年 8 月 25 日",
+      location: "日本东京",
+      summary: "与正在试验新互联网产品的创始人与社区进行早期交流。",
+      pullLine: "一个年轻的产品方向，只有遇到真实社区才会更清晰。",
+      tags: ["东京", "创始人", "新产品"],
+      assetId: "event-webx-tokyo-2024",
+      href: "https://webx-asia.com/",
+      linkLabel: "活动网站"
+    },
+    {
+      slug: "eth-tokyo-2024",
+      title: "ETH Tokyo 2024",
+      role: "会议参与",
+      date: "2024 年 4 月 15 日",
+      location: "日本东京",
+      summary: "一个本地建设者聚会，帮助 Random Walk 形成对社区拥有型软件的判断。",
+      pullLine: "社区软件始于愿意公开构建的人。",
+      tags: ["东京", "建设者", "开放系统"],
+      assetId: "event-eth-tokyo-2024",
+      href: "https://ethtokyo.com/",
+      linkLabel: "活动网站"
+    }
+  ],
+  ja: [
+    {
+      slug: "clawcon-tokyo-2026",
+      title: "ClawCon Tokyo",
+      role: "コミュニティイベント",
+      date: "2026年3月30日",
+      location: "東京、日本",
+      summary: "自分で形づくり、動かし、所有できる AI をつくる人たちのための東京の集まり。",
+      pullLine: "Personal AI は、触れられ、調整でき、信頼できる距離にあるべきです。",
+      tags: ["Personal AI", "ローカルモデル", "コミュニティ"],
+      assetId: "event-clawcon-tokyo-2026",
+      href: "https://luma.com/clawcontokyo",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "ai-web3-online-panel-2026",
+      title: "AI x Web3 Online Panel",
+      role: "登壇 / オンラインパネル",
+      date: "2026年1月26日",
+      location: "オンライン",
+      summary: "AI プロダクトを、人が理解し、指示し、安心して使えるものにするための録画対話。",
+      pullLine: "人が自分の世界とのつながりを理解できるほど、AI は役に立ちます。",
+      tags: ["AI products", "User ownership", "録画パネル"],
+      assetId: "event-online-panel-youtube-2025",
+      href: "https://www.youtube.com/watch?v=2X5ZcL1zfmo",
+      linkLabel: "Watch Recording"
+    },
+    {
+      slug: "devcon-sea-2025",
+      title: "DevCon SEA 2025",
+      role: "カンファレンス参加",
+      date: "2025年11月12日",
+      location: "バンコク、タイ",
+      summary: "長く使えるツール、新しいネットワーク、ユーザー主導のシステムに関心を持つアジアのビルダーとの交流。",
+      pullLine: "良いインフラは、人々が意見を交わす場で信頼を得ていきます。",
+      tags: ["Builders", "Infrastructure", "Asia"],
+      assetId: "event-devcon-sea-2025",
+      href: "https://devcon.org/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2025",
+      title: "WebX Tokyo 2025",
+      role: "カンファレンス参加",
+      date: "2025年8月28日",
+      location: "東京、日本",
+      summary: "プロダクト、金融、クリエイターのコミュニティが新しいインフラの考え方と出会う東京の場。",
+      pullLine: "重要なプロダクトの兆しは、プロダクトページの外にある会話から生まれます。",
+      tags: ["Tokyo", "Products", "Community"],
+      assetId: "event-webx-tokyo-2025",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2024",
+      title: "WebX Tokyo 2024",
+      role: "カンファレンス参加",
+      date: "2024年8月25日",
+      location: "東京、日本",
+      summary: "新しいインターネットプロダクトを試す創業者やコミュニティとの初期の対話。",
+      pullLine: "若いプロダクトの方向性は、実際のコミュニティと出会うことで明確になります。",
+      tags: ["Tokyo", "Founders", "New products"],
+      assetId: "event-webx-tokyo-2024",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "eth-tokyo-2024",
+      title: "ETH Tokyo 2024",
+      role: "カンファレンス参加",
+      date: "2024年4月15日",
+      location: "東京、日本",
+      summary: "Random Walk のコミュニティ所有型ソフトウェアへの見方を形づくった、ローカルなビルダーの集まり。",
+      pullLine: "コミュニティソフトウェアは、オープンにつくる意思のある人から始まります。",
+      tags: ["Tokyo", "Builders", "Open systems"],
+      assetId: "event-eth-tokyo-2024",
+      href: "https://ethtokyo.com/",
+      linkLabel: "Event Website"
+    }
+  ],
+  ko: [
+    {
+      slug: "clawcon-tokyo-2026",
+      title: "ClawCon Tokyo",
+      role: "커뮤니티 이벤트",
+      date: "2026년 3월 30일",
+      location: "도쿄, 일본",
+      summary: "직접 만들고, 실행하고, 소유할 수 있는 AI를 구축하려는 사람들을 위한 도쿄 모임.",
+      pullLine: "Personal AI는 만지고, 조정하고, 신뢰할 수 있을 만큼 가까워야 합니다.",
+      tags: ["Personal AI", "Local models", "Community"],
+      assetId: "event-clawcon-tokyo-2026",
+      href: "https://luma.com/clawcontokyo",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "ai-web3-online-panel-2026",
+      title: "AI x Web3 Online Panel",
+      role: "발표 / 온라인 패널",
+      date: "2026년 1월 26일",
+      location: "온라인",
+      summary: "사람들이 AI 제품을 더 쉽게 이해하고 지시하며 안심하고 사용할 수 있게 만드는 방법에 대한 녹화 대화.",
+      pullLine: "사람들이 자신의 세계와 연결되는 방식을 볼 수 있을 때 AI는 더 유용해집니다.",
+      tags: ["AI products", "User ownership", "Recorded panel"],
+      assetId: "event-online-panel-youtube-2025",
+      href: "https://www.youtube.com/watch?v=2X5ZcL1zfmo",
+      linkLabel: "Watch Recording"
+    },
+    {
+      slug: "devcon-sea-2025",
+      title: "DevCon SEA 2025",
+      role: "컨퍼런스 참석",
+      date: "2025년 11월 12일",
+      location: "방콕, 태국",
+      summary: "오래 쓰이는 도구, 새로운 네트워크, 사용자가 소유하는 시스템에 관심 있는 아시아의 빌더들과 만난 자리.",
+      pullLine: "좋은 인프라는 사람들이 서로 비교하고 이야기하는 자리에서 신뢰를 얻습니다.",
+      tags: ["Builders", "Infrastructure", "Asia"],
+      assetId: "event-devcon-sea-2025",
+      href: "https://devcon.org/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2025",
+      title: "WebX Tokyo 2025",
+      role: "컨퍼런스 참석",
+      date: "2025년 8월 28일",
+      location: "도쿄, 일본",
+      summary: "제품, 금융, 크리에이터 커뮤니티가 새로운 인프라 아이디어를 만나는 도쿄의 장.",
+      pullLine: "가장 중요한 제품 신호는 종종 제품 페이지 밖의 대화에서 나옵니다.",
+      tags: ["Tokyo", "Products", "Community"],
+      assetId: "event-webx-tokyo-2025",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "webx-tokyo-2024",
+      title: "WebX Tokyo 2024",
+      role: "컨퍼런스 참석",
+      date: "2024년 8월 25일",
+      location: "도쿄, 일본",
+      summary: "새로운 인터넷 제품을 실험하는 창업자와 커뮤니티와의 초기 대화.",
+      pullLine: "초기 제품 방향은 실제 커뮤니티를 만날 때 더 선명해집니다.",
+      tags: ["Tokyo", "Founders", "New products"],
+      assetId: "event-webx-tokyo-2024",
+      href: "https://webx-asia.com/",
+      linkLabel: "Event Website"
+    },
+    {
+      slug: "eth-tokyo-2024",
+      title: "ETH Tokyo 2024",
+      role: "컨퍼런스 참석",
+      date: "2024년 4월 15일",
+      location: "도쿄, 일본",
+      summary: "커뮤니티가 소유하는 소프트웨어에 대한 Random Walk의 관점을 형성하는 데 도움을 준 로컬 빌더 모임.",
+      pullLine: "커뮤니티 소프트웨어는 공개적으로 만들 의지가 있는 사람들로부터 시작됩니다.",
+      tags: ["Tokyo", "Builders", "Open systems"],
+      assetId: "event-eth-tokyo-2024",
+      href: "https://ethtokyo.com/",
+      linkLabel: "Event Website"
+    }
+  ]
+};
+
+export const speakingContactCopy: Localized<{
+  hero: PageCopy;
+  panelTitle: string;
+  panelBody: string;
+  topicLabel: string;
+  messagePlaceholder: string;
+  emailSubject: string;
+}> = {
+  en: {
+    hero: {
+      eyebrow: "Speaking",
+      title: "Invite Random Walk to speak, lead a workshop, or join a panel.",
+      description: "Share the event format, audience, location or recording plan, preferred topic, and timeline. We will reply if the invitation is a fit."
+    },
+    panelTitle: "Speaking / workshop / panel",
+    panelBody: "Useful context: event format, expected audience, city or recording plan, preferred topic, timing, and what you want the audience to remember.",
+    topicLabel: "Speaking / workshop / panel",
+    messagePlaceholder: "Tell us about the event format, audience, location or recording plan, preferred topic, timeline, and what kind of conversation you want Random Walk to bring.",
+    emailSubject: "Speaking / workshop / panel invitation"
+  },
+  zh: {
+    hero: {
+      eyebrow: "分享邀请",
+      title: "邀请 Random Walk 演讲、主持 workshop 或参与圆桌。",
+      description: "请说明活动形式、受众、地点或录制方式、希望讨论的主题与时间计划。适合的话我们会回复。"
+    },
+    panelTitle: "演讲 / workshop / 圆桌",
+    panelBody: "有用信息包括：活动形式、预计受众、城市或录制方式、希望讨论的主题、时间，以及你希望听众记住什么。",
+    topicLabel: "演讲 / workshop / 圆桌",
+    messagePlaceholder: "请说明活动形式、受众、地点或录制方式、希望讨论的主题、时间计划，以及你希望 Random Walk 带来怎样的对话。",
+    emailSubject: "演讲 / workshop / 圆桌邀请"
+  },
+  ja: {
+    hero: {
+      eyebrow: "Speaking",
+      title: "Random Walk への登壇、ワークショップ、パネル参加の依頼。",
+      description: "イベント形式、参加者、場所または録画計画、希望テーマ、時期を共有してください。適している場合に返信します。"
+    },
+    panelTitle: "登壇 / ワークショップ / パネル",
+    panelBody: "イベント形式、想定参加者、都市または録画計画、希望テーマ、時期、参加者に残したいことを共有してください。",
+    topicLabel: "登壇 / ワークショップ / パネル",
+    messagePlaceholder: "イベント形式、参加者、場所または録画計画、希望テーマ、時期、Random Walk に期待する対話を記載してください。",
+    emailSubject: "登壇 / ワークショップ / パネル依頼"
+  },
+  ko: {
+    hero: {
+      eyebrow: "Speaking",
+      title: "Random Walk를 발표, 워크숍, 패널에 초대하세요.",
+      description: "이벤트 형식, 청중, 장소 또는 녹화 계획, 선호 주제와 일정을 공유해 주세요. 적합하면 답변드리겠습니다."
+    },
+    panelTitle: "발표 / 워크숍 / 패널",
+    panelBody: "이벤트 형식, 예상 청중, 도시 또는 녹화 계획, 선호 주제, 일정, 청중이 기억하길 바라는 내용을 알려 주세요.",
+    topicLabel: "발표 / 워크숍 / 패널",
+    messagePlaceholder: "이벤트 형식, 청중, 장소 또는 녹화 계획, 선호 주제, 일정, Random Walk가 어떤 대화를 가져오길 원하는지 알려 주세요.",
+    emailSubject: "발표 / 워크숍 / 패널 초대"
+  }
 };
 
 export const deliveryChain = [

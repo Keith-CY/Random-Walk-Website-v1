@@ -1079,6 +1079,145 @@ select.rw-field {
   line-height: 1.25;
 }
 
+.rw-presence-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.rw-presence-feature,
+.rw-presence-proof,
+.rw-event-card,
+.rw-event-feature-card {
+  border-radius: 8px;
+  background: var(--rw-cream-soft);
+  box-shadow: var(--rw-inset-edge);
+}
+
+.rw-presence-feature {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-content: start;
+  align-items: start;
+  padding: 18px;
+}
+
+.rw-presence-feature .rw-card-media {
+  margin: -4px -4px 0;
+}
+
+.rw-presence-proof-list {
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  height: 100%;
+}
+
+.rw-presence-proof {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.rw-presence-proof:hover,
+.rw-event-card:hover {
+  background: rgb(255 255 255 / 78%);
+  box-shadow: var(--rw-inset-edge-strong), 0 3px 8px rgb(0 0 0 / 5%);
+  transform: translateY(-1px);
+}
+
+.rw-presence-proof-media .rw-image-frame {
+  border-radius: 6px;
+}
+
+.rw-presence-quote {
+  margin-inline: 0;
+  border-left: 2px solid rgb(159 116 66 / 58%);
+  padding-left: 16px;
+  color: var(--rw-text-primary);
+  font-size: 1rem;
+  font-weight: var(--rw-weight-card-title);
+  line-height: 1.48;
+}
+
+.rw-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.rw-tag-row span {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 64%);
+  box-shadow: var(--rw-inset-edge);
+  color: var(--rw-text-secondary);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.rw-event-feature-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr);
+  gap: 32px;
+  align-items: end;
+  padding: clamp(28px, 4vw, 46px);
+  background:
+    radial-gradient(circle at 88% 20%, rgb(159 116 66 / 10%), transparent 30%),
+    linear-gradient(135deg, rgb(255 255 255 / 78%), var(--rw-cream-soft));
+}
+
+.rw-event-facts {
+  display: grid;
+  gap: 10px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 58%);
+  box-shadow: var(--rw-inset-edge);
+  padding: 18px;
+  color: var(--rw-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.rw-event-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.rw-event-card {
+  display: grid;
+  align-content: start;
+  min-height: 100%;
+  padding: 18px;
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.rw-event-card-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  color: var(--rw-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.rw-event-image-link {
+  display: block;
+  border-radius: 8px;
+}
+
 .rw-work-ledger {
   overflow: hidden;
   border-radius: 8px;
@@ -1160,6 +1299,15 @@ select.rw-field {
 
 .rw-contact-review-band {
   max-width: 520px;
+}
+
+.rw-contact-intent-note {
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 94% 16%, rgb(159 116 66 / 12%), transparent 32%),
+    rgb(255 255 255 / 56%);
+  box-shadow: var(--rw-inset-edge);
+  padding: 18px;
 }
 
 .rw-cta-watermark::before {
@@ -2167,6 +2315,10 @@ select.rw-field {
 
   .rw-home-section-header,
   .rw-creation-mosaic,
+  .rw-presence-showcase,
+  .rw-presence-feature,
+  .rw-event-feature-card,
+  .rw-event-grid,
   .rw-work-ledger-row,
   .rw-service-bento {
     grid-template-columns: 1fr;
@@ -2196,6 +2348,27 @@ select.rw-field {
   .rw-creation-side {
     grid-template-columns: 1fr;
     align-items: start;
+  }
+
+  .rw-home-section-header .flex {
+    justify-content: flex-start;
+  }
+
+  .rw-presence-showcase {
+    align-items: start;
+  }
+
+  .rw-presence-proof-list {
+    grid-template-rows: auto;
+    height: auto;
+  }
+
+  .rw-presence-proof {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .rw-event-card-footer {
+    grid-template-columns: 1fr;
   }
 
   .rw-service-bento-feature {

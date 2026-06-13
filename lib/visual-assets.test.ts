@@ -15,8 +15,8 @@ function pngDimensions(path: string) {
 
 describe("generated visual asset registry", () => {
   test("registers the full temporary visual set with files on disk", () => {
-    expect(visualAssetIds).toHaveLength(32);
-    expect(new Set(visualAssetIds).size).toBe(32);
+    expect(visualAssetIds).toHaveLength(38);
+    expect(new Set(visualAssetIds).size).toBe(38);
 
     for (const id of visualAssetIds) {
       const asset = visualAssets[id];
@@ -29,8 +29,13 @@ describe("generated visual asset registry", () => {
 
       const filePath = join(projectRoot, "public", asset.src);
       expect(existsSync(filePath), `${id} should point to an existing temporary visual asset`).toBe(true);
-      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset|product cover asset|neo-engraved asset/i);
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/placeholder|photo asset|product cover asset|event image|neo-engraved asset/i);
       expect(asset.replacementBrief.length).toBeGreaterThan(40);
+
+      if (asset.src.startsWith("images/events/")) {
+        expect(asset.src).toMatch(/^images\/events\/.+\.jpg$/);
+        continue;
+      }
 
       const { width, height } = pngDimensions(filePath);
       const aspectRatio = width / height;
@@ -91,7 +96,7 @@ describe("generated visual asset registry", () => {
   test("uses the single-object neo-engraved direction for every non-media placeholder", () => {
     const nonMediaPlaceholderIds = visualAssetIds.filter((id) => {
       const src = visualAssets[id].src;
-      return !src.startsWith("photos/") && !src.startsWith("images/product-covers/") && !src.startsWith("http://") && !src.startsWith("https://");
+      return !src.startsWith("photos/") && !src.startsWith("images/product-covers/") && !src.startsWith("images/events/") && !src.startsWith("http://") && !src.startsWith("https://");
     });
 
     for (const id of nonMediaPlaceholderIds) {

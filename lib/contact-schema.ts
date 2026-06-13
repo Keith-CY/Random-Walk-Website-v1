@@ -2,7 +2,7 @@ import { locales } from "./i18n";
 
 export const contactFieldOptions = {
   industry: ["legal-ip", "manufacturing-industrial", "finance-insurance", "other"],
-  use_case: ["dataset-package", "lora-adapter", "private-deployment", "evaluation-evidence", "air-gapped", "other"],
+  use_case: ["dataset-package", "lora-adapter", "private-deployment", "evaluation-evidence", "air-gapped", "speaking-workshop-panel", "other"],
   deployment_target: ["apple-silicon", "on-prem-gpu", "private-cloud", "customer-vpc", "air-gapped", "edge-devices"],
   data_sensitivity: ["trade-secrets", "customer-data", "legal-ip", "regulated-records", "internal-knowledge", "other"],
   air_gapped_required: ["yes", "no", "unsure"],

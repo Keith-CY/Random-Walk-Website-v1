@@ -39,13 +39,14 @@ describe("visual tokens", () => {
     expect(component).toContain("rw-engraving-lines");
   });
 
-  test("does not force engraving overlays onto color photo or product cover assets", () => {
+  test("does not force engraving overlays onto color photo, event, or product cover assets", () => {
     const globals = readFileSync(join(projectRoot, "app", "globals.css"), "utf8");
     const component = readFileSync(join(projectRoot, "components", "placeholder-image.tsx"), "utf8");
 
     expect(component).toContain("const isPhoto = asset?.src.startsWith(\"photos/\") ?? false");
     expect(component).toContain("const isProductCover = asset?.src.startsWith(\"images/product-covers/\") ?? false");
-    expect(component).toContain("const usesNaturalImageTreatment = isPhoto || isProductCover || isExternal");
+    expect(component).toContain("const isEventImage = asset?.src.startsWith(\"images/events/\") ?? false");
+    expect(component).toContain("const usesNaturalImageTreatment = isPhoto || isProductCover || isEventImage || isExternal");
     expect(component).toContain("!usesNaturalImageTreatment ? <div className=\"rw-engraving-lines\"");
     expect(component).toContain("rw-image-frame-photo");
     expect(globals).toContain(".rw-image-frame-photo img");

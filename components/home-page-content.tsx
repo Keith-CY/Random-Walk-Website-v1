@@ -13,6 +13,8 @@ import {
   homeConstraintItems,
   homeCopy,
   homeWorkflowVisualItems,
+  eventPresenceItems,
+  eventsPageCopy,
   localizedDeliveryChain,
   localizedEvidenceArtifacts,
   localizedServiceModules,
@@ -71,6 +73,10 @@ export function HomePageContent({ locale }: { locale: Locale }) {
   const heritage = localizedTechnicalHeritage[locale];
   const constraints = homeConstraintItems[locale];
   const workflowVisualItems = homeWorkflowVisualItems[locale];
+  const eventsCopy = eventsPageCopy[locale];
+  const publicPresence = eventPresenceItems[locale];
+  const featuredPresence = publicPresence[0];
+  const proofPresence = publicPresence.slice(1, 4);
   const deliverablesLabel = workPageCopy[locale].deliverablesLabel;
   const proofItems = dictionary.common.proofLine.split(" · ");
   const featuredCreations = creationDetailSlugs.slice(0, 3).map((slug) => ({ slug, copy: creationDetailPages[locale][slug] }));
@@ -170,6 +176,54 @@ export function HomePageContent({ locale }: { locale: Locale }) {
                 {index === 0 ? <FeaturedWorkflowRail label={creation.taxonomy.slice(0, 3).join(" / ")} stages={creation.taxonomy} variant="product" /> : null}
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="rw-section rw-section-lined">
+        <div className="rw-container">
+          <div className="rw-home-section-header">
+            <SectionHeading copy={eventsCopy.home} showEyebrow />
+            <div className="flex flex-wrap justify-end gap-3">
+              <Link className="rw-button rw-button-secondary" href={localizePath(locale, "/events")}>{eventsCopy.viewAllLabel}</Link>
+              <Link className="rw-button rw-button-primary" href={localizePath(locale, "/contact?intent=speaking")}>{eventsCopy.inviteLabel}</Link>
+            </div>
+          </div>
+          <div className="rw-presence-showcase mt-10">
+            <article className="rw-presence-feature">
+              <div className="rw-card-media">
+                <a className="rw-event-image-link" href={featuredPresence.href} target="_blank" rel="noreferrer" aria-label={`${featuredPresence.title}: ${featuredPresence.linkLabel}`}>
+                  <PlaceholderImage assetId={featuredPresence.assetId} ratio="16 / 10" variant="paper" />
+                </a>
+              </div>
+              <div>
+                <p className="rw-eyebrow">{eventsCopy.featuredLabel}</p>
+                <h3 className="rw-subheading mt-4">{featuredPresence.title}</h3>
+                <p className="rw-body mt-4">{featuredPresence.summary}</p>
+                <blockquote className="rw-presence-quote mt-5">{featuredPresence.pullLine}</blockquote>
+                <p className="rw-caption mt-5">{featuredPresence.date} · {featuredPresence.location}</p>
+                <div className="rw-tag-row mt-5">
+                  {featuredPresence.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+              </div>
+            </article>
+            <div className="rw-presence-proof-list" aria-label={eventsCopy.proofLabel}>
+              {proofPresence.map((event) => (
+                <article className="rw-presence-proof" key={event.slug}>
+                  <div className="rw-presence-proof-media">
+                    <a className="rw-event-image-link" href={event.href} target="_blank" rel="noreferrer" aria-label={`${event.title}: ${event.linkLabel}`}>
+                      <PlaceholderImage assetId={event.assetId} ratio="1 / 1" variant="paper" />
+                    </a>
+                  </div>
+                  <div>
+                    <p className="rw-caption">{event.role} · {event.location}</p>
+                    <h3 className="rw-subheading mt-3">{event.title}</h3>
+                    <p className="rw-body mt-3">{event.summary}</p>
+                    <Link className="rw-text-link mt-4" href={localizePath(locale, "/events")}>{eventsCopy.viewAllLabel} -&gt;</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
