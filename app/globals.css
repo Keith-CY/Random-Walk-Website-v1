@@ -1083,7 +1083,7 @@ select.rw-field {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
   gap: 18px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .rw-presence-feature,
@@ -1110,7 +1110,9 @@ select.rw-field {
 
 .rw-presence-proof-list {
   display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  height: 100%;
 }
 
 .rw-presence-proof {
@@ -2345,6 +2347,15 @@ select.rw-field {
 
   .rw-home-section-header .flex {
     justify-content: flex-start;
+  }
+
+  .rw-presence-showcase {
+    align-items: start;
+  }
+
+  .rw-presence-proof-list {
+    grid-template-rows: auto;
+    height: auto;
   }
 
   .rw-presence-proof {
