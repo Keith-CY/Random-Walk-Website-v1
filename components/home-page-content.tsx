@@ -192,7 +192,9 @@ export function HomePageContent({ locale }: { locale: Locale }) {
           <div className="rw-presence-showcase mt-10">
             <article className="rw-presence-feature">
               <div className="rw-card-media">
-                <PlaceholderImage assetId={featuredPresence.assetId} ratio="16 / 10" variant="paper" />
+                <a className="rw-event-image-link" href={featuredPresence.href} target="_blank" rel="noreferrer" aria-label={`${featuredPresence.title}: ${featuredPresence.linkLabel}`}>
+                  <PlaceholderImage assetId={featuredPresence.assetId} ratio="16 / 10" variant="paper" />
+                </a>
               </div>
               <div>
                 <p className="rw-eyebrow">{eventsCopy.featuredLabel}</p>
@@ -209,7 +211,9 @@ export function HomePageContent({ locale }: { locale: Locale }) {
               {proofPresence.map((event) => (
                 <article className="rw-presence-proof" key={event.slug}>
                   <div className="rw-presence-proof-media">
-                    <PlaceholderImage assetId={event.assetId} ratio="1 / 1" variant="paper" />
+                    <a className="rw-event-image-link" href={event.href} target="_blank" rel="noreferrer" aria-label={`${event.title}: ${event.linkLabel}`}>
+                      <PlaceholderImage assetId={event.assetId} ratio="1 / 1" variant="paper" />
+                    </a>
                   </div>
                   <div>
                     <p className="rw-caption">{event.role} · {event.location}</p>

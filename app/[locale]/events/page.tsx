@@ -38,7 +38,9 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6">
-            <PlaceholderImage assetId={featured.assetId} ratio="4 / 3" variant="paper" priority />
+            <a className="rw-event-image-link" href={featured.href} target="_blank" rel="noreferrer" aria-label={`${featured.title}: ${featured.linkLabel}`}>
+              <PlaceholderImage assetId={featured.assetId} ratio="4 / 3" variant="paper" priority />
+            </a>
           </div>
         </div>
       </section>
@@ -72,7 +74,9 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
             {archive.map((event) => (
               <article className="rw-event-card" key={event.slug}>
                 <div className="rw-card-media">
-                  <PlaceholderImage assetId={event.assetId} ratio="16 / 10" variant="paper" />
+                  <a className="rw-event-image-link" href={event.href} target="_blank" rel="noreferrer" aria-label={`${event.title}: ${event.linkLabel}`}>
+                    <PlaceholderImage assetId={event.assetId} ratio="16 / 10" variant="paper" />
+                  </a>
                 </div>
                 <p className="rw-caption">{event.role} · {event.date}</p>
                 <h3 className="rw-subheading mt-3">{event.title}</h3>

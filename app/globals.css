@@ -1213,6 +1213,11 @@ select.rw-field {
   line-height: 1.4;
 }
 
+.rw-event-image-link {
+  display: block;
+  border-radius: 8px;
+}
+
 .rw-work-ledger {
   overflow: hidden;
   border-radius: 8px;
