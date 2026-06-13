@@ -218,6 +218,48 @@ export const visualAssets = {
     caption: "Temporary neo-engraved asset: reaching hands",
     replacementBrief: "Replace with approved review material or an approved single-object handoff visual showing the real split between Random Walk engineering support and customer or advisor decisions."
   },
+  "event-clawcon-tokyo-2026": {
+    id: "event-clawcon-tokyo-2026",
+    src: "images/events/clawcon-tokyo-2026.jpg",
+    alt: "ClawCon Tokyo event image",
+    caption: "Event image: ClawCon Tokyo",
+    replacementBrief: "Use approved real ClawCon Tokyo event material from the Random Walk archive."
+  },
+  "event-online-panel-youtube-2025": {
+    id: "event-online-panel-youtube-2025",
+    src: "images/events/online-panel-youtube-2025.jpg",
+    alt: "AI x Web3 online panel recording thumbnail",
+    caption: "Event image: AI x Web3 online panel",
+    replacementBrief: "Use approved recording or event material for the AI x Web3 online panel."
+  },
+  "event-devcon-sea-2025": {
+    id: "event-devcon-sea-2025",
+    src: "images/events/devcon-sea-2025.jpg",
+    alt: "DevCon SEA event image",
+    caption: "Event image: DevCon SEA",
+    replacementBrief: "Use approved real DevCon SEA event material from the Random Walk archive."
+  },
+  "event-webx-tokyo-2025": {
+    id: "event-webx-tokyo-2025",
+    src: "images/events/webx-tokyo-2025.jpg",
+    alt: "WebX Tokyo 2025 event image",
+    caption: "Event image: WebX Tokyo 2025",
+    replacementBrief: "Use approved real WebX Tokyo 2025 event material from the Random Walk archive."
+  },
+  "event-webx-tokyo-2024": {
+    id: "event-webx-tokyo-2024",
+    src: "images/events/webx-tokyo-2024.jpg",
+    alt: "WebX Tokyo 2024 event image",
+    caption: "Event image: WebX Tokyo 2024",
+    replacementBrief: "Use approved real WebX Tokyo 2024 event material from the Random Walk archive."
+  },
+  "event-eth-tokyo-2024": {
+    id: "event-eth-tokyo-2024",
+    src: "images/events/eth-tokyo-2024.jpg",
+    alt: "ETH Tokyo 2024 event image",
+    caption: "Event image: ETH Tokyo 2024",
+    replacementBrief: "Use approved real ETH Tokyo 2024 event material from the Random Walk archive."
+  },
   "company-team-panel-photo": {
     id: "company-team-panel-photo",
     src: "photos/company-team-panel-photo.png",

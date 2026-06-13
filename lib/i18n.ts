@@ -148,6 +148,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
             { label: "Company", href: "/company" },
             { label: "Philosophy", href: "/philosophy" },
             { label: "Work", href: "/work" },
+            { label: "Events", href: "/events" },
             { label: "Articles", href: "/articles" },
             { label: "Notes", href: "/notes" },
             { label: "Contact", href: "/contact" }
@@ -285,6 +286,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
                     {
                       "label": "工作",
                       "href": "/work"
+                    },
+                    {
+                      "label": "活动",
+                      "href": "/events"
                     },
                     {
                       "label": "文章",
@@ -461,6 +466,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
                       "href": "/work"
                     },
                     {
+                      "label": "イベント",
+                      "href": "/events"
+                    },
+                    {
                       "label": "記事",
                       "href": "/articles"
                     },
@@ -633,6 +642,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
                     {
                       "label": "작업",
                       "href": "/work"
+                    },
+                    {
+                      "label": "이벤트",
+                      "href": "/events"
                     },
                     {
                       "label": "아티클",

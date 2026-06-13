@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { contactFieldOptions, validateContactPayload } from "@/lib/contact-schema";
 import type { Locale } from "@/lib/i18n";
+import { speakingContactCopy } from "@/lib/site-data";
 
 const labels = {
   industry: {
@@ -17,6 +18,7 @@ const labels = {
     "private-deployment": "Private Deployment",
     "evaluation-evidence": "Evaluation Evidence",
     "air-gapped": "Air-gapped",
+    "speaking-workshop-panel": "Speaking / workshop / panel",
     other: "Other"
   },
   deployment_target: {
@@ -185,7 +187,7 @@ const contactFormCopy: Record<Locale, {
     fallbackBodyLabels: { name: "姓名", company: "公司", useCase: "使用场景", deployment: "部署目标" },
     options: {
       industry: { "legal-ip": "研究 / IP", "manufacturing-industrial": "内容 / 设计 / 生产", "finance-insurance": "运营 / 内部工具", other: "其他" },
-      use_case: { "dataset-package": "数据集包", "lora-adapter": "LoRA 适配器", "private-deployment": "私有部署", "evaluation-evidence": "评估证据", "air-gapped": "隔离环境", other: "其他" },
+      use_case: { "dataset-package": "数据集包", "lora-adapter": "LoRA 适配器", "private-deployment": "私有部署", "evaluation-evidence": "评估证据", "air-gapped": "隔离环境", "speaking-workshop-panel": "演讲 / workshop / 圆桌", other: "其他" },
       deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "本地 GPU", "private-cloud": "私有云", "customer-vpc": "客户 VPC", "air-gapped": "隔离环境", "edge-devices": "边缘设备" },
       data_sensitivity: { "trade-secrets": "商业秘密", "customer-data": "客户数据", "legal-ip": "法律 / IP", "regulated-records": "受监管记录", "internal-knowledge": "内部知识", other: "其他" },
       air_gapped_required: { yes: "是", no: "否", unsure: "不确定" },
@@ -231,7 +233,7 @@ const contactFormCopy: Record<Locale, {
     fallbackBodyLabels: { name: "氏名", company: "会社名", useCase: "用途", deployment: "配備先" },
     options: {
       industry: { "legal-ip": "研究 / IP", "manufacturing-industrial": "コンテンツ / デザイン / 制作", "finance-insurance": "運用 / 内部ツール", other: "その他" },
-      use_case: { "dataset-package": "データセットパッケージ", "lora-adapter": "LoRA アダプター", "private-deployment": "プライベート配備", "evaluation-evidence": "評価証拠", "air-gapped": "エアギャップ", other: "その他" },
+      use_case: { "dataset-package": "データセットパッケージ", "lora-adapter": "LoRA アダプター", "private-deployment": "プライベート配備", "evaluation-evidence": "評価証拠", "air-gapped": "エアギャップ", "speaking-workshop-panel": "登壇 / ワークショップ / パネル", other: "その他" },
       deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "オンプレ GPU", "private-cloud": "プライベートクラウド", "customer-vpc": "顧客 VPC", "air-gapped": "エアギャップ", "edge-devices": "エッジデバイス" },
       data_sensitivity: { "trade-secrets": "営業秘密", "customer-data": "顧客データ", "legal-ip": "法律 / IP", "regulated-records": "規制対象記録", "internal-knowledge": "内部知識", other: "その他" },
       air_gapped_required: { yes: "はい", no: "いいえ", unsure: "未定" },
@@ -277,7 +279,7 @@ const contactFormCopy: Record<Locale, {
     fallbackBodyLabels: { name: "이름", company: "회사", useCase: "사용 사례", deployment: "배포 대상" },
     options: {
       industry: { "legal-ip": "연구 / IP", "manufacturing-industrial": "콘텐츠 / 디자인 / 제작", "finance-insurance": "운영 / 내부 도구", other: "기타" },
-      use_case: { "dataset-package": "데이터셋 패키지", "lora-adapter": "LoRA 어댑터", "private-deployment": "프라이빗 배포", "evaluation-evidence": "평가 증거", "air-gapped": "에어갭", other: "기타" },
+      use_case: { "dataset-package": "데이터셋 패키지", "lora-adapter": "LoRA 어댑터", "private-deployment": "프라이빗 배포", "evaluation-evidence": "평가 증거", "air-gapped": "에어갭", "speaking-workshop-panel": "발표 / 워크숍 / 패널", other: "기타" },
       deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "온프레미스 GPU", "private-cloud": "프라이빗 클라우드", "customer-vpc": "고객 VPC", "air-gapped": "에어갭", "edge-devices": "엣지 디바이스" },
       data_sensitivity: { "trade-secrets": "영업 비밀", "customer-data": "고객 데이터", "legal-ip": "법률 / IP", "regulated-records": "규제 기록", "internal-knowledge": "내부 지식", other: "기타" },
       air_gapped_required: { yes: "예", no: "아니요", unsure: "미정" },
@@ -295,7 +297,9 @@ function fieldValue(formData: FormData, key: string) {
 
 export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Locale; pageOrigin: string; emailAddress: string }) {
   const copy = contactFormCopy[locale];
+  const speakingCopy = speakingContactCopy[locale];
   const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
+  const [isSpeakingIntent, setIsSpeakingIntent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<string[]>([]);
   const canPost = useMemo(() => Boolean(endpoint), [endpoint]);
@@ -307,6 +311,10 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
     const timeout = window.setTimeout(() => setStatus("idle"), 5200);
     return () => window.clearTimeout(timeout);
   }, [status]);
+
+  useEffect(() => {
+    setIsSpeakingIntent(new URLSearchParams(window.location.search).get("intent") === "speaking");
+  }, []);
 
   function fieldErrorId(field: string) {
     return `contact-${field.replaceAll("_", "-")}-error`;
@@ -355,6 +363,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
       consent: formData.get("consent") === "on",
       locale,
       page_origin: pageOrigin,
+      inquiry_intent: fieldValue(formData, "inquiry_intent"),
       utm_source: fieldValue(formData, "utm_source")
     };
 
@@ -368,7 +377,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
     if (!canPost || !endpoint) {
       setErrors([]);
       setStatus("idle");
-      const subject = encodeURIComponent(copy.emailSubject);
+      const subject = encodeURIComponent(isSpeakingIntent ? speakingCopy.emailSubject : copy.emailSubject);
       const useCaseLabel = (copy.options.use_case as Record<string, string>)[payload.use_case] ?? payload.use_case;
       const deploymentLabels = payload.deployment_target.map((target) => {
         const key = String(target);
@@ -408,6 +417,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
 
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="page_origin" value={pageOrigin} />
+      <input type="hidden" name="inquiry_intent" value={isSpeakingIntent ? "speaking" : "project"} />
       <input type="hidden" name="utm_source" value="" />
 
       <div className="rw-form-alert">
@@ -416,6 +426,13 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
           {copy.confidentialityBody}
         </p>
       </div>
+
+      {isSpeakingIntent ? (
+        <div className="rw-contact-intent-note">
+          <p className="rw-eyebrow">{speakingCopy.panelTitle}</p>
+          <p className="rw-body mt-3">{speakingCopy.panelBody}</p>
+        </div>
+      ) : null}
 
       <div className="rw-form-section">
         <p className="rw-form-section-label">{copy.sections.contact}</p>
@@ -454,8 +471,8 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
             <FieldError field="industry" />
           </label>
           <label className="grid gap-2">
-            <span className="font-medium">{copy.fields.useCase}</span>
-            <select className="rw-field" name="use_case" required defaultValue="" {...fieldErrorProps("use_case")}>
+            <span className="font-medium">{isSpeakingIntent ? speakingCopy.topicLabel : copy.fields.useCase}</span>
+            <select className="rw-field" name="use_case" required key={isSpeakingIntent ? "speaking-use-case" : "project-use-case"} defaultValue={isSpeakingIntent ? "speaking-workshop-panel" : ""} {...fieldErrorProps("use_case")}>
               <option value="" disabled>{copy.placeholders.selectOne}</option>
               {contactFieldOptions.use_case.map((option) => <option key={option} value={option}>{copy.options.use_case[option]}</option>)}
             </select>
@@ -539,7 +556,7 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
 
         <label className="mt-4 grid gap-2">
           <span className="font-medium">{copy.fields.message}</span>
-          <textarea className="rw-field min-h-32" name="message" required placeholder={copy.placeholders.message} {...fieldErrorProps("message")} />
+          <textarea className="rw-field min-h-32" name="message" required placeholder={isSpeakingIntent ? speakingCopy.messagePlaceholder : copy.placeholders.message} {...fieldErrorProps("message")} />
           <FieldError field="message" />
         </label>
         <p className="rw-form-inline-warning rw-caption mt-3">{copy.inlineWarning}</p>

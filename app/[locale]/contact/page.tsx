@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/contact-form";
+import { ContactIntentNote } from "@/components/contact-intent-note";
 import { InstitutionalCell, InstitutionalGrid } from "@/components/institutional-grid";
 import { PlaceholderImage } from "@/components/placeholder-image";
 import { isLocale, type Locale } from "@/lib/i18n";
@@ -31,6 +32,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <p className="rw-eyebrow">{copy.hero.eyebrow}</p>
             <h1 className="rw-page-title mt-5">{copy.hero.title}</h1>
             <p className="rw-body-large mt-6">{copy.hero.description}</p>
+            <ContactIntentNote locale={locale} />
             <p className="rw-caption mt-6">{copy.directEmail}: <a href={`mailto:${emailAddress}`}>{emailAddress}</a></p>
           </div>
           <div className="col-span-12 lg:col-span-6">

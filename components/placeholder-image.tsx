@@ -17,7 +17,8 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
   const isExternal = asset?.src.startsWith("http://") || asset?.src.startsWith("https://") || false;
   const isPhoto = asset?.src.startsWith("photos/") ?? false;
   const isProductCover = asset?.src.startsWith("images/product-covers/") ?? false;
-  const usesNaturalImageTreatment = isPhoto || isProductCover || isExternal;
+  const isEventImage = asset?.src.startsWith("images/events/") ?? false;
+  const usesNaturalImageTreatment = isPhoto || isProductCover || isEventImage || isExternal;
   const displayLabel = label ?? asset?.caption ?? "Placeholder visual";
   const displayDescription = description;
 
