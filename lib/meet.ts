@@ -432,14 +432,15 @@ export function validateMeetRequest(input: MeetValidationInput, todayIso = getTo
   const email = typeof input.email === "string" ? input.email.trim() : "";
   const phone = typeof input.phone === "string" ? input.phone.trim() : "";
   const message = typeof input.message === "string" ? input.message.trim() : "";
-  const locale = input.locale;
+  const locale: Locale | null =
+    input.locale === "en" || input.locale === "zh" || input.locale === "ja" || input.locale === "ko" ? input.locale : null;
 
   if (!isSelectableMeetDate(date, todayIso)) errors.add("date");
   if (!isMeetSlotId(input.slotId) || !isBookableMeetSlot(input.slotId)) errors.add("slotId");
   if (!name) errors.add("name");
   if (!email || !emailPattern.test(email)) errors.add("email");
   if (!message) errors.add("message");
-  if (locale !== "en" && locale !== "zh" && locale !== "ja" && locale !== "ko") errors.add("locale");
+  if (!locale) errors.add("locale");
 
   if (errors.size > 0 || !isMeetSlotId(input.slotId) || !isBookableMeetSlot(input.slotId)) {
     return { ok: false, errors: [...errors] };
