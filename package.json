@@ -14,7 +14,7 @@
     "prebuild": "bun run refresh:melix",
     "build": "next build",
     "lint": "eslint .",
-    "test": "bun test lib/contact-schema.test.ts lib/content.test.ts lib/visual-assets.test.ts lib/layout-shell.test.ts lib/visual-tokens.test.ts lib/page-ui-consistency.test.ts lib/i18n-completeness.test.ts lib/footer-links.test.ts",
+    "test": "bun test lib/contact-schema.test.ts lib/meet.test.ts lib/content.test.ts lib/visual-assets.test.ts lib/layout-shell.test.ts lib/visual-tokens.test.ts lib/page-ui-consistency.test.ts lib/i18n-completeness.test.ts lib/footer-links.test.ts",
     "visual:check": "node scripts/visual-check.mjs"
   },
   "dependencies": {
