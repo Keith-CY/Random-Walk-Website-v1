@@ -442,7 +442,7 @@ export function validateMeetRequest(input: MeetValidationInput, todayIso = getTo
   if (!message) errors.add("message");
   if (!locale) errors.add("locale");
 
-  if (errors.size > 0 || !isMeetSlotId(input.slotId) || !isBookableMeetSlot(input.slotId)) {
+  if (errors.size > 0 || !locale || !isMeetSlotId(input.slotId) || !isBookableMeetSlot(input.slotId)) {
     return { ok: false, errors: [...errors] };
   }
 
