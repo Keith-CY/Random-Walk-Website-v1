@@ -244,7 +244,6 @@ export async function createCalBooking(env: MeetEnv, booking: BookingInput) {
       ...(booking.phone ? { phoneNumber: booking.phone } : {})
     },
     ...eventTypeBookingBody(env),
-    lengthInMinutes: meetDurationMinutes,
     metadata: {
       source: "random-walk-meet",
       locale: booking.locale,
