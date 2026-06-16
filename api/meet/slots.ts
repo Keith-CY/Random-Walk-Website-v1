@@ -1,9 +1,26 @@
-import {
-  buildSlotAvailabilityForDate,
-  dateRange,
-  getAvailableCalStarts,
-  serverEnv
-} from "../../server/meet-cal";
+const meetTimeZone = "Asia/Tokyo";
+const meetLeadDays = 2;
+const meetDurationMinutes = 120;
+const slotsApiVersion = "2024-09-04";
+
+const meetSlots = [
+  { id: "morning", start: "10:00", end: "12:00", policy: "blocked" },
+  { id: "early-afternoon", start: "14:00", end: "16:00", policy: "bookable" },
+  { id: "late-afternoon", start: "16:00", end: "18:00", policy: "bookable" }
+] as const;
+
+const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+type MeetSlotId = (typeof meetSlots)[number]["id"];
+
+type MeetEnv = {
+  CAL_API_KEY?: string;
+  CAL_EVENT_TYPE_ID?: string;
+  CAL_EVENT_TYPE_SLUG?: string;
+  CAL_USERNAME?: string;
+  CAL_TEAM_SLUG?: string;
+  CAL_ORGANIZATION_SLUG?: string;
+};
 
 type HeaderValue = string | string[] | undefined;
 
@@ -21,6 +38,17 @@ type VercelResponseLike = {
   end?: (body?: string) => void;
   statusCode?: number;
 };
+
+function serverEnv(): MeetEnv {
+  return {
+    CAL_API_KEY: process.env.CAL_API_KEY,
+    CAL_EVENT_TYPE_ID: process.env.CAL_EVENT_TYPE_ID,
+    CAL_EVENT_TYPE_SLUG: process.env.CAL_EVENT_TYPE_SLUG,
+    CAL_USERNAME: process.env.CAL_USERNAME,
+    CAL_TEAM_SLUG: process.env.CAL_TEAM_SLUG,
+    CAL_ORGANIZATION_SLUG: process.env.CAL_ORGANIZATION_SLUG
+  };
+}
 
 function firstHeaderValue(value: HeaderValue) {
   if (Array.isArray(value)) return value[0];
@@ -87,6 +115,147 @@ function sendEmpty(response: VercelResponseLike | undefined, statusCode: number)
   return undefined;
 }
 
+function parseIsoDate(dateIso: string) {
+  if (!isoDatePattern.test(dateIso)) return null;
+  const [year, month, day] = dateIso.split("-").map(Number);
+  return { year, month, day };
+}
+
+function makeIsoDate(year: number, month: number, day: number) {
+  return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function addDaysIso(dateIso: string, days: number) {
+  const date = parseIsoDate(dateIso);
+  if (!date) return dateIso;
+  const next = new Date(Date.UTC(date.year, date.month - 1, date.day + days, 12));
+  return makeIsoDate(next.getUTCFullYear(), next.getUTCMonth() + 1, next.getUTCDate());
+}
+
+function getTokyoTodayIso(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: meetTimeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(now);
+  const year = parts.find((part) => part.type === "year")?.value ?? "1970";
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  return `${year}-${month}-${day}`;
+}
+
+function getWeekdayIso(dateIso: string) {
+  const date = parseIsoDate(dateIso);
+  if (!date) return -1;
+  return new Date(Date.UTC(date.year, date.month - 1, date.day, 12)).getUTCDay();
+}
+
+function isWeekendIso(dateIso: string) {
+  const weekday = getWeekdayIso(dateIso);
+  return weekday === 0 || weekday === 6;
+}
+
+function getEarliestMeetDateIso(todayIso = getTokyoTodayIso()) {
+  return addDaysIso(todayIso, meetLeadDays);
+}
+
+function isSelectableMeetDate(dateIso: string, todayIso = getTokyoTodayIso()) {
+  return isoDatePattern.test(dateIso) && dateIso >= getEarliestMeetDateIso(todayIso) && !isWeekendIso(dateIso);
+}
+
+function slotStartUtcIso(dateIso: string, slotId: MeetSlotId) {
+  const slot = meetSlots.find((item) => item.id === slotId);
+  if (!slot) return "";
+  return new Date(`${dateIso}T${slot.start}:00+09:00`).toISOString();
+}
+
+function dateRange(startIso: string, endIso: string) {
+  const dates: string[] = [];
+  let current = startIso;
+
+  for (let index = 0; index < 45 && current <= endIso; index += 1) {
+    dates.push(current);
+    current = addDaysIso(current, 1);
+  }
+
+  return dates;
+}
+
+function requireCalConfig(env: MeetEnv) {
+  if (!env.CAL_API_KEY) {
+    throw new Error("missing_cal_api_key");
+  }
+
+  if (env.CAL_EVENT_TYPE_ID) {
+    return;
+  }
+
+  if (env.CAL_EVENT_TYPE_SLUG && (env.CAL_USERNAME || env.CAL_TEAM_SLUG)) {
+    return;
+  }
+
+  throw new Error("missing_cal_event_type");
+}
+
+function eventTypeQueryParams(env: MeetEnv) {
+  const params = new URLSearchParams();
+
+  if (env.CAL_EVENT_TYPE_ID) {
+    params.set("eventTypeId", env.CAL_EVENT_TYPE_ID);
+  } else {
+    params.set("eventTypeSlug", env.CAL_EVENT_TYPE_SLUG ?? "");
+    if (env.CAL_USERNAME) params.set("username", env.CAL_USERNAME);
+    if (env.CAL_TEAM_SLUG) params.set("teamSlug", env.CAL_TEAM_SLUG);
+    if (env.CAL_ORGANIZATION_SLUG) params.set("organizationSlug", env.CAL_ORGANIZATION_SLUG);
+  }
+
+  return params;
+}
+
+async function getAvailableCalStarts(env: MeetEnv, startIso: string, endIso: string) {
+  requireCalConfig(env);
+  const params = eventTypeQueryParams(env);
+  params.set("start", startIso);
+  params.set("end", endIso);
+  params.set("timeZone", meetTimeZone);
+  params.set("duration", String(meetDurationMinutes));
+  params.set("format", "range");
+
+  const response = await fetch(`https://api.cal.com/v2/slots?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${env.CAL_API_KEY}`,
+      "cal-api-version": slotsApiVersion
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`cal_slots_${response.status}`);
+  }
+
+  const body = (await response.json()) as { data?: Record<string, Array<string | { start?: string }>> };
+  const starts = new Set<string>();
+
+  for (const daySlots of Object.values(body.data ?? {})) {
+    for (const slot of daySlots) {
+      const start = typeof slot === "string" ? slot : slot.start;
+      if (start) starts.add(new Date(start).toISOString());
+    }
+  }
+
+  return starts;
+}
+
+function buildSlotAvailabilityForDate(dateIso: string, calStarts: Set<string>, todayIso = getTokyoTodayIso()) {
+  const selectable = isSelectableMeetDate(dateIso, todayIso);
+  return Object.fromEntries(
+    meetSlots.map((slot) => {
+      const available = selectable && slot.policy === "bookable" && calStarts.has(slotStartUtcIso(dateIso, slot.id));
+      return [slot.id, available];
+    })
+  );
+}
+
 export default async function handler(request: VercelRequestLike, response?: VercelResponseLike) {
   try {
     const env = serverEnv();
@@ -102,7 +271,6 @@ export default async function handler(request: VercelRequestLike, response?: Ver
     const url = requestUrl(request);
     const start = url.searchParams.get("start") || new Date().toISOString().slice(0, 10);
     const end = url.searchParams.get("end") || start;
-
     const calStarts = await getAvailableCalStarts(env, start, end);
     const days = dateRange(start, end).map((date) => ({
       date,
