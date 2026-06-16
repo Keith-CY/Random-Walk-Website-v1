@@ -5,60 +5,111 @@ import {
   serverEnv
 } from "../../server/meet-cal";
 
+type HeaderValue = string | string[] | undefined;
+
 type VercelRequestLike = {
   method?: string;
   url?: string;
-  headers: Record<string, string | string[] | undefined>;
+  headers?: Headers | Record<string, HeaderValue>;
 };
 
 type VercelResponseLike = {
-  status: (statusCode: number) => VercelResponseLike;
-  setHeader: (name: string, value: string) => void;
-  json: (body: unknown) => void;
-  end: () => void;
+  status?: (statusCode: number) => VercelResponseLike;
+  setHeader?: (name: string, value: string) => void;
+  json?: (body: unknown) => void;
+  send?: (body: string) => void;
+  end?: (body?: string) => void;
+  statusCode?: number;
 };
 
-function firstHeaderValue(value: string | string[] | undefined) {
+function firstHeaderValue(value: HeaderValue) {
   if (Array.isArray(value)) return value[0];
   return value;
 }
 
+function headerValue(headers: VercelRequestLike["headers"], key: string) {
+  if (!headers) return undefined;
+  if (typeof Headers !== "undefined" && headers instanceof Headers) {
+    return headers.get(key) || undefined;
+  }
+
+  const bag = headers as Record<string, HeaderValue>;
+  return firstHeaderValue(bag[key]) || firstHeaderValue(bag[key.toLowerCase()]);
+}
+
 function requestUrl(request: VercelRequestLike) {
-  const host = firstHeaderValue(request.headers["x-forwarded-host"]) || firstHeaderValue(request.headers.host) || "random-walk.co.jp";
-  const protocol = firstHeaderValue(request.headers["x-forwarded-proto"]) || "https";
+  const host = headerValue(request.headers, "x-forwarded-host") || headerValue(request.headers, "host") || "random-walk.co.jp";
+  const protocol = headerValue(request.headers, "x-forwarded-proto") || "https";
   return new URL(request.url || "/", `${protocol}://${host}`);
 }
 
-function sendJson(response: VercelResponseLike, statusCode: number, body: unknown) {
-  response.setHeader("Cache-Control", "no-store");
-  response.status(statusCode).json(body);
+function sendJson(response: VercelResponseLike | undefined, statusCode: number, body: unknown) {
+  const payload = JSON.stringify(body);
+
+  if (!response) {
+    return new Response(payload, {
+      status: statusCode,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
+    });
+  }
+
+  response.statusCode = statusCode;
+  response.setHeader?.("Content-Type", "application/json; charset=utf-8");
+  response.setHeader?.("Cache-Control", "no-store");
+
+  const nextResponse = response.status?.(statusCode) ?? response;
+
+  if (typeof nextResponse.json === "function") {
+    nextResponse.json(body);
+    return undefined;
+  }
+
+  if (typeof nextResponse.send === "function") {
+    nextResponse.send(payload);
+    return undefined;
+  }
+
+  nextResponse.end?.(payload);
+  return undefined;
 }
 
-export default async function handler(request: VercelRequestLike, response: VercelResponseLike) {
-  const env = serverEnv();
-
-  if (request.method === "OPTIONS") {
-    response.status(204).end();
-    return;
+function sendEmpty(response: VercelResponseLike | undefined, statusCode: number) {
+  if (!response) {
+    return new Response(null, { status: statusCode });
   }
 
-  if (request.method !== "GET") {
-    sendJson(response, 405, { status: "error", error: "method_not_allowed" });
-    return;
-  }
+  response.statusCode = statusCode;
+  const nextResponse = response.status?.(statusCode) ?? response;
+  nextResponse.end?.();
+  return undefined;
+}
 
-  const url = requestUrl(request);
-  const start = url.searchParams.get("start") || new Date().toISOString().slice(0, 10);
-  const end = url.searchParams.get("end") || start;
-
+export default async function handler(request: VercelRequestLike, response?: VercelResponseLike) {
   try {
+    const env = serverEnv();
+
+    if (request.method === "OPTIONS") {
+      return sendEmpty(response, 204);
+    }
+
+    if (request.method !== "GET") {
+      return sendJson(response, 405, { status: "error", error: "method_not_allowed" });
+    }
+
+    const url = requestUrl(request);
+    const start = url.searchParams.get("start") || new Date().toISOString().slice(0, 10);
+    const end = url.searchParams.get("end") || start;
+
     const calStarts = await getAvailableCalStarts(env, start, end);
     const days = dateRange(start, end).map((date) => ({
       date,
       slots: buildSlotAvailabilityForDate(date, calStarts)
     }));
 
-    sendJson(response, 200, {
+    return sendJson(response, 200, {
       status: "success",
       days
     });
@@ -66,7 +117,7 @@ export default async function handler(request: VercelRequestLike, response: Verc
     const message = error instanceof Error ? error.message : "unknown_error";
     const status = message.startsWith("missing_") ? 503 : 502;
 
-    sendJson(response, status, {
+    return sendJson(response, status, {
       status: "error",
       error: message
     });

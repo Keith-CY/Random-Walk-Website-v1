@@ -6,25 +6,77 @@ import {
   validateBookingPayload
 } from "../../server/meet-cal";
 
+type HeaderValue = string | string[] | undefined;
+
 type VercelRequestLike = {
   method?: string;
   body?: unknown;
-  headers: Record<string, string | string[] | undefined>;
+  headers?: Headers | Record<string, HeaderValue>;
+  json?: () => Promise<unknown>;
 };
 
 type VercelResponseLike = {
-  status: (statusCode: number) => VercelResponseLike;
-  setHeader: (name: string, value: string) => void;
-  json: (body: unknown) => void;
-  end: () => void;
+  status?: (statusCode: number) => VercelResponseLike;
+  setHeader?: (name: string, value: string) => void;
+  json?: (body: unknown) => void;
+  send?: (body: string) => void;
+  end?: (body?: string) => void;
+  statusCode?: number;
 };
 
-function sendJson(response: VercelResponseLike, statusCode: number, body: unknown) {
-  response.setHeader("Cache-Control", "no-store");
-  response.status(statusCode).json(body);
+function sendJson(response: VercelResponseLike | undefined, statusCode: number, body: unknown) {
+  const payload = JSON.stringify(body);
+
+  if (!response) {
+    return new Response(payload, {
+      status: statusCode,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
+    });
+  }
+
+  response.statusCode = statusCode;
+  response.setHeader?.("Content-Type", "application/json; charset=utf-8");
+  response.setHeader?.("Cache-Control", "no-store");
+
+  const nextResponse = response.status?.(statusCode) ?? response;
+
+  if (typeof nextResponse.json === "function") {
+    nextResponse.json(body);
+    return undefined;
+  }
+
+  if (typeof nextResponse.send === "function") {
+    nextResponse.send(payload);
+    return undefined;
+  }
+
+  nextResponse.end?.(payload);
+  return undefined;
 }
 
-function requestBody(request: VercelRequestLike) {
+function sendEmpty(response: VercelResponseLike | undefined, statusCode: number) {
+  if (!response) {
+    return new Response(null, { status: statusCode });
+  }
+
+  response.statusCode = statusCode;
+  const nextResponse = response.status?.(statusCode) ?? response;
+  nextResponse.end?.();
+  return undefined;
+}
+
+async function requestBody(request: VercelRequestLike) {
+  if (typeof request.json === "function") {
+    try {
+      return await request.json();
+    } catch {
+      return null;
+    }
+  }
+
   if (typeof request.body === "string") {
     try {
       return JSON.parse(request.body) as unknown;
@@ -36,44 +88,39 @@ function requestBody(request: VercelRequestLike) {
   return request.body ?? null;
 }
 
-export default async function handler(request: VercelRequestLike, response: VercelResponseLike) {
-  if (request.method === "OPTIONS") {
-    response.status(204).end();
-    return;
-  }
-
-  if (request.method !== "POST") {
-    sendJson(response, 405, { status: "error", error: "method_not_allowed" });
-    return;
-  }
-
-  const env = serverEnv();
-  const body = requestBody(request);
-
-  if (!body) {
-    sendJson(response, 400, { status: "error", error: "invalid_json" });
-    return;
-  }
-
-  const validation = validateBookingPayload(body);
-  if (!validation.ok) {
-    sendJson(response, 400, { status: "error", errors: validation.errors });
-    return;
-  }
-
+export default async function handler(request: VercelRequestLike, response?: VercelResponseLike) {
   try {
+    if (request.method === "OPTIONS") {
+      return sendEmpty(response, 204);
+    }
+
+    if (request.method !== "POST") {
+      return sendJson(response, 405, { status: "error", error: "method_not_allowed" });
+    }
+
+    const env = serverEnv();
+    const body = await requestBody(request);
+
+    if (!body) {
+      return sendJson(response, 400, { status: "error", error: "invalid_json" });
+    }
+
+    const validation = validateBookingPayload(body);
+    if (!validation.ok) {
+      return sendJson(response, 400, { status: "error", errors: validation.errors });
+    }
+
     const calStarts = await getAvailableCalStarts(env, validation.data.date, validation.data.date);
     const requestedStart = slotStartUtcIso(validation.data.date, validation.data.slotId);
 
     if (!calStarts.has(requestedStart)) {
-      sendJson(response, 409, { status: "error", error: "slot_unavailable" });
-      return;
+      return sendJson(response, 409, { status: "error", error: "slot_unavailable" });
     }
 
     const booking = await createCalBooking(env, validation.data);
     const data = booking.data ?? {};
 
-    sendJson(response, 200, {
+    return sendJson(response, 200, {
       status: "success",
       booking: {
         uid: data.uid ?? data.id ?? requestedStart,
@@ -86,7 +133,7 @@ export default async function handler(request: VercelRequestLike, response: Verc
     const message = error instanceof Error ? error.message : "unknown_error";
     const status = message.startsWith("missing_") ? 503 : 502;
 
-    sendJson(response, status, {
+    return sendJson(response, status, {
       status: "error",
       error: message
     });
