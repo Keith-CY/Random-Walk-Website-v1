@@ -55,9 +55,10 @@ export function corsHeaders(request: Request, env: MeetEnv): Record<string, stri
 }
 
 export function jsonResponse(request: Request, env: MeetEnv, body: unknown, status = 200) {
-  return Response.json(body, {
+  return new Response(JSON.stringify(body), {
     status,
     headers: {
+      "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
       ...corsHeaders(request, env)
     }
