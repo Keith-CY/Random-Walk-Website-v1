@@ -38,7 +38,7 @@ type BookingInput = {
   pageOrigin: string;
 };
 
-export function corsHeaders(request: Request, env: MeetEnv) {
+export function corsHeaders(request: Request, env: MeetEnv): Record<string, string> {
   const origin = request.headers.get("Origin");
   const allowedOrigin = env.MEET_ALLOWED_ORIGIN;
 
