@@ -3132,7 +3132,7 @@ const finalPositioningCopy = {
     contactIntake: {
       eyebrow: "Project context",
       title: "Send the boundary, not confidential material.",
-      description: "Useful context includes the workflow, data category, current stack, deployment target, evaluation needs, support model, and timeline."
+      description: "Bring the ambition, not the confidential files. Tell us what you want the system to do and what must stay yours; we'll help turn that boundary into working infrastructure."
     }
   },
   zh: {
@@ -3144,7 +3144,7 @@ const finalPositioningCopy = {
     servicesDelivery: { eyebrow: "方法", title: "工作从系统边界开始。", description: "数据不能离开受控环境、模型工作流需要评审、内部系统需要本地推理，或团队需要围绕现有技术栈获得实施支持。" },
     workHero: { eyebrow: "案例", title: "真实约束下的应用系统。", description: "这些案例展示 Random Walk 如何为具体团队与运行环境塑造私有 AI、本地数据基础设施和客户可控部署模式。" },
     contactHero: { eyebrow: "联系", title: "讨论一个私有 AI 项目。", description: "告诉我们你要构建什么、哪些数据或部署约束重要，以及系统需要运行在哪里。" },
-    contactIntake: { eyebrow: "项目上下文", title: "发送边界，不要发送机密材料。", description: "有用的上下文包括工作流、数据类别、当前技术栈、部署目标、评估需求、支持方式和时间计划。" }
+    contactIntake: { eyebrow: "项目上下文", title: "发送边界，不要发送机密材料。", description: "带来目标，而不是机密文件。告诉我们你希望系统做到什么、哪些部分必须留在你这边；我们会把这条边界转化为可落地的基础设施。" }
   },
   ja: {
     homeHero: { eyebrow: "ローカル AI 基盤", title: "制御下に置くプライベート AI システム。", description: "機密性の高いシステムに向けた、ローカル基盤、プライベートデータワークフロー、顧客管理型デプロイ。" },
@@ -3155,7 +3155,7 @@ const finalPositioningCopy = {
     servicesDelivery: { eyebrow: "方法", title: "作業はシステム境界から始まる。", description: "データが制御環境を離れられない、モデルワークフローにレビューが必要、社内システムにローカル推論が必要、または既存スタック周辺の実装支援が必要な場合です。" },
     workHero: { eyebrow: "実績", title: "現実の制約下で動くシステム。", description: "Random Walk の実績は、プライベート AI、ローカルデータ基盤、顧客管理型デプロイのパターンを、具体的なチームと運用環境に合わせて形にする方法を示します。" },
     contactHero: { eyebrow: "お問い合わせ", title: "プライベート AI プロジェクトを相談する。", description: "何を構築したいのか、重要なデータやデプロイ制約、システムがどこで動く必要があるのかを共有してください。" },
-    contactIntake: { eyebrow: "プロジェクト文脈", title: "機密資料ではなく、境界を共有する。", description: "有用な文脈は、ワークフロー、データ分類、現在のスタック、デプロイ先、評価ニーズ、支援形態、タイムラインです。" }
+    contactIntake: { eyebrow: "プロジェクト文脈", title: "機密資料ではなく、境界を共有する。", description: "機密ファイルではなく、実現したいことを共有してください。何を動かしたいのか、何を手元に留めるべきかをもとに、その境界を実装可能な基盤へ落とし込みます。" }
   },
   ko: {
     homeHero: { eyebrow: "로컬 AI 인프라", title: "통제 경계 안의 프라이빗 AI 시스템.", description: "민감한 시스템을 다루는 팀을 위한 로컬 인프라, 프라이빗 데이터 워크플로, 고객 제어 배포." },
@@ -3166,7 +3166,7 @@ const finalPositioningCopy = {
     servicesDelivery: { eyebrow: "방법", title: "작업은 시스템 경계에서 시작합니다.", description: "데이터가 통제된 환경을 떠날 수 없거나, 모델 워크플로에 리뷰가 필요하거나, 내부 시스템에 로컬 추론이 필요하거나, 기존 스택 주변의 구현 지원이 필요한 경우입니다." },
     workHero: { eyebrow: "작업", title: "현실의 제약 아래 적용되는 시스템.", description: "Random Walk의 작업은 프라이빗 AI, 로컬 데이터 인프라, 고객 제어 배포 패턴이 구체적인 팀과 운영 환경에 맞게 어떻게 구성되는지 보여줍니다." },
     contactHero: { eyebrow: "문의", title: "프라이빗 AI 프로젝트를 논의하세요.", description: "무엇을 만들려는지, 어떤 데이터나 배포 제약이 중요한지, 시스템이 어디에서 실행되어야 하는지 알려 주세요." },
-    contactIntake: { eyebrow: "프로젝트 맥락", title: "기밀 자료가 아니라 경계를 보내 주세요.", description: "유용한 맥락에는 워크플로, 데이터 범주, 현재 스택, 배포 대상, 평가 요구, 지원 방식, 일정이 포함됩니다." }
+    contactIntake: { eyebrow: "프로젝트 맥락", title: "기밀 자료가 아니라 경계를 보내 주세요.", description: "기밀 파일이 아니라 이루고 싶은 목표를 보내 주세요. 시스템이 무엇을 해야 하는지, 무엇이 당신 쪽에 남아야 하는지 알려 주시면 그 경계를 작동하는 인프라로 바꾸겠습니다." }
   }
 } satisfies Record<Locale, {
   homeHero: PageCopy;
