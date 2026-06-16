@@ -382,7 +382,7 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
                 const status = selected
                   ? copy.slots.status.selected
                   : slot.policy === "blocked"
-                    ? copy.slots.status.booked
+                    ? copy.slots.status.notOffered
                     : available
                       ? copy.slots.status.available
                       : copy.slots.status.unavailable;

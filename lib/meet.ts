@@ -68,7 +68,7 @@ export const meetPageCopy: Record<
     slots: {
       title: string;
       status: {
-        booked: string;
+        notOffered: string;
         available: string;
         selected: string;
         unavailable: string;
@@ -121,7 +121,7 @@ export const meetPageCopy: Record<
     slots: {
       title: "Time",
       status: {
-        booked: "Booked",
+        notOffered: "Not offered",
         available: "Available",
         selected: "Selected",
         unavailable: "Unavailable"
@@ -173,7 +173,7 @@ export const meetPageCopy: Record<
     slots: {
       title: "时间",
       status: {
-        booked: "已安排",
+        notOffered: "不开放预约",
         available: "可预约",
         selected: "已选择",
         unavailable: "不可预约"
@@ -225,7 +225,7 @@ export const meetPageCopy: Record<
     slots: {
       title: "時間",
       status: {
-        booked: "予定あり",
+        notOffered: "予約対象外",
         available: "予約可",
         selected: "選択中",
         unavailable: "予約不可"
@@ -277,7 +277,7 @@ export const meetPageCopy: Record<
     slots: {
       title: "시간",
       status: {
-        booked: "예약됨",
+        notOffered: "예약 대상 아님",
         available: "예약 가능",
         selected: "선택됨",
         unavailable: "예약 불가"

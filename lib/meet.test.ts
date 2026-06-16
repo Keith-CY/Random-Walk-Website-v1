@@ -3,6 +3,7 @@ import {
   getEarliestMeetDateIso,
   getNextSelectableMeetDateIso,
   isSelectableMeetDate,
+  meetPageCopy,
   meetSlotStartUtcIso,
   validateMeetRequest
 } from "./meet";
@@ -49,6 +50,11 @@ describe("meet scheduling rules", () => {
     if (!rejected.ok) {
       expect(rejected.errors).toContain("slotId");
     }
+  });
+
+  test("labels fixed morning closure as not offered instead of booked", () => {
+    expect(meetPageCopy.en.slots.status.notOffered).toBe("Not offered");
+    expect(Object.values(meetPageCopy.en.slots.status)).not.toContain("Booked");
   });
 
   test("converts JST visit starts to UTC for Cal.com", () => {
