@@ -38,6 +38,51 @@ type BookingInput = {
   pageOrigin: string;
 };
 
+export type NodeRequestLike = {
+  method?: string;
+  url?: string;
+  headers: Record<string, string | string[] | undefined>;
+  body?: unknown;
+};
+
+export type NodeResponseLike = {
+  status: (statusCode: number) => NodeResponseLike;
+  setHeader: (name: string, value: string) => void;
+  send: (body: string) => void;
+};
+
+function firstHeaderValue(value: string | string[] | undefined) {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+export function nodeRequestToWeb(request: NodeRequestLike) {
+  const host = firstHeaderValue(request.headers["x-forwarded-host"]) || firstHeaderValue(request.headers.host) || "random-walk.co.jp";
+  const protocol = firstHeaderValue(request.headers["x-forwarded-proto"]) || "https";
+  const url = new URL(request.url || "/", `${protocol}://${host}`);
+  const headers = new Headers();
+
+  for (const [key, value] of Object.entries(request.headers)) {
+    if (typeof value === "string") headers.set(key, value);
+    else if (Array.isArray(value)) headers.set(key, value.join(", "));
+  }
+
+  const method = request.method || "GET";
+  const init: RequestInit = { method, headers };
+
+  if (method !== "GET" && method !== "HEAD" && request.body !== undefined) {
+    init.body = typeof request.body === "string" ? request.body : JSON.stringify(request.body);
+    if (!headers.has("content-type")) headers.set("content-type", "application/json");
+  }
+
+  return new Request(url, init);
+}
+
+export async function sendWebResponse(response: NodeResponseLike, webResponse: Response) {
+  webResponse.headers.forEach((value, key) => response.setHeader(key, value));
+  response.status(webResponse.status).send(await webResponse.text());
+}
+
 export function corsHeaders(request: Request, env: MeetEnv): Record<string, string> {
   const origin = request.headers.get("Origin");
   const allowedOrigin = env.MEET_ALLOWED_ORIGIN;

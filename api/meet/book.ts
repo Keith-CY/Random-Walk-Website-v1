@@ -2,7 +2,11 @@ import {
   createCalBooking,
   getAvailableCalStarts,
   jsonResponse,
+  nodeRequestToWeb,
+  type NodeRequestLike,
+  type NodeResponseLike,
   optionsResponse,
+  sendWebResponse,
   serverEnv,
   slotStartUtcIso,
   validateBookingPayload
@@ -59,18 +63,18 @@ async function handlePost(request: Request) {
   }
 }
 
-const bookFunction = {
-  async fetch(request: Request) {
-    if (request.method === "OPTIONS") {
-      return optionsResponse(request, serverEnv());
-    }
+export default async function handler(request: NodeRequestLike, response: NodeResponseLike) {
+  const webRequest = nodeRequestToWeb(request);
 
-    if (request.method !== "POST") {
-      return jsonResponse(request, serverEnv(), { status: "error", error: "method_not_allowed" }, 405);
-    }
-
-    return handlePost(request);
+  if (webRequest.method === "OPTIONS") {
+    await sendWebResponse(response, optionsResponse(webRequest, serverEnv()));
+    return;
   }
-};
 
-export default bookFunction;
+  if (webRequest.method !== "POST") {
+    await sendWebResponse(response, jsonResponse(webRequest, serverEnv(), { status: "error", error: "method_not_allowed" }, 405));
+    return;
+  }
+
+  await sendWebResponse(response, await handlePost(webRequest));
+}

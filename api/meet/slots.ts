@@ -3,7 +3,11 @@ import {
   dateRange,
   getAvailableCalStarts,
   jsonResponse,
+  nodeRequestToWeb,
+  type NodeRequestLike,
+  type NodeResponseLike,
   optionsResponse,
+  sendWebResponse,
   serverEnv
 } from "../../server/meet-cal";
 
@@ -40,18 +44,18 @@ async function handleGet(request: Request) {
   }
 }
 
-const slotsFunction = {
-  async fetch(request: Request) {
-    if (request.method === "OPTIONS") {
-      return optionsResponse(request, serverEnv());
-    }
+export default async function handler(request: NodeRequestLike, response: NodeResponseLike) {
+  const webRequest = nodeRequestToWeb(request);
 
-    if (request.method !== "GET") {
-      return jsonResponse(request, serverEnv(), { status: "error", error: "method_not_allowed" }, 405);
-    }
-
-    return handleGet(request);
+  if (webRequest.method === "OPTIONS") {
+    await sendWebResponse(response, optionsResponse(webRequest, serverEnv()));
+    return;
   }
-};
 
-export default slotsFunction;
+  if (webRequest.method !== "GET") {
+    await sendWebResponse(response, jsonResponse(webRequest, serverEnv(), { status: "error", error: "method_not_allowed" }, 405));
+    return;
+  }
+
+  await sendWebResponse(response, await handleGet(webRequest));
+}
