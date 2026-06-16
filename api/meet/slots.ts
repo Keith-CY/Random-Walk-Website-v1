@@ -7,11 +7,7 @@ import {
   serverEnv
 } from "../../server/meet-cal";
 
-export function OPTIONS(request: Request) {
-  return optionsResponse(request, serverEnv());
-}
-
-export async function GET(request: Request) {
+async function handleGet(request: Request) {
   const env = serverEnv();
   const url = new URL(request.url);
   const start = url.searchParams.get("start") || new Date().toISOString().slice(0, 10);
@@ -43,3 +39,19 @@ export async function GET(request: Request) {
     );
   }
 }
+
+const slotsFunction = {
+  async fetch(request: Request) {
+    if (request.method === "OPTIONS") {
+      return optionsResponse(request, serverEnv());
+    }
+
+    if (request.method !== "GET") {
+      return jsonResponse(request, serverEnv(), { status: "error", error: "method_not_allowed" }, 405);
+    }
+
+    return handleGet(request);
+  }
+};
+
+export default slotsFunction;

@@ -8,11 +8,7 @@ import {
   validateBookingPayload
 } from "../../server/meet-cal";
 
-export function OPTIONS(request: Request) {
-  return optionsResponse(request, serverEnv());
-}
-
-export async function POST(request: Request) {
+async function handlePost(request: Request) {
   const env = serverEnv();
   let body: unknown;
 
@@ -62,3 +58,19 @@ export async function POST(request: Request) {
     );
   }
 }
+
+const bookFunction = {
+  async fetch(request: Request) {
+    if (request.method === "OPTIONS") {
+      return optionsResponse(request, serverEnv());
+    }
+
+    if (request.method !== "POST") {
+      return jsonResponse(request, serverEnv(), { status: "error", error: "method_not_allowed" }, 405);
+    }
+
+    return handlePost(request);
+  }
+};
+
+export default bookFunction;
