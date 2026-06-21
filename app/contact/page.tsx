@@ -4,10 +4,10 @@ import type { Metadata } from "next";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Meet",
+  title: "Contact",
   robots: { index: false, follow: true }
 };
 
-export default function MeetAliasPage() {
-  return <LocaleRedirect label="Meet Random Walk." path="/meet" />;
+export default function ContactAliasPage() {
+  return <LocaleRedirect label="Contact Random Walk." path="/contact" />;
 }
