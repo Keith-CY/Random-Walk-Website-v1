@@ -71,6 +71,7 @@ export const meetPageCopy: Record<
         notOffered: string;
         available: string;
         selected: string;
+        scheduled: string;
         unavailable: string;
       };
     };
@@ -124,6 +125,7 @@ export const meetPageCopy: Record<
         notOffered: "Not offered",
         available: "Available",
         selected: "Selected",
+        scheduled: "Scheduled",
         unavailable: "Unavailable"
       }
     },
@@ -176,6 +178,7 @@ export const meetPageCopy: Record<
         notOffered: "不开放预约",
         available: "可预约",
         selected: "已选择",
+        scheduled: "已预约",
         unavailable: "不可预约"
       }
     },
@@ -228,6 +231,7 @@ export const meetPageCopy: Record<
         notOffered: "予約対象外",
         available: "予約可",
         selected: "選択中",
+        scheduled: "予約済み",
         unavailable: "予約不可"
       }
     },
@@ -280,6 +284,7 @@ export const meetPageCopy: Record<
         notOffered: "예약 대상 아님",
         available: "예약 가능",
         selected: "선택됨",
+        scheduled: "예약됨",
         unavailable: "예약 불가"
       }
     },

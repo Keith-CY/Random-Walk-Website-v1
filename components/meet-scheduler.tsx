@@ -379,13 +379,23 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
               {meetSlots.map((slot) => {
                 const selected = selectedSlotId === slot.id;
                 const available = slotAvailable(slot.id);
+                const slotStatus =
+                  slot.policy === "blocked"
+                    ? "not-offered"
+                    : available
+                      ? "available"
+                      : availabilityStatus === "loaded"
+                        ? "scheduled"
+                        : "unavailable";
                 const status = selected
                   ? copy.slots.status.selected
-                  : slot.policy === "blocked"
+                  : slotStatus === "not-offered"
                     ? copy.slots.status.notOffered
-                    : available
+                    : slotStatus === "available"
                       ? copy.slots.status.available
-                      : copy.slots.status.unavailable;
+                      : slotStatus === "scheduled"
+                        ? copy.slots.status.scheduled
+                        : copy.slots.status.unavailable;
 
                 return (
                   <button
@@ -394,6 +404,7 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
                     type="button"
                     role="listitem"
                     data-selected={selected ? "true" : undefined}
+                    data-status={slotStatus}
                     disabled={!available}
                     onClick={() => selectSlot(slot.id)}
                   >

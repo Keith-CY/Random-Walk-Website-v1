@@ -57,6 +57,13 @@ describe("meet scheduling rules", () => {
     expect(Object.values(meetPageCopy.en.slots.status)).not.toContain("Booked");
   });
 
+  test("labels reserved afternoon visit slots as scheduled", () => {
+    expect(meetPageCopy.en.slots.status.scheduled).toBe("Scheduled");
+    expect(meetPageCopy.zh.slots.status.scheduled).toBe("已预约");
+    expect(meetPageCopy.ja.slots.status.scheduled).toBe("予約済み");
+    expect(meetPageCopy.ko.slots.status.scheduled).toBe("예약됨");
+  });
+
   test("converts JST visit starts to UTC for Cal.com", () => {
     expect(meetSlotStartUtcIso("2026-06-18", "early-afternoon")).toBe("2026-06-18T05:00:00.000Z");
     expect(meetSlotStartUtcIso("2026-06-18", "late-afternoon")).toBe("2026-06-18T07:00:00.000Z");
