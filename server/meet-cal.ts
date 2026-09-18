@@ -1,3 +1,6 @@
+import { buildCalBookingFieldsResponses } from "../lib/cal-booking";
+import { isMeetCapacityHeld } from "../lib/meet-capacity";
+
 const meetTimeZone = "Asia/Tokyo";
 const meetLeadDays = 2;
 const meetDurationMinutes = 120;
@@ -186,7 +189,11 @@ export function buildSlotAvailabilityForDate(dateIso: string, calStarts: Set<str
   const selectable = isSelectableMeetDate(dateIso, todayIso);
   return Object.fromEntries(
     meetSlots.map((slot) => {
-      const available = selectable && slot.policy === "bookable" && calStarts.has(slotStartUtcIso(dateIso, slot.id));
+      const available =
+        selectable &&
+        slot.policy === "bookable" &&
+        !isMeetCapacityHeld(dateIso, slot.id) &&
+        calStarts.has(slotStartUtcIso(dateIso, slot.id));
       return [slot.id, available];
     })
   );
@@ -251,15 +258,11 @@ export async function createCalBooking(env: MeetEnv, booking: BookingInput) {
       message: truncate(booking.message, 500),
       phone: truncate(booking.phone, 80)
     },
-    ...(env.CAL_MEET_INCLUDE_BOOKING_FIELDS === "false"
-      ? {}
-      : {
-          bookingFieldsResponses: {
-            message: booking.message,
-            phone: booking.phone,
-            office_address: env.MEET_OFFICE_ADDRESS || ""
-          }
-        })
+    bookingFieldsResponses: buildCalBookingFieldsResponses(env.CAL_MEET_INCLUDE_BOOKING_FIELDS !== "false", {
+      message: booking.message,
+      phone: booking.phone,
+      officeAddress: env.MEET_OFFICE_ADDRESS || ""
+    })
   };
 
   const response = await fetch("https://api.cal.com/v2/bookings", {

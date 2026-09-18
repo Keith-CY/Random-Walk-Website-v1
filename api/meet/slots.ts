@@ -1,3 +1,5 @@
+import { getMeetCapacityHoldsForDate, isMeetCapacityHeld } from "../../lib/meet-capacity";
+
 const meetTimeZone = "Asia/Tokyo";
 const meetLeadDays = 2;
 const meetDurationMinutes = 120;
@@ -250,7 +252,11 @@ function buildSlotAvailabilityForDate(dateIso: string, calStarts: Set<string>, t
   const selectable = isSelectableMeetDate(dateIso, todayIso);
   return Object.fromEntries(
     meetSlots.map((slot) => {
-      const available = selectable && slot.policy === "bookable" && calStarts.has(slotStartUtcIso(dateIso, slot.id));
+      const available =
+        selectable &&
+        slot.policy === "bookable" &&
+        !isMeetCapacityHeld(dateIso, slot.id) &&
+        calStarts.has(slotStartUtcIso(dateIso, slot.id));
       return [slot.id, available];
     })
   );
@@ -274,7 +280,8 @@ export default async function handler(request: VercelRequestLike, response?: Ver
     const calStarts = await getAvailableCalStarts(env, start, end);
     const days = dateRange(start, end).map((date) => ({
       date,
-      slots: buildSlotAvailabilityForDate(date, calStarts)
+      slots: buildSlotAvailabilityForDate(date, calStarts),
+      capacityHolds: getMeetCapacityHoldsForDate(date)
     }));
 
     return sendJson(response, 200, {

@@ -88,6 +88,7 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
   const [selectedSlotId, setSelectedSlotId] = useState<MeetSlotId | null>(null);
   const [visibleMonth, setVisibleMonth] = useState(monthKeyFromIso(initialDate));
   const [availability, setAvailability] = useState<AvailabilityByDate>({});
+  const [capacityHolds, setCapacityHolds] = useState<AvailabilityByDate>({});
   const [availabilityStatus, setAvailabilityStatus] = useState<"loading" | "loaded" | "mock" | "error">("loading");
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "error">("idle");
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -123,20 +124,24 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
         }
 
         const body = (await response.json()) as {
-          days?: Array<{ date: string; slots: SlotAvailability }>;
+          days?: Array<{ date: string; slots: SlotAvailability; capacityHolds?: SlotAvailability }>;
         };
         const nextAvailability: AvailabilityByDate = {};
+        const nextCapacityHolds: AvailabilityByDate = {};
 
         for (const day of body.days ?? []) {
           nextAvailability[day.date] = day.slots;
+          nextCapacityHolds[day.date] = day.capacityHolds ?? {};
         }
 
         setAvailability(nextAvailability);
+        setCapacityHolds(nextCapacityHolds);
         setAvailabilityStatus("loaded");
       } catch {
         if (controller.signal.aborted) return;
         if (allowMock) {
           setAvailability({});
+          setCapacityHolds({});
           setAvailabilityStatus("mock");
           return;
         }
@@ -156,6 +161,10 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
     if (availabilityStatus === "loaded") return availability[selectedDate]?.[slotId] === true;
     const remote = availability[selectedDate]?.[slotId];
     return remote !== false;
+  }
+
+  function slotHasCapacityHold(slotId: MeetSlotId) {
+    return availabilityStatus === "loaded" && capacityHolds[selectedDate]?.[slotId] === true;
   }
 
   function selectDate(dateIso: string) {
@@ -379,12 +388,15 @@ export function MeetScheduler({ locale, pageOrigin, apiBase, allowMock, officeAd
               {meetSlots.map((slot) => {
                 const selected = selectedSlotId === slot.id;
                 const available = slotAvailable(slot.id);
+                const capacityHeld = slotHasCapacityHold(slot.id);
                 const slotStatus =
                   slot.policy === "blocked"
                     ? "not-offered"
                     : available
                       ? "available"
-                      : availabilityStatus === "loaded"
+                      : capacityHeld
+                        ? "unavailable"
+                        : availabilityStatus === "loaded"
                         ? "scheduled"
                         : "unavailable";
                 const status = selected

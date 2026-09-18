@@ -1,3 +1,6 @@
+import { buildCalBookingFieldsResponses } from "../../lib/cal-booking";
+import { isMeetCapacityHeld } from "../../lib/meet-capacity";
+
 const meetTimeZone = "Asia/Tokyo";
 const meetLeadDays = 2;
 const meetDurationMinutes = 120;
@@ -323,15 +326,11 @@ async function createCalBooking(env: MeetEnv, booking: BookingInput) {
       message: truncate(booking.message, 500),
       phone: truncate(booking.phone, 80)
     },
-    ...(env.CAL_MEET_INCLUDE_BOOKING_FIELDS === "false"
-      ? {}
-      : {
-          bookingFieldsResponses: {
-            message: booking.message,
-            phone: booking.phone,
-            office_address: env.MEET_OFFICE_ADDRESS || ""
-          }
-        })
+    bookingFieldsResponses: buildCalBookingFieldsResponses(env.CAL_MEET_INCLUDE_BOOKING_FIELDS !== "false", {
+      message: booking.message,
+      phone: booking.phone,
+      officeAddress: env.MEET_OFFICE_ADDRESS || ""
+    })
   };
 
   const response = await fetch("https://api.cal.com/v2/bookings", {
@@ -373,6 +372,10 @@ export default async function handler(request: VercelRequestLike, response?: Ver
     const validation = validateBookingPayload(body);
     if (!validation.ok) {
       return sendJson(response, 400, { status: "error", errors: validation.errors });
+    }
+
+    if (isMeetCapacityHeld(validation.data.date, validation.data.slotId)) {
+      return sendJson(response, 409, { status: "error", error: "slot_unavailable" });
     }
 
     const calStarts = await getAvailableCalStarts(env, validation.data.date, validation.data.date);
