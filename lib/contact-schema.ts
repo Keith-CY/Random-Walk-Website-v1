@@ -36,18 +36,27 @@ function hasOneValidArrayValue(value: unknown, options: readonly string[]): bool
   return Array.isArray(value) && value.some((item) => typeof item === "string" && options.includes(item));
 }
 
+function isBlank(value: unknown): boolean {
+  return value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0);
+}
+
+// First contact only requires who you are and what you need; qualification fields are optional.
+function isOptionalOption<T extends readonly string[]>(value: unknown, options: T): boolean {
+  return isBlank(value) || isInOptions(value, options);
+}
+
 export function validateContactPayload(payload: ContactPayload): ValidationResult {
   const errors = new Set<string>();
 
   if (!isNonEmptyString(payload.name)) errors.add("name");
   if (!isNonEmptyString(payload.email) || !emailPattern.test(payload.email)) errors.add("email");
   if (!isNonEmptyString(payload.company)) errors.add("company");
-  if (!isInOptions(payload.industry, contactFieldOptions.industry)) errors.add("industry");
-  if (!isInOptions(payload.use_case, contactFieldOptions.use_case)) errors.add("use_case");
-  if (!hasOneValidArrayValue(payload.deployment_target, contactFieldOptions.deployment_target)) errors.add("deployment_target");
-  if (!isInOptions(payload.data_sensitivity, contactFieldOptions.data_sensitivity)) errors.add("data_sensitivity");
-  if (!isInOptions(payload.air_gapped_required, contactFieldOptions.air_gapped_required)) errors.add("air_gapped_required");
-  if (!isInOptions(payload.onsite_intro, contactFieldOptions.onsite_intro)) errors.add("onsite_intro");
+  if (!isOptionalOption(payload.industry, contactFieldOptions.industry)) errors.add("industry");
+  if (!isOptionalOption(payload.use_case, contactFieldOptions.use_case)) errors.add("use_case");
+  if (!isBlank(payload.deployment_target) && !hasOneValidArrayValue(payload.deployment_target, contactFieldOptions.deployment_target)) errors.add("deployment_target");
+  if (!isOptionalOption(payload.data_sensitivity, contactFieldOptions.data_sensitivity)) errors.add("data_sensitivity");
+  if (!isOptionalOption(payload.air_gapped_required, contactFieldOptions.air_gapped_required)) errors.add("air_gapped_required");
+  if (!isOptionalOption(payload.onsite_intro, contactFieldOptions.onsite_intro)) errors.add("onsite_intro");
   if (!isNonEmptyString(payload.message)) errors.add("message");
   if (!isBooleanTrue(payload.consent)) errors.add("consent");
   if (!isInOptions(payload.locale, locales)) errors.add("locale");

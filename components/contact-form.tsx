@@ -122,12 +122,12 @@ const contactFormCopy: Record<Locale, {
       email: "Work email *",
       company: "Company *",
       role: "Role",
-      industry: "Industry *",
-      useCase: "Use case *",
-      deploymentTarget: "Deployment target *",
-      dataSensitivity: "Data sensitivity *",
-      airGappedRequired: "Air-gapped required *",
-      onsiteIntro: "FDE support mode *",
+      industry: "Industry",
+      useCase: "Use case",
+      deploymentTarget: "Deployment target",
+      dataSensitivity: "Data sensitivity",
+      airGappedRequired: "Air-gapped required",
+      onsiteIntro: "FDE support mode",
       timeline: "Timeline",
       supportPreference: "Support preference",
       complianceConstraints: "Compliance constraints",
@@ -159,12 +159,12 @@ const contactFormCopy: Record<Locale, {
       email: "工作邮箱 *",
       company: "公司 *",
       role: "职位",
-      industry: "行业 *",
-      useCase: "使用场景 *",
-      deploymentTarget: "部署目标 *",
-      dataSensitivity: "数据敏感度 *",
-      airGappedRequired: "是否需要隔离环境 *",
-      onsiteIntro: "FDE 支持方式 *",
+      industry: "行业",
+      useCase: "使用场景",
+      deploymentTarget: "部署目标",
+      dataSensitivity: "数据敏感度",
+      airGappedRequired: "是否需要隔离环境",
+      onsiteIntro: "FDE 支持方式",
       timeline: "时间计划",
       supportPreference: "支持偏好",
       complianceConstraints: "合规约束",
@@ -205,12 +205,12 @@ const contactFormCopy: Record<Locale, {
       email: "業務用メール *",
       company: "会社名 *",
       role: "役割",
-      industry: "業界 *",
-      useCase: "用途 *",
-      deploymentTarget: "配備先 *",
-      dataSensitivity: "データ感度 *",
-      airGappedRequired: "エアギャップ要否 *",
-      onsiteIntro: "FDE 支援方式 *",
+      industry: "業界",
+      useCase: "用途",
+      deploymentTarget: "配備先",
+      dataSensitivity: "データ感度",
+      airGappedRequired: "エアギャップ要否",
+      onsiteIntro: "FDE 支援方式",
       timeline: "時期",
       supportPreference: "サポート希望",
       complianceConstraints: "コンプライアンス制約",
@@ -251,12 +251,12 @@ const contactFormCopy: Record<Locale, {
       email: "업무용 이메일 *",
       company: "회사 *",
       role: "역할",
-      industry: "산업 *",
-      useCase: "사용 사례 *",
-      deploymentTarget: "배포 대상 *",
-      dataSensitivity: "데이터 민감도 *",
-      airGappedRequired: "에어갭 필요 여부 *",
-      onsiteIntro: "FDE 지원 방식 *",
+      industry: "산업",
+      useCase: "사용 사례",
+      deploymentTarget: "배포 대상",
+      dataSensitivity: "데이터 민감도",
+      airGappedRequired: "에어갭 필요 여부",
+      onsiteIntro: "FDE 지원 방식",
       timeline: "일정",
       supportPreference: "지원 선호",
       complianceConstraints: "컴플라이언스 제약",
@@ -464,16 +464,16 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.industry}</span>
-            <select className="rw-field" name="industry" required defaultValue="" {...fieldErrorProps("industry")}>
-              <option value="" disabled>{copy.placeholders.selectOne}</option>
+            <select className="rw-field" name="industry" defaultValue="" {...fieldErrorProps("industry")}>
+              <option value="">{copy.placeholders.selectOne}</option>
               {contactFieldOptions.industry.map((option) => <option key={option} value={option}>{copy.options.industry[option]}</option>)}
             </select>
             <FieldError field="industry" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{isSpeakingIntent ? speakingCopy.topicLabel : copy.fields.useCase}</span>
-            <select className="rw-field" name="use_case" required key={isSpeakingIntent ? "speaking-use-case" : "project-use-case"} defaultValue={isSpeakingIntent ? "speaking-workshop-panel" : ""} {...fieldErrorProps("use_case")}>
-              <option value="" disabled>{copy.placeholders.selectOne}</option>
+            <select className="rw-field" name="use_case" key={isSpeakingIntent ? "speaking-use-case" : "project-use-case"} defaultValue={isSpeakingIntent ? "speaking-workshop-panel" : ""} {...fieldErrorProps("use_case")}>
+              <option value="">{copy.placeholders.selectOne}</option>
               {contactFieldOptions.use_case.map((option) => <option key={option} value={option}>{copy.options.use_case[option]}</option>)}
             </select>
             <FieldError field="use_case" />
@@ -503,24 +503,24 @@ export function ContactForm({ locale, pageOrigin, emailAddress }: { locale: Loca
         <div className="grid gap-4 md:grid-cols-3">
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.dataSensitivity}</span>
-            <select className="rw-field" name="data_sensitivity" required defaultValue="" {...fieldErrorProps("data_sensitivity")}>
-              <option value="" disabled>{copy.placeholders.selectOne}</option>
+            <select className="rw-field" name="data_sensitivity" defaultValue="" {...fieldErrorProps("data_sensitivity")}>
+              <option value="">{copy.placeholders.selectOne}</option>
               {contactFieldOptions.data_sensitivity.map((option) => <option key={option} value={option}>{copy.options.data_sensitivity[option]}</option>)}
             </select>
             <FieldError field="data_sensitivity" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.airGappedRequired}</span>
-            <select className="rw-field" name="air_gapped_required" required defaultValue="" {...fieldErrorProps("air_gapped_required")}>
-              <option value="" disabled>{copy.placeholders.selectOne}</option>
+            <select className="rw-field" name="air_gapped_required" defaultValue="" {...fieldErrorProps("air_gapped_required")}>
+              <option value="">{copy.placeholders.selectOne}</option>
               {contactFieldOptions.air_gapped_required.map((option) => <option key={option} value={option}>{copy.options.air_gapped_required[option]}</option>)}
             </select>
             <FieldError field="air_gapped_required" />
           </label>
           <label className="grid gap-2">
             <span className="font-medium">{copy.fields.onsiteIntro}</span>
-            <select className="rw-field" name="onsite_intro" required defaultValue="" {...fieldErrorProps("onsite_intro")}>
-              <option value="" disabled>{copy.placeholders.selectOne}</option>
+            <select className="rw-field" name="onsite_intro" defaultValue="" {...fieldErrorProps("onsite_intro")}>
+              <option value="">{copy.placeholders.selectOne}</option>
               {contactFieldOptions.onsite_intro.map((option) => <option key={option} value={option}>{copy.options.onsite_intro[option]}</option>)}
             </select>
             <FieldError field="onsite_intro" />

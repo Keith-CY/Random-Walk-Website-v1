@@ -50,10 +50,50 @@ describe("contact lead intake validation", () => {
       expect(result.errors).toContain("name");
       expect(result.errors).toContain("email");
       expect(result.errors).toContain("company");
-      expect(result.errors).toContain("deployment_target");
+      expect(result.errors).not.toContain("deployment_target");
       expect(result.errors).toContain("consent");
       expect(result.errors).toContain("file");
       expect(result.errors).toContain("message");
+    }
+  });
+
+  test("accepts a minimal first-contact payload without qualification answers", () => {
+    const result = validateContactPayload({
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      company: "Analytical Engines Ltd",
+      industry: "",
+      use_case: "",
+      deployment_target: [],
+      data_sensitivity: "",
+      air_gapped_required: "",
+      onsite_intro: "",
+      message: "We want to discuss a private model workflow.",
+      consent: true,
+      locale: "en",
+      page_origin: "/en/contact"
+    });
+
+    expect(result.ok).toBe(true);
+  });
+
+  test("still rejects unknown values in optional qualification fields", () => {
+    const result = validateContactPayload({
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      company: "Analytical Engines Ltd",
+      industry: "crypto-casino",
+      deployment_target: ["mainframe"],
+      air_gapped_required: "maybe",
+      message: "We want to discuss a private model workflow.",
+      consent: true,
+      locale: "en",
+      page_origin: "/en/contact"
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors).toEqual(expect.arrayContaining(["industry", "deployment_target", "air_gapped_required"]));
     }
   });
 
