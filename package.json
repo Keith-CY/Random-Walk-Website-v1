@@ -11,10 +11,11 @@
   "scripts": {
     "dev": "next dev",
     "refresh:melix": "node scripts/fetch-melix-metadata.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "prebuild": "bun run refresh:melix",
     "build": "next build",
     "lint": "eslint .",
-    "test": "bun test lib/contact-schema.test.ts lib/meet.test.ts lib/cal-booking.test.ts lib/meet-capacity.test.ts lib/content.test.ts lib/visual-assets.test.ts lib/layout-shell.test.ts lib/visual-tokens.test.ts lib/page-ui-consistency.test.ts lib/i18n-completeness.test.ts lib/footer-links.test.ts lib/public-copy.test.ts",
+    "test": "bun test lib/contact-schema.test.ts lib/meet.test.ts lib/cal-booking.test.ts lib/meet-capacity.test.ts lib/content.test.ts lib/visual-assets.test.ts lib/layout-shell.test.ts lib/visual-tokens.test.ts lib/page-ui-consistency.test.ts lib/i18n-completeness.test.ts lib/footer-links.test.ts lib/public-copy.test.ts lib/image-loader.test.ts",
     "visual:check": "node scripts/visual-check.mjs"
   },
   "dependencies": {

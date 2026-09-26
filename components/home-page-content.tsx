@@ -23,6 +23,8 @@ import {
   workPageCopy
 } from "@/lib/site-data";
 
+const thirdColumnSizes = "(max-width: 900px) 100vw, 33vw";
+
 const homeServiceAssetIds = [
   "services-dataset-package",
   "services-lora-adapter",
@@ -116,9 +118,9 @@ export function HomePageContent({ locale }: { locale: Locale }) {
             ))}
           </div>
           <div className="rw-visual-strip mt-7">
-            <PlaceholderImage assetId="home-evidence-archive-scene" ratio="16 / 9" />
-            <PlaceholderImage assetId="services-deployment-topology" ratio="16 / 9" />
-            <PlaceholderImage assetId="home-first-review-reference" ratio="16 / 9" variant="paper" />
+            <PlaceholderImage assetId="home-evidence-archive-scene" ratio="16 / 9" sizes={thirdColumnSizes} />
+            <PlaceholderImage assetId="services-deployment-topology" ratio="16 / 9" sizes={thirdColumnSizes} />
+            <PlaceholderImage assetId="home-first-review-reference" ratio="16 / 9" variant="paper" sizes={thirdColumnSizes} />
           </div>
         </div>
       </section>
@@ -212,7 +214,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
                 <article className="rw-presence-proof" key={event.slug}>
                   <div className="rw-presence-proof-media">
                     <a className="rw-event-image-link" href={event.href} target="_blank" rel="noreferrer" aria-label={`${event.title}: ${event.linkLabel}`}>
-                      <PlaceholderImage assetId={event.assetId} ratio="1 / 1" variant="paper" />
+                      <PlaceholderImage assetId={event.assetId} ratio="1 / 1" variant="paper" sizes="160px" />
                     </a>
                   </div>
                   <div>
@@ -282,7 +284,7 @@ export function HomePageContent({ locale }: { locale: Locale }) {
             {services.map((service, index) => (
               <article className={index === 0 ? "rw-service-bento-feature" : ""} key={service.title}>
                 <div className="rw-card-media">
-                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio={index === 0 ? "16 / 9" : "16 / 8"} variant="paper" />
+                  <PlaceholderImage assetId={homeServiceAssetIds[index % homeServiceAssetIds.length]} ratio={index === 0 ? "16 / 9" : "16 / 8"} variant="paper" sizes={index === 0 ? undefined : thirdColumnSizes} />
                 </div>
                 <h3 className="rw-subheading">{service.title}</h3>
                 <p className="rw-body mt-4">{service.description}</p>

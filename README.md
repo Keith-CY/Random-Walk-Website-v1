@@ -14,6 +14,8 @@ bun dev
 
 The production build uses `output: "export"` and emits a static site under `out/`.
 
+Images go through a custom `next/image` loader (`lib/image-loader.ts`). Every production build first runs `scripts/optimize-images.mjs` (triggered from `next.config.ts`), which renders WebP variants of each PNG/JPG in `public/` into the git-ignored `public/_optimized/` at the widths in `lib/image-widths.json`. Run `bun run optimize:images` to generate them manually; `next dev` serves the original files. `sitemap.xml` and `robots.txt` are generated from `app/sitemap.ts` and `app/robots.ts`.
+
 ## Environment
 
 - `NEXT_PUBLIC_SITE_URL`: canonical production origin.

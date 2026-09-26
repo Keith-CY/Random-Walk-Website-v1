@@ -8,3 +8,4 @@ node_modules/
 .env.*.local
 .superpowers/
 .visual-check/
+public/_optimized/

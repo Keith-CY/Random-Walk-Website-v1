@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { visualAssets, type VisualAssetId } from "@/lib/visual-assets";
+import { visualAssets, type VisualAsset, type VisualAssetId } from "@/lib/visual-assets";
 
 type PlaceholderImageProps = {
   assetId?: VisualAssetId;
@@ -8,12 +8,13 @@ type PlaceholderImageProps = {
   variant?: "paper" | "stone" | "ink";
   ratio?: string;
   priority?: boolean;
+  sizes?: string;
 };
 
-export function PlaceholderImage({ assetId, label, description, variant = "stone", ratio = "16 / 10", priority = false }: PlaceholderImageProps) {
+export function PlaceholderImage({ assetId, label, description, variant = "stone", ratio = "16 / 10", priority = false, sizes = "(max-width: 900px) 100vw, 50vw" }: PlaceholderImageProps) {
   const isInk = variant === "ink";
   const isPaper = variant === "paper";
-  const asset = assetId ? visualAssets[assetId] : null;
+  const asset: VisualAsset | null = assetId ? visualAssets[assetId] : null;
   const isExternal = asset?.src.startsWith("http://") || asset?.src.startsWith("https://") || false;
   const isPhoto = asset?.src.startsWith("photos/") ?? false;
   const isProductCover = asset?.src.startsWith("images/product-covers/") ?? false;
@@ -23,7 +24,8 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
   const displayDescription = description;
 
   if (asset) {
-    const loadingProps = priority ? { priority: true } : { loading: "eager" as const };
+    const loadingProps = priority ? { priority: true } : { loading: "lazy" as const };
+    const fitsInside = isExternal || asset.fit === "contain";
 
     return (
       <figure
@@ -34,9 +36,9 @@ export function PlaceholderImage({ assetId, label, description, variant = "stone
           src={isExternal ? asset.src : `/${asset.src}`}
           alt={asset.alt}
           fill
-          sizes="(max-width: 900px) 100vw, 50vw"
+          sizes={sizes}
           {...loadingProps}
-          className={isExternal ? "object-contain" : "object-cover"}
+          className={fitsInside ? "object-contain" : "object-cover"}
         />
         {!usesNaturalImageTreatment ? <div className="rw-engraving-lines" aria-hidden="true" /> : null}
         <div className="rw-image-shimmer" aria-hidden="true" />

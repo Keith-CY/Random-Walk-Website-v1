@@ -18,7 +18,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="rw-container rw-footer-inner">
         <div className="rw-footer-top">
           <div className="rw-footer-brand">
-            <Image src="/brand/logo-wordmark.svg" alt="Random Walk" width={220} height={34} className="rw-footer-logo h-auto w-[220px] invert" />
+            <Image src="/brand/logo-wordmark.svg" alt="Random Walk" unoptimized width={220} height={34} className="rw-footer-logo h-auto w-[220px] invert" />
             <p className="rw-body mt-5 max-w-md">
               {dictionary.footer.description}
             </p>

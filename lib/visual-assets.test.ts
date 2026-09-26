@@ -59,7 +59,7 @@ describe("generated visual asset registry", () => {
     for (const id of generatedIds) {
       expect(visualAssetIds).toContain(id as (typeof visualAssetIds)[number]);
       const asset = visualAssets[id as keyof typeof visualAssets];
-      expect(asset.alt).toMatch(/ChatGPT generated placeholder/i);
+      expect(asset.caption).toMatch(/ChatGPT generated placeholder/i);
       expect(asset.replacementBrief).toMatch(/approved|reviewed|real/i);
     }
   });
@@ -71,7 +71,7 @@ describe("generated visual asset registry", () => {
       const asset = visualAssets[id];
       expect(asset.src).toMatch(/^photos\/.+\.png$/);
       expect(id).toMatch(/^company-team-/);
-      expect(asset.alt).toMatch(/Titan-inspired|Asian technology team/i);
+      expect(`${asset.alt} ${asset.caption}`).toMatch(/Titan-inspired|technology team/i);
       expect(asset.replacementBrief).toMatch(/Random Walk team|team culture/i);
       expect(existsSync(join(projectRoot, "public", asset.src)), `${id} should point to an existing team photo asset`).toBe(true);
     }
@@ -103,6 +103,25 @@ describe("generated visual asset registry", () => {
       const asset = visualAssets[id];
       expect(`${asset.alt} ${asset.caption}`).toMatch(/neo-engraved/i);
       expect(`${asset.alt} ${asset.caption}`).not.toMatch(/scene|composite|dashboard|full building|city street|workflow illustration/i);
+    }
+  });
+
+  test("keeps generation and prompt wording out of public alt text", () => {
+    const promptWording = /chatgpt|generated|placeholder|titan-inspired|neo-engraved|temporary|external/i;
+
+    for (const id of visualAssetIds) {
+      const asset = visualAssets[id];
+      expect(asset.alt, id).not.toMatch(promptWording);
+      expect(asset.src, id).not.toMatch(/^https?:\/\//);
+    }
+  });
+
+  test("marks engraved illustrations as decorative", () => {
+    for (const id of visualAssetIds) {
+      const asset = visualAssets[id];
+      if (/neo-engraved asset/i.test(asset.caption)) {
+        expect(asset.alt, id).toBe("");
+      }
     }
   });
 
