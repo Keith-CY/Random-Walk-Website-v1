@@ -33,7 +33,7 @@ export type DetailPageCopy = {
     description: string;
   }>;
   sections: DetailSection[];
-  notice: string;
+  notice?: string;
   closing?: {
     title: string;
     description: string;
@@ -8552,7 +8552,7 @@ export const standaloneDetailPages: DetailCollection<StandaloneDetailSlug> = {
           points: ["Article title", "Topic category", "Related service or creation", "Publication boundary note"]
         }
       ],
-      notice: "This page is intentionally distinct from Notes: it explains the article surface and links to the current public material.",
+      notice: undefined,
       closing: {
         title: "Read the longer public context.",
         description: "Articles are for readers who want Random Walk's fuller explanations of systems work, boundaries, services, and creations.",
@@ -8795,7 +8795,7 @@ export const standaloneDetailPages: DetailCollection<StandaloneDetailSlug> = {
           ]
         }
       ],
-      notice: "本页有意与 笔记 区分开来：它说明 article 界面，并链接到当前 public 材料。",
+      notice: undefined,
       closing: {
         title: "阅读更完整的公开 上下文。",
         description: "文章 面向希望了解 Random Walk 对 systems work、边界、服务 与 creations 更完整阐释的读者。",
@@ -9105,7 +9105,7 @@ export const standaloneDetailPages: DetailCollection<StandaloneDetailSlug> = {
           ]
         }
       ],
-      notice: "このページは ノート と意図的に区別されています。article 画面 を説明し、現在の public 資料 へリンクします。",
+      notice: undefined,
       closing: {
         title: "より長い public 文脈 を読む。",
         description: "記事 は、Random Walk による systems work、境界、サービス、creations のより完全な説明を求める読者のためのものです。",
@@ -9415,7 +9415,7 @@ export const standaloneDetailPages: DetailCollection<StandaloneDetailSlug> = {
           ]
         }
       ],
-      notice: "이 페이지는 의도적으로 노트와 구분됩니다. article 화면를 설명하고 현재 public 자료로 연결합니다.",
+      notice: undefined,
       closing: {
         title: "더 긴 public 맥락를 읽으세요.",
         description: "글는 Random Walk의 systems work, 경계, 서비스, creations에 대한 더 충분한 설명을 원하는 독자를 위한 것입니다.",
@@ -9895,10 +9895,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "Melix is a local AI runtime and model workbench for Apple Silicon.", points: ["Local model loading", "LoRA adaptation", "Benchmark and evaluation records", "CLI and local server workflows"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use Melix when model work should stay close to the machine, local data, and operator review.", points: ["Apple Silicon development", "Local inference", "Controlled evaluation", "Private model workflows"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not position Melix as generic cloud AI tooling.", points: ["Not a hosted AI platform", "Not a cloud control plane", "Not a universal orchestration suite"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use Melix when model work should stay close to the machine, local data, and operator review.", points: ["Apple Silicon development", "Local inference", "Controlled evaluation", "Private model workflows"] }
       ],
-      notice: "Melix should read as local execution, privacy, and Apple Silicon performance, not as generic cloud AI tooling.",
+      notice: undefined,
       closing: undefined
     },
     "1-tok": {
@@ -9908,10 +9907,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "1-TOK is a marketplace for agent runtime work with token-based usage metering.", points: ["Agent runtime tasks", "Token output metering", "Streamed execution", "Settlement records"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use 1-TOK when agent work needs a clear usage model and settlement can follow the execution stream.", points: ["Runtime work requests", "Usage-aware coordination", "Streaming output", "Work marketplace context"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not reduce 1-TOK to simple runtime rent or a generic freelance marketplace.", points: ["Not simple server rental", "Not a generic gig marketplace", "Do not make settlement the whole story"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use 1-TOK when agent work needs a clear usage model and settlement can follow the execution stream.", points: ["Runtime work requests", "Usage-aware coordination", "Streaming output", "Work marketplace context"] }
       ],
-      notice: "1-TOK should be understood as token-metered agent runtime work, not generic freelance work or simple infrastructure rental.",
+      notice: undefined,
       closing: undefined
     },
     "fiber-link": {
@@ -9921,10 +9919,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "Fiber Link brings Fiber-based reward and settlement flows into community products.", points: ["Community tipping", "Creator rewards", "Platform balances", "Withdrawals"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use Fiber Link when a community platform needs rewards and balances without making users handle complex on-chain steps.", points: ["Community platforms", "Creator programs", "Reward balances", "CKB Fiber settlement"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not claim every user flow is fully non-custodial.", points: ["Hosted service components may exist", "Platform balances are part of the flow", "Avoid crypto-first marketing"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use Fiber Link when a community platform needs rewards and balances without making users handle complex on-chain steps.", points: ["Community platforms", "Creator programs", "Reward balances", "CKB Fiber settlement"] }
       ],
-      notice: "Fiber Link can mention CKB and Fiber where needed, but the page should emphasize community settlement and usable product flows.",
+      notice: undefined,
       closing: undefined
     },
     neuron: {
@@ -9934,10 +9931,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "Neuron is desktop wallet infrastructure for Nervos CKB.", points: ["CKB asset management", "Governance activity", "Script interactions", "Open-source desktop app"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use Neuron when the work needs a concrete reference for CKB asset control and wallet operation.", points: ["Desktop wallet context", "Asset control", "CKB scripts", "Nervos ecosystem operations"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not describe Neuron as a general multi-chain wallet or local AI workspace.", points: ["Not a generic wallet suite", "Not an AI product", "Not detached from Nervos CKB"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use Neuron when the work needs a concrete reference for CKB asset control and wallet operation.", points: ["Desktop wallet context", "Asset control", "CKB scripts", "Nervos ecosystem operations"] }
       ],
-      notice: "Neuron should be positioned as Nervos CKB wallet infrastructure, not as a general wallet or local AI interface.",
+      notice: undefined,
       closing: undefined
     },
     "utxo-data": {
@@ -9947,10 +9943,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "UTXO Data provides indexed data access for UTXO-style systems.", points: ["Indexed chain activity", "API access", "Analytics infrastructure", "Product data support"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use UTXO Data when monitoring, investigation, or product workflows need structured UTXO activity.", points: ["Monitoring", "Investigation", "Product data", "Downstream applications"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not lead with broad blockchain marketing or imply universal live coverage.", points: ["Separate supported networks from planned ones", "Avoid universal coverage claims", "Keep the data-infrastructure focus"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use UTXO Data when monitoring, investigation, or product workflows need structured UTXO activity.", points: ["Monitoring", "Investigation", "Product data", "Downstream applications"] }
       ],
-      notice: "UTXO Data should read as structured data infrastructure, not as broad blockchain marketing.",
+      notice: undefined,
       closing: undefined
     },
     "distributed-paradigm": {
@@ -9960,10 +9955,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "Role", title: "What it is", description: "Distributed Paradigm is the Kuai-backed direction for actor-style distributed application structure.", points: ["Service boundaries", "Message passing", "Runtime structure", "Distributed coordination"] },
-        { eyebrow: "Fit", title: "Where it fits", description: "Use it when distributed systems need clearer ownership, coordination, and runtime-level design.", points: ["Distributed applications", "Actor-style coordination", "Service boundaries", "Kuai framework context"] },
-        { eyebrow: "Boundary", title: "What not to overclaim", description: "Do not position Distributed Paradigm as a standalone platform detached from Kuai.", points: ["Not independent of Kuai", "Not a generic platform claim", "Not broad distributed-system marketing"] }
+        { eyebrow: "Fit", title: "Where it fits", description: "Use it when distributed systems need clearer ownership, coordination, and runtime-level design.", points: ["Distributed applications", "Actor-style coordination", "Service boundaries", "Kuai framework context"] }
       ],
-      notice: "Distributed Paradigm should stay tied to Kuai and actor-style systems, not a standalone platform claim.",
+      notice: undefined,
       closing: undefined
     }
   },
@@ -9975,10 +9969,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "Melix 是面向 Apple Silicon 的本地 AI 运行时与模型工作台。", points: ["本地模型加载", "LoRA 适配", "基准测试与评估记录", "CLI 与本地服务器工作流"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当模型工作需要靠近机器、本地数据和人工评审时，Melix 是合适的参考。", points: ["Apple Silicon 开发", "本地推理", "受控评估", "私有模型工作流"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要将 Melix 表述为通用云端 AI 工具。", points: ["不是托管 AI 平台", "不是云端控制平面", "不是通用编排套件"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当模型工作需要靠近机器、本地数据和人工评审时，Melix 是合适的参考。", points: ["Apple Silicon 开发", "本地推理", "受控评估", "私有模型工作流"] }
       ],
-      notice: "Melix 应该表达本地执行、隐私与 Apple Silicon 性能，而不是通用云端 AI 工具。",
+      notice: undefined,
       closing: undefined
     },
     "1-tok": {
@@ -9988,10 +9981,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "1-TOK 是面向 Agent 运行时工作的市场，并支持基于 token 的使用量计量。", points: ["Agent 运行时任务", "Token 输出计量", "流式执行", "结算记录"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当 Agent 工作需要清晰的使用量模型，并且结算可以跟随执行流推进时，1-TOK 更合适。", points: ["运行时工作请求", "使用量感知协作", "流式输出", "工作市场场景"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要将 1-TOK 简化为单纯运行时租赁，或泛化为普通自由职业市场。", points: ["不是简单服务器租赁", "不是普通零工市场", "不要把结算作为唯一主叙事"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当 Agent 工作需要清晰的使用量模型，并且结算可以跟随执行流推进时，1-TOK 更合适。", points: ["运行时工作请求", "使用量感知协作", "流式输出", "工作市场场景"] }
       ],
-      notice: "1-TOK 应被理解为按 token 计量的 Agent 运行时工作，而不是普通自由职业或简单基础设施租赁。",
+      notice: undefined,
       closing: undefined
     },
     "fiber-link": {
@@ -10001,10 +9993,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "Fiber Link 将基于 Fiber 的奖励与结算流程带入社区产品。", points: ["社区打赏", "创作者奖励", "平台余额", "提现"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当社区平台需要奖励和余额体系，但不希望用户处理复杂链上步骤时，Fiber Link 更合适。", points: ["社区平台", "创作者计划", "奖励余额", "CKB Fiber 结算"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要声称 Fiber Link 的每一条用户流程都是完全非托管的。", points: ["可能存在托管服务组件", "平台余额是流程的一部分", "避免 crypto-first 营销"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当社区平台需要奖励和余额体系，但不希望用户处理复杂链上步骤时，Fiber Link 更合适。", points: ["社区平台", "创作者计划", "奖励余额", "CKB Fiber 结算"] }
       ],
-      notice: "Fiber Link 可以在必要处提到 CKB 与 Fiber，但页面重点应是社区结算和可用的产品流程。",
+      notice: undefined,
       closing: undefined
     },
     neuron: {
@@ -10014,10 +10005,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "Neuron 是 Nervos CKB 的桌面钱包基础设施。", points: ["CKB 资产管理", "治理活动", "脚本交互", "开源桌面应用"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当工作需要 CKB 资产控制和钱包操作的具体参考时，Neuron 更合适。", points: ["桌面钱包场景", "资产控制", "CKB 脚本", "Nervos 生态操作"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要将 Neuron 描述为通用多链钱包或本地 AI 工作空间。", points: ["不是通用钱包套件", "不是 AI 产品", "不要脱离 Nervos CKB 语境"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当工作需要 CKB 资产控制和钱包操作的具体参考时，Neuron 更合适。", points: ["桌面钱包场景", "资产控制", "CKB 脚本", "Nervos 生态操作"] }
       ],
-      notice: "Neuron 应定位为 Nervos CKB 钱包基础设施，而不是通用钱包或本地 AI 界面。",
+      notice: undefined,
       closing: undefined
     },
     "utxo-data": {
@@ -10027,10 +10017,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "UTXO Data 为 UTXO 风格系统提供索引数据访问。", points: ["已索引链上活动", "API 访问", "分析基础设施", "产品数据支持"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当监控、调查或产品工作流需要结构化 UTXO 活动时，UTXO Data 更合适。", points: ["监控", "调查", "产品数据", "下游应用"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要用宽泛区块链叙事包装 UTXO Data，也不要声称具备全网络实时覆盖。", points: ["区分已支持与计划支持的网络", "避免全覆盖承诺", "保持数据基础设施叙事"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当监控、调查或产品工作流需要结构化 UTXO 活动时，UTXO Data 更合适。", points: ["监控", "调查", "产品数据", "下游应用"] }
       ],
-      notice: "UTXO Data 应表达为结构化数据基础设施，而不是宽泛的区块链营销。",
+      notice: undefined,
       closing: undefined
     },
     "distributed-paradigm": {
@@ -10040,10 +10029,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "定位", title: "它是什么", description: "Distributed Paradigm 是基于 Kuai 的 Actor 风格分布式应用结构方向。", points: ["服务边界", "消息传递", "运行时结构", "分布式协作"] },
-        { eyebrow: "适用", title: "适合什么场景", description: "当分布式系统需要更清晰的所有权、协作方式和运行时设计时，它更合适。", points: ["分布式应用", "Actor 风格协作", "服务边界", "Kuai 框架语境"] },
-        { eyebrow: "边界", title: "不要过度表达", description: "不要将 Distributed Paradigm 描述为脱离 Kuai 的独立平台。", points: ["不脱离 Kuai", "不是通用平台声明", "不要做宽泛分布式系统营销"] }
+        { eyebrow: "适用", title: "适合什么场景", description: "当分布式系统需要更清晰的所有权、协作方式和运行时设计时，它更合适。", points: ["分布式应用", "Actor 风格协作", "服务边界", "Kuai 框架语境"] }
       ],
-      notice: "Distributed Paradigm 应保持与 Kuai 和 Actor 风格系统绑定，而不是成为独立平台声明。",
+      notice: undefined,
       closing: undefined
     }
   },
@@ -10055,10 +10043,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "Melix は Apple Silicon のためのローカル AI ランタイムとモデルワークベンチです。", points: ["ローカルモデル読み込み", "LoRA 適応", "ベンチマークと評価記録", "CLI とローカルサーバーワークフロー"] },
-        { eyebrow: "適用", title: "適した場面", description: "モデル作業をマシン、ローカルデータ、オペレーターのレビューに近づけたい場合に適しています。", points: ["Apple Silicon 開発", "ローカル推論", "制御された評価", "プライベートなモデルワークフロー"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "Melix を汎用的なクラウド AI ツールとして表現しないこと。", points: ["ホスト型 AI プラットフォームではない", "クラウド制御プレーンではない", "汎用オーケストレーションスイートではない"] }
+        { eyebrow: "適用", title: "適した場面", description: "モデル作業をマシン、ローカルデータ、オペレーターのレビューに近づけたい場合に適しています。", points: ["Apple Silicon 開発", "ローカル推論", "制御された評価", "プライベートなモデルワークフロー"] }
       ],
-      notice: "Melix は、汎用クラウド AI ではなく、ローカル実行、プライバシー、Apple Silicon の性能として読まれるべきです。",
+      notice: undefined,
       closing: undefined
     },
     "1-tok": {
@@ -10068,10 +10055,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "1-TOK は、token ベースの利用量計測に対応する Agent ランタイムワークのマーケットプレイスです。", points: ["Agent ランタイムタスク", "Token 出力の計測", "ストリーミング実行", "精算記録"] },
-        { eyebrow: "適用", title: "適した場面", description: "Agent work に明確な利用量モデルが必要で、実行ストリームに沿って精算を進めたい場合に適しています。", points: ["ランタイムワーク依頼", "利用量を意識した協調", "ストリーミング出力", "ワークマーケットプレイス文脈"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "1-TOK を単なるランタイム貸出、または一般的なフリーランスマーケットプレイスとして扱わないこと。", points: ["単なるサーバーレンタルではない", "一般的なギグ市場ではない", "精算だけを主題にしない"] }
+        { eyebrow: "適用", title: "適した場面", description: "Agent work に明確な利用量モデルが必要で、実行ストリームに沿って精算を進めたい場合に適しています。", points: ["ランタイムワーク依頼", "利用量を意識した協調", "ストリーミング出力", "ワークマーケットプレイス文脈"] }
       ],
-      notice: "1-TOK は、一般的なフリーランス作業や単純な基盤レンタルではなく、token で計測する Agent ランタイムワークとして扱います。",
+      notice: undefined,
       closing: undefined
     },
     "fiber-link": {
@@ -10081,10 +10067,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "Fiber Link は、Fiber ベースの報酬と精算フローをコミュニティプロダクトへ組み込みます。", points: ["コミュニティのチップ", "クリエイター報酬", "プラットフォーム内残高", "出金"] },
-        { eyebrow: "適用", title: "適した場面", description: "複雑なオンチェーン手順をユーザーに求めず、コミュニティに報酬と残高の仕組みを入れたい場合に適しています。", points: ["コミュニティプラットフォーム", "クリエイタープログラム", "報酬残高", "CKB Fiber 精算"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "Fiber Link のすべてのユーザーフローが完全にノンカストディアルであると主張しないこと。", points: ["ホスト型サービス要素があり得る", "プラットフォーム内残高も流れの一部", "crypto-first な訴求を避ける"] }
+        { eyebrow: "適用", title: "適した場面", description: "複雑なオンチェーン手順をユーザーに求めず、コミュニティに報酬と残高の仕組みを入れたい場合に適しています。", points: ["コミュニティプラットフォーム", "クリエイタープログラム", "報酬残高", "CKB Fiber 精算"] }
       ],
-      notice: "Fiber Link では必要に応じて CKB と Fiber に触れつつ、中心はコミュニティ精算と使いやすいプロダクトフローに置きます。",
+      notice: undefined,
       closing: undefined
     },
     neuron: {
@@ -10094,10 +10079,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "Neuron は Nervos CKB のためのデスクトップウォレット基盤です。", points: ["CKB 資産管理", "ガバナンス活動", "スクリプト操作", "オープンソースのデスクトップアプリ"] },
-        { eyebrow: "適用", title: "適した場面", description: "CKB の資産管理とウォレット操作について具体的な参照が必要な場合に適しています。", points: ["デスクトップウォレット文脈", "資産管理", "CKB スクリプト", "Nervos エコシステム運用"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "Neuron を汎用マルチチェーンウォレット、またはローカル AI ワークスペースとして説明しないこと。", points: ["汎用ウォレットスイートではない", "AI プロダクトではない", "Nervos CKB から切り離さない"] }
+        { eyebrow: "適用", title: "適した場面", description: "CKB の資産管理とウォレット操作について具体的な参照が必要な場合に適しています。", points: ["デスクトップウォレット文脈", "資産管理", "CKB スクリプト", "Nervos エコシステム運用"] }
       ],
-      notice: "Neuron は Nervos CKB のウォレット基盤として位置づけ、汎用ウォレットやローカル AI インターフェースとはしません。",
+      notice: undefined,
       closing: undefined
     },
     "utxo-data": {
@@ -10107,10 +10091,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "UTXO Data は、UTXO 型システムのためのインデックス済みデータアクセスを提供します。", points: ["インデックス済みチェーン活動", "API アクセス", "分析基盤", "プロダクトデータ支援"] },
-        { eyebrow: "適用", title: "適した場面", description: "監視、調査、プロダクトワークフローで構造化された UTXO 活動が必要な場合に適しています。", points: ["監視", "調査", "プロダクトデータ", "下流アプリケーション"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "UTXO Data を広範なブロックチェーン訴求として見せたり、全ネットワークのリアルタイム対応を主張したりしないこと。", points: ["対応済みネットワークと計画中ネットワークを分ける", "全カバレッジを主張しない", "データ基盤の焦点を保つ"] }
+        { eyebrow: "適用", title: "適した場面", description: "監視、調査、プロダクトワークフローで構造化された UTXO 活動が必要な場合に適しています。", points: ["監視", "調査", "プロダクトデータ", "下流アプリケーション"] }
       ],
-      notice: "UTXO Data は、広範なブロックチェーン訴求ではなく、構造化データ基盤として読まれるべきです。",
+      notice: undefined,
       closing: undefined
     },
     "distributed-paradigm": {
@@ -10120,10 +10103,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "位置づけ", title: "これは何か", description: "Distributed Paradigm は、Kuai に基づく Actor スタイルの分散アプリケーション構造です。", points: ["サービス境界", "メッセージパッシング", "ランタイム構造", "分散協調"] },
-        { eyebrow: "適用", title: "適した場面", description: "分散システムに明確な所有、協調、ランタイム設計が必要な場合に適しています。", points: ["分散アプリケーション", "Actor スタイルの協調", "サービス境界", "Kuai フレームワーク文脈"] },
-        { eyebrow: "境界", title: "過度に主張しないこと", description: "Distributed Paradigm を Kuai から切り離された独立プラットフォームとして位置づけないこと。", points: ["Kuai から切り離さない", "汎用プラットフォーム主張ではない", "広範な分散システム訴求にしない"] }
+        { eyebrow: "適用", title: "適した場面", description: "分散システムに明確な所有、協調、ランタイム設計が必要な場合に適しています。", points: ["分散アプリケーション", "Actor スタイルの協調", "サービス境界", "Kuai フレームワーク文脈"] }
       ],
-      notice: "Distributed Paradigm は Kuai と Actor スタイルのシステムに結びつけ、独立プラットフォームとして扱いません。",
+      notice: undefined,
       closing: undefined
     }
   },
@@ -10135,10 +10117,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "Melix는 Apple Silicon을 위한 로컬 AI 런타임이자 모델 워크벤치입니다.", points: ["로컬 모델 로딩", "LoRA 적응", "벤치마크와 평가 기록", "CLI 및 로컬 서버 워크플로"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "모델 작업을 기기, 로컬 데이터, 운영자 리뷰 가까이에 둬야 할 때 적합합니다.", points: ["Apple Silicon 개발", "로컬 추론", "제어된 평가", "프라이빗 모델 워크플로"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "Melix를 일반적인 클라우드 AI 도구로 설명하지 마십시오.", points: ["호스팅형 AI 플랫폼이 아님", "클라우드 제어 평면이 아님", "범용 오케스트레이션 제품군이 아님"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "모델 작업을 기기, 로컬 데이터, 운영자 리뷰 가까이에 둬야 할 때 적합합니다.", points: ["Apple Silicon 개발", "로컬 추론", "제어된 평가", "프라이빗 모델 워크플로"] }
       ],
-      notice: "Melix는 일반 클라우드 AI가 아니라 로컬 실행, 프라이버시, Apple Silicon 성능으로 읽혀야 합니다.",
+      notice: undefined,
       closing: undefined
     },
     "1-tok": {
@@ -10148,10 +10129,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "1-TOK은 token 기반 사용량 계량을 지원하는 Agent 런타임 작업 마켓플레이스입니다.", points: ["Agent 런타임 작업", "Token 출력 계량", "스트리밍 실행", "정산 기록"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "Agent 작업에 명확한 사용량 모델이 필요하고 정산이 실행 흐름을 따라가야 할 때 적합합니다.", points: ["런타임 작업 요청", "사용량 인식 조율", "스트리밍 출력", "작업 마켓플레이스 맥락"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "1-TOK을 단순 런타임 임대나 일반 프리랜서 마켓플레이스로 축소하지 마십시오.", points: ["단순 서버 임대가 아님", "일반 긱 마켓이 아님", "정산만을 중심 서사로 삼지 않을 것"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "Agent 작업에 명확한 사용량 모델이 필요하고 정산이 실행 흐름을 따라가야 할 때 적합합니다.", points: ["런타임 작업 요청", "사용량 인식 조율", "스트리밍 출력", "작업 마켓플레이스 맥락"] }
       ],
-      notice: "1-TOK은 일반 프리랜서 작업이나 단순 인프라 임대가 아니라 token으로 계량되는 Agent 런타임 작업으로 다뤄야 합니다.",
+      notice: undefined,
       closing: undefined
     },
     "fiber-link": {
@@ -10161,10 +10141,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "Fiber Link는 Fiber 기반 보상과 정산 흐름을 커뮤니티 제품에 통합합니다.", points: ["커뮤니티 팁", "크리에이터 리워드", "플랫폼 잔액", "출금"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "커뮤니티 플랫폼에 보상과 잔액 시스템이 필요하지만 사용자가 복잡한 온체인 단계를 다루지 않아야 할 때 적합합니다.", points: ["커뮤니티 플랫폼", "크리에이터 프로그램", "리워드 잔액", "CKB Fiber 정산"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "Fiber Link의 모든 사용자 흐름이 완전한 논커스터디얼이라고 주장하지 마십시오.", points: ["호스팅 서비스 구성요소가 있을 수 있음", "플랫폼 잔액도 흐름의 일부", "crypto-first 마케팅을 피할 것"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "커뮤니티 플랫폼에 보상과 잔액 시스템이 필요하지만 사용자가 복잡한 온체인 단계를 다루지 않아야 할 때 적합합니다.", points: ["커뮤니티 플랫폼", "크리에이터 프로그램", "리워드 잔액", "CKB Fiber 정산"] }
       ],
-      notice: "Fiber Link는 필요한 곳에서 CKB와 Fiber를 언급하되, 중심은 커뮤니티 정산과 사용 가능한 제품 흐름이어야 합니다.",
+      notice: undefined,
       closing: undefined
     },
     neuron: {
@@ -10174,10 +10153,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "Neuron은 Nervos CKB를 위한 데스크톱 월렛 인프라입니다.", points: ["CKB 자산 관리", "거버넌스 활동", "스크립트 상호작용", "오픈소스 데스크톱 앱"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "CKB 자산 제어와 월렛 운용에 대한 구체적 참조가 필요할 때 적합합니다.", points: ["데스크톱 월렛 맥락", "자산 제어", "CKB 스크립트", "Nervos 생태계 운용"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "Neuron을 범용 멀티체인 월렛이나 로컬 AI 워크스페이스로 설명하지 마십시오.", points: ["범용 월렛 제품군이 아님", "AI 제품이 아님", "Nervos CKB와 분리하지 않을 것"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "CKB 자산 제어와 월렛 운용에 대한 구체적 참조가 필요할 때 적합합니다.", points: ["데스크톱 월렛 맥락", "자산 제어", "CKB 스크립트", "Nervos 생태계 운용"] }
       ],
-      notice: "Neuron은 범용 월렛이나 로컬 AI 인터페이스가 아니라 Nervos CKB 월렛 인프라로 포지셔닝해야 합니다.",
+      notice: undefined,
       closing: undefined
     },
     "utxo-data": {
@@ -10187,10 +10165,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "UTXO Data는 UTXO 스타일 시스템을 위한 인덱싱 데이터 접근을 제공합니다.", points: ["인덱싱된 체인 활동", "API 접근", "분석 인프라", "제품 데이터 지원"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "모니터링, 조사, 제품 워크플로에 구조화된 UTXO 활동이 필요할 때 적합합니다.", points: ["모니터링", "조사", "제품 데이터", "다운스트림 애플리케이션"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "UTXO Data를 광범위한 블록체인 마케팅으로 포장하거나 모든 네트워크의 실시간 커버리지를 주장하지 마십시오.", points: ["지원 네트워크와 계획 네트워크를 구분할 것", "전체 커버리지를 주장하지 않을 것", "데이터 인프라 중심을 유지할 것"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "모니터링, 조사, 제품 워크플로에 구조화된 UTXO 활동이 필요할 때 적합합니다.", points: ["모니터링", "조사", "제품 데이터", "다운스트림 애플리케이션"] }
       ],
-      notice: "UTXO Data는 광범위한 블록체인 마케팅이 아니라 구조화 데이터 인프라로 읽혀야 합니다.",
+      notice: undefined,
       closing: undefined
     },
     "distributed-paradigm": {
@@ -10200,10 +10177,9 @@ const creationCopyOverrides: Record<Locale, Record<CreationDetailSlug, CreationC
       outputsAtGlance: undefined,
       sections: [
         { eyebrow: "역할", title: "무엇인가", description: "Distributed Paradigm은 Kuai 기반의 Actor 스타일 분산 애플리케이션 구조입니다.", points: ["서비스 경계", "메시지 패싱", "런타임 구조", "분산 조율"] },
-        { eyebrow: "적합성", title: "어디에 맞는가", description: "분산 시스템에 더 명확한 소유권, 조율 방식, 런타임 설계가 필요할 때 적합합니다.", points: ["분산 애플리케이션", "Actor 스타일 조율", "서비스 경계", "Kuai 프레임워크 맥락"] },
-        { eyebrow: "경계", title: "과장하지 않을 것", description: "Distributed Paradigm을 Kuai와 분리된 독립 플랫폼으로 포지셔닝하지 마십시오.", points: ["Kuai와 분리하지 않을 것", "범용 플랫폼 주장이 아님", "광범위한 분산 시스템 마케팅이 아님"] }
+        { eyebrow: "적합성", title: "어디에 맞는가", description: "분산 시스템에 더 명확한 소유권, 조율 방식, 런타임 설계가 필요할 때 적합합니다.", points: ["분산 애플리케이션", "Actor 스타일 조율", "서비스 경계", "Kuai 프레임워크 맥락"] }
       ],
-      notice: "Distributed Paradigm은 Kuai 및 Actor 스타일 시스템과 연결되어야 하며, 독립 플랫폼으로 다뤄서는 안 됩니다.",
+      notice: undefined,
       closing: undefined
     }
   }

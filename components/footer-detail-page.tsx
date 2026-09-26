@@ -196,7 +196,7 @@ export function FooterDetailPage({ copy, locale }: { copy: DetailPageCopy; local
         </section>
       ) : null}
 
-      {!copy.closing ? (
+      {!copy.closing && copy.notice ? (
         <section className="rw-section rw-section-marked rw-section-tight">
           <div className="rw-container">
             <div className="rw-legal-panel p-6">

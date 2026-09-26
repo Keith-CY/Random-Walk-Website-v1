@@ -1370,91 +1370,37 @@ export const localizedTechnicalHeritage: Localized<string[]> = {
 
 export const homeConstraintItems: Localized<{ title: string; description: string }[]> = {
   en: [
-    "Customer privacy",
-    "Commercial secrets",
-    "Patent-sensitive R&D",
-    "Regulated workflows",
-    "Edge latency",
-    "Air-gapped systems"
-  ].map((title) => ({ title, description: "Boundary, retention, access, and evaluation requirements must be explicit before model work begins." })),
+    { title: "Customer privacy", description: "Customer records stay inside approved systems, and we define up front what a model may read, log, and retain." },
+    { title: "Commercial secrets", description: "Pricing, contracts, and internal know-how stay out of third-party APIs and shared model weights." },
+    { title: "Patent-sensitive R&D", description: "Unfiled inventions and lab notes are processed locally, so disclosure and prior-art risk stay under your control." },
+    { title: "Regulated workflows", description: "Each model step leaves an audit trail that compliance and risk teams can review before go-live." },
+    { title: "Edge latency", description: "Inference runs next to the device or production line, so responses do not depend on a round trip to the cloud." },
+    { title: "Air-gapped systems", description: "Models, updates, and evaluation sets are packaged for offline transfer into networks without internet access." }
+  ],
   zh: [
-        {
-          "title": "客户隐私",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        },
-        {
-          "title": "商业机密",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        },
-        {
-          "title": "专利敏感型研发",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        },
-        {
-          "title": "受监管工作流",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        },
-        {
-          "title": "边缘延迟",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        },
-        {
-          "title": "气隙系统",
-          "description": "在模型工作开始之前，边界、留存、访问与评估要求必须被清晰界定。"
-        }
-      ],
+    { title: "客户隐私", description: "客户记录只留在获批的系统内，我们事先界定模型可以读取、记录和保留哪些内容。" },
+    { title: "商业机密", description: "定价、合同与内部经验不会进入第三方 API，也不会混入共享的模型权重。" },
+    { title: "专利敏感型研发", description: "尚未申请专利的发明与实验记录在本地处理，公开披露与现有技术风险始终由你掌控。" },
+    { title: "受监管工作流", description: "每个模型步骤都留下审计记录，合规与风控团队可以在上线前审查。" },
+    { title: "边缘延迟", description: "推理在设备或产线旁运行，响应不依赖往返云端。" },
+    { title: "气隙系统", description: "模型、更新与评估集会被打包，以离线方式导入不连接互联网的网络。" }
+  ],
   ja: [
-        {
-          "title": "顧客プライバシー",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        },
-        {
-          "title": "商業機密",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        },
-        {
-          "title": "特許に関わるR&D",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        },
-        {
-          "title": "規制対象ワークフロー",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        },
-        {
-          "title": "エッジレイテンシー",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        },
-        {
-          "title": "エアギャップシステム",
-          "description": "モデル作業を始める前に、境界、保持、アクセス、評価の要件を明確に定める必要があります。"
-        }
-      ],
+    { title: "顧客プライバシー", description: "顧客記録は承認済みのシステム内にとどめ、モデルが読み取り・記録・保持できる範囲を事前に定めます。" },
+    { title: "商業機密", description: "価格、契約、社内ノウハウを外部 API や共有モデルの重みに渡しません。" },
+    { title: "特許に関わるR&D", description: "未出願の発明や実験ノートはローカルで処理し、開示や先行技術のリスクを自社で管理できます。" },
+    { title: "規制対象ワークフロー", description: "モデルの各ステップに監査証跡を残し、コンプライアンス・リスク部門が本番前に確認できます。" },
+    { title: "エッジレイテンシー", description: "推論をデバイスや生産ラインの近くで実行し、クラウドとの往復に依存しない応答を実現します。" },
+    { title: "エアギャップシステム", description: "モデル、更新、評価セットをパッケージ化し、インターネットに接続されていないネットワークへオフラインで持ち込みます。" }
+  ],
   ko: [
-        {
-          "title": "고객 프라이버시",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        },
-        {
-          "title": "상업 기밀",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        },
-        {
-          "title": "특허 민감 R&D",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        },
-        {
-          "title": "규제 대상 워크플로",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        },
-        {
-          "title": "엣지 지연 시간",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        },
-        {
-          "title": "에어갭 시스템",
-          "description": "모델 작업이 시작되기 전에 경계, 보존, 접근, 평가 요건은 명확히 규정되어야 합니다."
-        }
-      ]
+    { title: "고객 프라이버시", description: "고객 기록은 승인된 시스템 안에 두고, 모델이 읽고 기록하고 보관할 수 있는 범위를 미리 정합니다." },
+    { title: "상업 기밀", description: "가격, 계약, 내부 노하우가 외부 API나 공유 모델 가중치로 흘러가지 않도록 합니다." },
+    { title: "특허 민감 R&D", description: "출원 전 발명과 연구 노트를 로컬에서 처리해 공개 및 선행 기술 위험을 직접 관리할 수 있습니다." },
+    { title: "규제 대상 워크플로", description: "모델의 각 단계에 감사 기록을 남겨 컴플라이언스·리스크 팀이 운영 전에 검토할 수 있습니다." },
+    { title: "엣지 지연 시간", description: "추론을 기기나 생산 라인 가까이에서 실행해 클라우드 왕복에 의존하지 않는 응답을 만듭니다." },
+    { title: "에어갭 시스템", description: "모델, 업데이트, 평가 세트를 패키지로 만들어 인터넷이 없는 네트워크에 오프라인으로 반입합니다." }
+  ]
 };
 
 export const homeWorkflowVisualItems: Localized<VisualItem[]> = {
