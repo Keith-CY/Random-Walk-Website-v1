@@ -22,9 +22,9 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--rw-line-light)] bg-[rgba(255,255,255,0.94)] backdrop-blur">
       <div className="rw-container flex min-h-[var(--rw-header-height)] items-center justify-between gap-4">
-        <Link href={localizePath(locale, "/")} className="flex min-w-0 items-center" aria-label="Random Walk home">
+        <Link href={localizePath(locale, "/")} className="flex min-w-0 items-center">
           <span className="flex min-w-0 flex-col">
-            <Image src="/brand/logo-wordmark.svg" alt="Random Walk" width={150} height={26} priority className="h-6 w-auto object-contain object-left" />
+            <Image src="/brand/logo-wordmark.svg" alt="Random Walk" unoptimized width={150} height={26} priority className="h-6 w-auto object-contain object-left" />
             <span className="rw-caption leading-none">{dictionary.common.brandDescriptor}</span>
           </span>
         </Link>

@@ -27,7 +27,7 @@
   --rw-section-container-gutter: calc((100vw - min(var(--rw-container), calc(100vw - 40px))) / 2);
   --rw-text-primary: rgb(5 5 5 / 88%);
   --rw-text-secondary: rgb(5 5 5 / 64%);
-  --rw-text-tertiary: rgb(5 5 5 / 46%);
+  --rw-text-tertiary: rgb(5 5 5 / 58%); /* ≥4.5:1 on paper and cream for small caption text (WCAG AA) */
   --rw-text-muted: rgb(5 5 5 / 34%);
   --rw-text-inverse-primary: rgb(253 252 252 / 92%);
   --rw-text-inverse-secondary: rgb(253 252 252 / 66%);
@@ -2512,7 +2512,7 @@ select.rw-field {
   margin-top: 58px;
   border-top: 1px solid rgb(255 255 255 / 13%);
   padding-top: 26px;
-  color: rgb(247 244 236 / 45%);
+  color: rgb(247 244 236 / 52%);
   font-size: clamp(0.68rem, 0.72vw, 0.78rem);
   line-height: 1.66;
 }

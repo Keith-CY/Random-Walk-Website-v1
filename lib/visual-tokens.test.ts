@@ -170,7 +170,7 @@ describe("visual tokens", () => {
 
     expect(globals).toContain("--rw-text-primary: rgb(5 5 5 / 88%)");
     expect(globals).toContain("--rw-text-secondary: rgb(5 5 5 / 64%)");
-    expect(globals).toContain("--rw-text-tertiary: rgb(5 5 5 / 46%)");
+    expect(globals).toContain("--rw-text-tertiary: rgb(5 5 5 / 58%)");
     expect(globals).toContain("--rw-weight-label: 520");
     expect(globals).toContain("--rw-weight-card-title: 560");
     expect(globals).toContain("--rw-weight-section: 610");
