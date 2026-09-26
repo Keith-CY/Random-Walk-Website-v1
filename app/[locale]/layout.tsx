@@ -3,6 +3,7 @@ import { MotionController } from "@/components/motion-controller";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getDictionary, isLocale, locales, type Locale } from "@/lib/i18n";
+import { ogImage } from "@/lib/metadata";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -19,7 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const dictionary = getDictionary(locale);
 
   return {
-    title: "Controlled infrastructure for private AI systems",
+    title: {
+      default: "Controlled infrastructure for private AI systems",
+      template: "%s - Random Walk"
+    },
     description: "Random Walk builds private AI infrastructure, model workflows, private deployment, evaluation evidence, and FDE support for controlled environments.",
     alternates: {
       canonical: `/${locale}/`,
@@ -29,12 +33,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       title: "Random Walk - Private AI Infrastructure",
       description: "Controlled infrastructure for private AI systems.",
       type: "website",
-      locale
+      locale,
+      images: [ogImage]
     },
     twitter: {
       card: "summary_large_image",
       title: "Random Walk - Private AI Infrastructure",
-      description: dictionary.common.brandDescriptor
+      description: dictionary.common.brandDescriptor,
+      images: [ogImage.url]
     }
   };
 }
@@ -45,11 +51,15 @@ export default async function LocaleLayout({ children, params }: Readonly<{ chil
   const locale = rawLocale as Locale;
 
   return (
-    <div lang={locale} className="flex min-h-dvh flex-col">
-      <MotionController />
-      <SiteHeader locale={locale} />
-      <div className="flex-1">{children}</div>
-      <SiteFooter locale={locale} />
-    </div>
+    <html lang={locale}>
+      <body>
+        <div className="flex min-h-dvh flex-col">
+          <MotionController />
+          <SiteHeader locale={locale} />
+          <div className="flex-1">{children}</div>
+          <SiteFooter locale={locale} />
+        </div>
+      </body>
+    </html>
   );
 }

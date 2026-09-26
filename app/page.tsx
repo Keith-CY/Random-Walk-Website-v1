@@ -8,7 +8,8 @@ export const dynamic = "force-static";
 
 const copy = homeCopy[defaultLocale];
 
-export const metadata = localizedMetadata(defaultLocale, "/", copy.hero.title, copy.hero.description);
+// The root layout's title template does not apply to its own segment, so add the suffix here.
+export const metadata = { ...localizedMetadata(defaultLocale, "/", copy.hero.title, copy.hero.description), title: { absolute: `${copy.hero.title} - Random Walk` } };
 
 export default function RootPage() {
   return (

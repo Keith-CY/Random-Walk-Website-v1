@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogImage } from "@/lib/metadata";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,6 +7,14 @@ export const metadata: Metadata = {
   title: {
     default: "Random Walk",
     template: "%s - Random Walk"
+  },
+  openGraph: {
+    siteName: "Random Walk",
+    images: [ogImage]
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [ogImage.url]
   },
   icons: {
     icon: [
@@ -16,10 +25,8 @@ export const metadata: Metadata = {
   }
 };
 
+// Each tree renders its own <html lang>: app/[locale]/layout.tsx for localized routes,
+// LocalizedPageShell / LocaleRedirect for English compatibility routes, and not-found.tsx.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }

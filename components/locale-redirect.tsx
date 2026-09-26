@@ -28,23 +28,27 @@ export function LocaleRedirect({ label, path }: { label: string; path: string })
   const fallbackPath = `${localizePath(defaultLocale, path)}/`;
 
   return (
-    <main className="rw-section rw-section-major">
-      <script dangerouslySetInnerHTML={{ __html: redirectScript(path) }} />
-      <div className="rw-container">
-        <p className="rw-eyebrow">Redirecting</p>
-        <h1 className="rw-page-title mt-5">{label}</h1>
-        <p className="rw-body-large mt-5">Opening the best language version for your browser.</p>
-        <p className="mt-8">
-          <a className="rw-button rw-button-primary" href={fallbackPath}>
-            Continue in English
-          </a>
-        </p>
-        <noscript>
-          <p className="rw-body mt-5">
-            JavaScript is disabled. Continue to <a className="rw-text-link" href={fallbackPath}>the English page</a>.
-          </p>
-        </noscript>
-      </div>
-    </main>
+    <html lang={defaultLocale}>
+      <body>
+        <main className="rw-section rw-section-major">
+          <script dangerouslySetInnerHTML={{ __html: redirectScript(path) }} />
+          <div className="rw-container">
+            <p className="rw-eyebrow">Redirecting</p>
+            <h1 className="rw-page-title mt-5">{label}</h1>
+            <p className="rw-body-large mt-5">Opening the best language version for your browser.</p>
+            <p className="mt-8">
+              <a className="rw-button rw-button-primary" href={fallbackPath}>
+                Continue in English
+              </a>
+            </p>
+            <noscript>
+              <p className="rw-body mt-5">
+                JavaScript is disabled. Continue to <a className="rw-text-link" href={fallbackPath}>the English page</a>.
+              </p>
+            </noscript>
+          </div>
+        </main>
+      </body>
+    </html>
   );
 }

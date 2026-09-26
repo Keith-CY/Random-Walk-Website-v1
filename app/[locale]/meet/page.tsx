@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { MeetScheduler } from "@/components/meet-scheduler";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { meetPageCopy } from "@/lib/meet";
@@ -7,11 +8,12 @@ import type { CSSProperties } from "react";
 
 export const dynamic = "force-static";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const copy = meetPageCopy[rawLocale];
-  return localizedMetadata(rawLocale, "/meet", copy.metadataTitle, copy.metadataDescription);
+  // The visit scheduler is shared by direct link only; keep it out of search results.
+  return { ...localizedMetadata(rawLocale, "/meet", copy.metadataTitle, copy.metadataDescription), robots: { index: false, follow: false } };
 }
 
 export default async function MeetPage({ params }: { params: Promise<{ locale: string }> }) {
