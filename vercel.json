@@ -1,0 +1,121 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:locale(en|zh|ja|ko)/home{/}?",
+      "destination": "/:locale/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/articles{/}?",
+      "destination": "/:locale/notes/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/philosophy{/}?",
+      "destination": "/:locale/company/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/events{/}?",
+      "destination": "/:locale/company/#events",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/creations{/}?",
+      "destination": "/:locale/earlier-work/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/creations/melix{/}?",
+      "destination": "/:locale/melix/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/creations/:slug(neuron|1-tok|fiber-link|utxo-data|distributed-paradigm){/}?",
+      "destination": "/:locale/earlier-work/:slug/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/services/:slug(ai-ml|data-platform|it-architecture|privacy-data|sovereign-infrastructure){/}?",
+      "destination": "/:locale/services/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/resources/:slug(repository-metadata|engagement-patterns){/}?",
+      "destination": "/:locale/notes/",
+      "permanent": true
+    },
+    {
+      "source": "/:locale(en|zh|ja|ko)/work/:slug(finance-regulated-records|legal-ip-private-model|manufacturing-edge-ai){/}?",
+      "destination": "/:locale/work/",
+      "permanent": true
+    },
+    {
+      "source": "/home{/}?",
+      "destination": "/en/",
+      "permanent": true
+    },
+    {
+      "source": "/articles{/}?",
+      "destination": "/en/notes/",
+      "permanent": true
+    },
+    {
+      "source": "/philosophy{/}?",
+      "destination": "/en/company/",
+      "permanent": true
+    },
+    {
+      "source": "/events{/}?",
+      "destination": "/en/company/#events",
+      "permanent": true
+    },
+    {
+      "source": "/creations{/}?",
+      "destination": "/en/earlier-work/",
+      "permanent": true
+    },
+    {
+      "source": "/creations/melix{/}?",
+      "destination": "/en/melix/",
+      "permanent": true
+    },
+    {
+      "source": "/creations/:slug(neuron|1-tok|fiber-link|utxo-data|distributed-paradigm){/}?",
+      "destination": "/en/earlier-work/:slug/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:slug(ai-ml|data-platform|it-architecture|privacy-data|sovereign-infrastructure){/}?",
+      "destination": "/en/services/",
+      "permanent": true
+    },
+    {
+      "source": "/datasets{/}?",
+      "destination": "/en/datasets/",
+      "permanent": true
+    },
+    {
+      "source": "/work{/}?",
+      "destination": "/en/work/",
+      "permanent": true
+    },
+    {
+      "source": "/melix{/}?",
+      "destination": "/en/melix/",
+      "permanent": true
+    },
+    {
+      "source": "/notes{/}?",
+      "destination": "/en/notes/",
+      "permanent": true
+    },
+    {
+      "source": "/earlier-work{/}?",
+      "destination": "/en/earlier-work/",
+      "permanent": true
+    }
+  ]
+}

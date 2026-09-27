@@ -1,104 +1,73 @@
-import Link from "next/link";
-import { InstitutionalCell, InstitutionalGrid } from "@/components/institutional-grid";
-import { PlaceholderImage } from "@/components/placeholder-image";
-import { SectionHeading } from "@/components/section-heading";
-import { getDictionary, isLocale, localizePath, type Locale } from "@/lib/i18n";
+import { CloseSection } from "@/components/site/close-section";
+import { PaintingHero } from "@/components/site/painting-hero";
+import { isLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { companyPageCopy, companyPhilosophyVisualItems } from "@/lib/site-data";
+import { company, getSiteCopy, paintings } from "@/lib/site-copy";
+import { eventPresenceItems } from "@/lib/site-data";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) notFound();
-  const copy = companyPageCopy[rawLocale];
-  return localizedMetadata(rawLocale, "/company", copy.hero.title, copy.hero.description);
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  return localizedMetadata(locale, "/company", "Company", getSiteCopy(locale).company.lede);
 }
 
 export default async function CompanyPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) notFound();
-  const locale = rawLocale as Locale;
-  const dictionary = getDictionary(locale);
-  const copy = companyPageCopy[locale];
-  const visualItems = companyPhilosophyVisualItems[locale];
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const copy = getSiteCopy(locale).company;
+  const events = eventPresenceItems.en;
 
   return (
     <main>
-      <section className="rw-section rw-section-major">
-        <div className="rw-container rw-grid items-center">
-          <div className="col-span-12 lg:col-span-5">
-            <p className="rw-eyebrow">{copy.hero.eyebrow}</p>
-            <h1 className="rw-page-title mt-5">{copy.hero.title}</h1>
-            <p className="rw-body-large mt-6">{copy.hero.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link className="rw-button rw-button-primary" href={localizePath(locale, "/contact")}>{copy.ctaLabel}</Link>
-              <Link className="rw-button rw-button-secondary" href={localizePath(locale, "/work")}>{dictionary.nav.work}</Link>
-            </div>
-          </div>
-          <div className="col-span-12 lg:col-span-7">
-            <PlaceholderImage assetId="company-team-panel-photo" label="Asian team panel discussion" ratio="16 / 10" priority />
-          </div>
+      <PaintingHero painting={paintings.company} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="company-title" />
+
+      <section className="s-section" aria-labelledby="token-plant-title">
+        <div className="s-wrap s-split">
+          <h2 className="s-h2" id="token-plant-title">{copy.tokenPlantTitle}</h2>
+          <div className="s-prose"><p style={{ marginTop: 0 }}>{copy.tokenPlant}</p></div>
         </div>
       </section>
 
-      <section className="rw-section rw-section-lined">
-        <div className="rw-container rw-grid items-center">
-          <div className="col-span-12 lg:col-span-6">
-            <PlaceholderImage assetId="company-team-room-photo" label="Asian team discussion room" ratio="16 / 10" />
-          </div>
-          <div className="col-span-12 lg:col-span-6">
-            <SectionHeading copy={copy.team} />
-            <InstitutionalGrid columns={3} className="mt-8">
-              {copy.stats.map((stat) => (
-                <InstitutionalCell key={stat.label}>
-                  <p className="rw-caption">{stat.label}</p>
-                  <p className="mt-3 text-base font-medium text-[var(--rw-text-primary)]">{stat.value}</p>
-                </InstitutionalCell>
-              ))}
-            </InstitutionalGrid>
-          </div>
-        </div>
-      </section>
-
-      <section className="rw-section rw-section-supporting">
-        <div className="rw-container">
-          <SectionHeading copy={copy.philosophy} />
-          <InstitutionalGrid columns={2} className="mt-10">
-            {visualItems.map((item) => (
-              <InstitutionalCell key={item.label}>
-                <div className="rw-card-media">
-                  <PlaceholderImage assetId={item.assetId} ratio="16 / 10" variant="paper" />
-                </div>
-                <p className="rw-eyebrow">{item.eyebrow}</p>
-                <h3 className="rw-subheading mt-4">{item.title}</h3>
-                <p className="rw-body mt-4">{item.description}</p>
-              </InstitutionalCell>
-            ))}
-          </InstitutionalGrid>
-        </div>
-      </section>
-
-      <section className="rw-section rw-section-marked rw-section-major">
-        <div className="rw-container">
-          <div className="rw-obsidian-panel rw-ink rw-grid">
-            <div className="col-span-12 lg:col-span-5">
-              <SectionHeading copy={copy.operating} inverse />
-            </div>
-            <div className="col-span-12 lg:col-span-7">
-              <InstitutionalGrid columns={2} variant="ink">
-                {copy.principles.map((principle) => (
-                  <InstitutionalCell key={principle.title}>
-                    <h3 className="rw-subheading">{principle.title}</h3>
-                    <p className="rw-body mt-4">{principle.description}</p>
-                  </InstitutionalCell>
+      <section className="s-section" id="events" aria-labelledby="events-title">
+        <div className="s-wrap s-split">
+          <h2 className="s-h2" id="events-title">{copy.eventsTitle}</h2>
+          <div className="s-table-wrap" style={{ marginTop: 0 }}>
+            <table className="s-table">
+              <thead><tr><th scope="col">Event</th><th scope="col">Where</th><th scope="col">When</th></tr></thead>
+              <tbody>
+                {events.map((event) => (
+                  <tr key={event.slug}>
+                    <td>{event.href ? <a className="s-link" href={event.href} rel="noopener noreferrer" target="_blank">{event.title}</a> : event.title}<br /><span className="s-caption">{event.role}</span></td>
+                    <td>{event.location}</td>
+                    <td>{event.date}</td>
+                  </tr>
                 ))}
-              </InstitutionalGrid>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
+
+      <section className="s-section" aria-labelledby="registered-title">
+        <div className="s-wrap s-split">
+          <h2 className="s-h2" id="registered-title">{copy.registeredTitle}</h2>
+          <div>
+            <dl className="s-dl" style={{ marginTop: 0 }}>
+              <dt>Registered name</dt><dd>{company.name} ({company.nameLatin})</dd>
+              <dt>Corporate number</dt><dd className="s-num">{company.corporateNumber}</dd>
+              <dt>Registered</dt><dd>{company.registered}</dd>
+              <dt>Address</dt><dd>{company.addressBlock}<br />{company.addressBlockLatin}</dd>
+              <dt>Email</dt><dd>{company.email}</dd>
+            </dl>
+            <p className="s-caption" style={{ marginTop: 16 }}>{copy.registeredNote}</p>
+          </div>
+        </div>
+      </section>
+
+      <CloseSection locale={locale} />
     </main>
   );
 }

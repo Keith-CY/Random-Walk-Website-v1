@@ -3,10 +3,11 @@ import { MotionController } from "@/components/motion-controller";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import type { Locale } from "@/lib/i18n";
+import { fontVariables } from "@/lib/fonts";
 
 export function LocalizedPageShell({ children, locale }: { children: ReactNode; locale: Locale }) {
   return (
-    <html lang={locale}>
+    <html lang={locale} className={fontVariables}>
       <body>
         <div className="flex min-h-dvh flex-col">
           <MotionController />

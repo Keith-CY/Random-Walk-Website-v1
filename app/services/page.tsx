@@ -2,13 +2,11 @@ import ServicesPage from "@/app/[locale]/services/page";
 import { LocalizedPageShell } from "@/components/localized-page-shell";
 import { defaultLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { servicesPageCopy } from "@/lib/site-data";
+import { getSiteCopy } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
 
-const copy = servicesPageCopy[defaultLocale];
-
-export const metadata = localizedMetadata(defaultLocale, "/services", copy.hero.title, copy.hero.description);
+export const metadata = localizedMetadata(defaultLocale, "/services", "Services", getSiteCopy(defaultLocale).services.lede);
 
 export default async function ServicesAliasPage() {
   return (

@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --rw-ink: #050505;
+  --rw-ink: #1b1712;
   --rw-black: #000000;
-  --rw-paper: #fdfcfc;
-  --rw-ivory: #ffffff;
-  --rw-cream: #f7efe3;
+  --rw-paper: #fbfaf7;
+  --rw-ivory: #f3f0e9;
+  --rw-cream: #f3f0e9;
   --rw-cream-soft: rgba(247, 239, 227, 0.58);
   --rw-line: rgba(0, 0, 0, 0.075);
   --rw-line-light: rgba(0, 0, 0, 0.04);
@@ -25,10 +25,10 @@
   --rw-section-marker-dot-color: rgb(0 0 0 / 45%);
   --rw-section-rule-height: 1px;
   --rw-section-container-gutter: calc((100vw - min(var(--rw-container), calc(100vw - 40px))) / 2);
-  --rw-text-primary: rgb(5 5 5 / 88%);
-  --rw-text-secondary: rgb(5 5 5 / 64%);
-  --rw-text-tertiary: rgb(5 5 5 / 58%); /* ≥4.5:1 on paper and cream for small caption text (WCAG AA) */
-  --rw-text-muted: rgb(5 5 5 / 34%);
+  --rw-text-primary: rgb(27 23 18 / 92%);
+  --rw-text-secondary: rgb(27 23 18 / 70%);
+  --rw-text-tertiary: rgb(27 23 18 / 62%); /* ≥4.5:1 on paper and cream for small caption text (WCAG AA) */
+  --rw-text-muted: rgb(27 23 18 / 38%);
   --rw-text-inverse-primary: rgb(253 252 252 / 92%);
   --rw-text-inverse-secondary: rgb(253 252 252 / 66%);
   --rw-text-inverse-tertiary: rgb(253 252 252 / 48%);
@@ -41,15 +41,16 @@
   --rw-graphite: #232323;
   --rw-muted: #777169;
   --rw-inverse-muted: #c7c3ba;
-  --rw-signal: #9f7442;
-  --rw-compute: #4268c3;
+  --rw-signal: #2437ff;
+  --rw-compute: #2437ff;
   --rw-secure: #4f8065;
   --rw-warning: #9d573a;
   --rw-model: #756f98;
   --rw-container: 1248px;
   --rw-header-height: 72px;
-  --font-sans: Inter, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", sans-serif;
-  --font-mono: "IBM Plex Mono", "JetBrains Mono", "SF Mono", "SFMono-Regular", Consolas, monospace;
+  --font-sans: var(--font-text), "Archivo", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", sans-serif;
+  --font-serif: var(--font-display), "Bodoni Moda", "Didot", "Bodoni 72", Georgia, "Songti SC", "Hiragino Mincho ProN", serif;
+  --font-mono: var(--font-sans);
 }
 
 * {
@@ -114,7 +115,7 @@ svg {
 
 ::selection {
   background: var(--rw-signal);
-  color: var(--rw-ink);
+  color: #fff;
 }
 
 :focus-visible {

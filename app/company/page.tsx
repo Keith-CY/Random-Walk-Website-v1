@@ -2,13 +2,11 @@ import CompanyPage from "@/app/[locale]/company/page";
 import { LocalizedPageShell } from "@/components/localized-page-shell";
 import { defaultLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { companyPageCopy } from "@/lib/site-data";
+import { getSiteCopy } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
 
-const copy = companyPageCopy[defaultLocale];
-
-export const metadata = localizedMetadata(defaultLocale, "/company", copy.hero.title, copy.hero.description);
+export const metadata = localizedMetadata(defaultLocale, "/company", "Company", getSiteCopy(defaultLocale).company.lede);
 
 export default async function CompanyAliasPage() {
   return (

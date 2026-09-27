@@ -20,57 +20,57 @@ type LegalContent = {
 export const legalContent: LegalContent = {
   privacy: {
     en: {
-      eyebrow: "Privacy Policy",
-      title: "Random Walk Privacy Policy",
-      description: "How Random Walk handles website inquiries and first-contact lead intake for private AI infrastructure work.",
+      eyebrow: "Privacy",
+      title: "Privacy policy",
+      description: "How Random Walk handles what you send us through this website, from the first inquiry to the start of a project.",
       sections: [
         {
           heading: "Effective date",
-          body: ["This Privacy Policy is effective May 18, 2026. It explains how Random Walk 株式会社 collects, uses, and protects information submitted through this website."]
+          body: ["This policy took effect on 18 May 2026 and was last updated on 28 September 2026. It explains how Random Walk株式会社 collects, uses and protects the information you send through this website."]
         },
         {
-          heading: "Scope",
-          body: ["This policy applies to the public Random Walk website, contact forms, and related business inquiry workflows. Project-specific systems, support channels, repositories, or customer-controlled deployments may be governed by separate written agreements."]
+          heading: "What this policy covers",
+          body: ["It covers this website, its contact and visit forms, and the business conversations that follow an inquiry. Project systems, support channels, repositories and deployments inside your own environment are covered by separate written agreements."]
         },
         {
-          heading: "Information we collect",
-          body: ["A contact inquiry may include name, work email, company, role, industry, use case, deployment target, data sensitivity category, air-gapped requirement, on-site introduction preference, timeline, support preference, compliance constraints, message content, consent status, locale, page origin, and UTM source.", "The first-contact form does not include a file upload field and is not intended for confidential files, source code, customer records, patent drafts, legally privileged material, private keys, or trade secrets."]
+          heading: "What we collect",
+          body: ["An inquiry may include your name, work email, company and role; the industry, use case and deployment target; the sensitivity of the data involved and whether an air-gapped setup or an on-site visit is needed; your timeline, support preference and compliance constraints; your message; whether you consented; and the language, page and campaign you came from.", "A request to visit our office adds your phone number and the date and time you choose.", "The form has no file upload and is not meant for confidential files, source code, customer records, patent drafts, privileged legal material, private keys or trade secrets."]
         },
         {
-          heading: "How we use information",
-          body: ["We use inquiry information to understand the requested workflow, route the request, assess whether Random Walk can help, schedule follow-up, prepare a technical scoping conversation, improve website communication, and maintain ordinary business records.", "We do not sell personal information."]
+          heading: "How we use it",
+          body: ["We use it to understand what you need, pass it to the right person, judge whether we can help, arrange a follow-up, prepare a first technical conversation, improve how the website explains our work and keep ordinary business records.", "We do not sell personal information."]
         },
         {
-          heading: "Contact-form confidentiality",
-          body: ["Please describe categories, constraints, deployment boundaries, and review requirements only. If sensitive material is needed later, Random Walk and the customer will agree on an appropriate review channel before anything is shared."]
+          heading: "Keep the first message general",
+          body: ["Please describe the kinds of data, the constraints, where the model has to run and how you review work, without the material itself. If sensitive material is needed later, we will agree a suitable way to share it with you before anything is sent."]
         },
         {
-          heading: "Sharing and processors",
-          body: ["We may share inquiry information with service providers that help operate the website, process forms, host email, manage scheduling, or support business operations. These providers are expected to process information only for the relevant service purpose.", "We may disclose information when required by law, to protect rights and security, or in connection with corporate administration."]
+          heading: "Who else may see it",
+          body: ["We use service providers to run the website, process forms, host email, schedule meetings and support our operations. They may process your information only to provide that service.", "We may disclose information when the law requires it, to protect rights and security, or in the course of running the company."]
         },
         {
-          heading: "International transfer",
-          body: ["Because website, email, and form infrastructure may operate across regions, inquiry information may be processed outside the country where it was submitted. We use reasonable administrative and technical measures appropriate to the nature of the information."]
+          heading: "Processing outside your country",
+          body: ["Our website, email and form providers may operate in several regions, so your information may be processed outside the country you sent it from. We protect it with reasonable administrative and technical measures suited to what it is."]
         },
         {
-          heading: "Retention",
-          body: ["We retain inquiry information for as long as needed to respond, maintain business records, manage legal or operational requirements, and understand customer communication history. Retention may vary by communication channel and project context."]
+          heading: "How long we keep it",
+          body: ["We keep inquiry information as long as we need it to reply, keep business records, meet legal and operational requirements and understand our history with you. How long depends on the channel and the project."]
         },
         {
           heading: "Security",
-          body: ["We use reasonable technical and organizational safeguards for website inquiry information. No internet transmission or electronic storage method is perfectly secure, and this policy does not create a guaranteed-security or certification claim."]
+          body: ["We protect inquiry information with reasonable technical and organisational safeguards. No transmission or storage over the internet is perfectly secure, and this policy is not a guarantee of security or a certification."]
         },
         {
-          heading: "Customer-controlled deployment boundaries",
-          body: ["Random Walk's services may involve discussions about customer-controlled environments, local model workflows, dataset packages, LoRA adapters, evaluation reports, and deployment runbooks. Those project materials are not collected through the public first-contact form unless separately agreed in writing."]
+          heading: "Project material",
+          body: ["Our work may involve your environments, datasets, models, adapters, evaluation reports and runbooks. None of that is collected through the website's forms unless we agree otherwise in writing."]
         },
         {
-          heading: "Choices and updates",
-          body: ["You may contact us to request correction, deletion, or review of inquiry information where applicable. We may update this policy as the website, business, or legal requirements change."]
+          heading: "Your choices and changes to this policy",
+          body: ["You can ask us to correct, delete or show you your inquiry information where the law allows. We may update this policy as the website, the business or the law changes."]
         },
         {
           heading: "Children and contact",
-          body: ["This website is intended for business users and is not directed to children. Questions about this policy can be sent to privacy@random-walk.co.jp."]
+          body: ["This website is for businesses and is not directed at children. Questions about this policy can be sent to privacy@random-walk.co.jp."]
         }
       ]
     },
@@ -324,20 +324,20 @@ export const legalContent: LegalContent = {
   terms: {
     en: {
       eyebrow: "Terms",
-      title: "Random Walk Terms of Service",
-      description: "Terms for using Random Walk public website materials, inquiry flows, and service descriptions.",
+      title: "Terms of service",
+      description: "Terms for using this website, its materials and its inquiry forms.",
       sections: [
-        { heading: "Effective date", body: ["These Terms of Service are effective May 18, 2026 and govern use of the Random Walk website and public materials."] },
-        { heading: "Website use", body: ["The website provides information about Random Walk 株式会社, private and local AI infrastructure services, dataset packaging, LoRA adapter development, evaluation evidence, deployment runbooks, support options, and Melix-related local AI tooling."] },
-        { heading: "Informational nature", body: ["Website materials are provided for general informational purposes. They do not create a professional advisory relationship, service engagement, legal opinion, security certification, compliance certification, or guaranteed outcome."] },
-        { heading: "Inquiries and no confidential submission", body: ["The contact form is for initial scoping only. Do not submit confidential files, source code, customer records, patent drafts, legally privileged material, private keys, credentials, or trade secrets through the website.", "If a potential project requires sensitive material, appropriate review channels and written terms must be agreed before such material is shared."] },
-        { heading: "Separate written agreements", body: ["Any paid service, deployment, support, license, data handling, model delivery, or customer-controlled deployment work is governed by separate written agreements. These website terms do not replace those agreements."] },
-        { heading: "Open-source references", body: ["References to Melix or other open-source materials are informational. Open-source repositories are governed by their own licenses, notices, and contribution rules."] },
-        { heading: "Intellectual property", body: ["Unless otherwise stated, website text, design, graphics, and Random Walk brand assets are owned by Random Walk or its licensors. You may not copy, modify, or reuse website materials in a way that suggests endorsement, partnership, or customer proof without permission."] },
-        { heading: "Prohibited use", body: ["You may not misuse the website, interfere with its operation, attempt unauthorized access, submit harmful content, scrape at unreasonable volume, or use the website to transmit unlawful, confidential, or rights-infringing material."] },
-        { heading: "Third-party links", body: ["The website may link to third-party sites, repositories, tools, or services. Random Walk is not responsible for third-party content, availability, policies, or security practices."] },
-        { heading: "Disclaimers and liability", body: ["The website is provided on an as-is and as-available basis. To the extent permitted by law, Random Walk disclaims implied warranties and will not be liable for indirect, incidental, special, consequential, or punitive damages arising from use of the website."] },
-        { heading: "Governing context and changes", body: ["These terms are maintained by Random Walk 株式会社 in Japan. Mandatory laws may apply depending on user location and transaction context. We may update these terms as the website, services, or legal requirements change."] },
+        { heading: "Effective date", body: ["These terms took effect on 18 May 2026 and were last updated on 28 September 2026. They govern your use of the Random Walk website and its public materials."] },
+        { heading: "What the website offers", body: ["The website describes Random Walk株式会社 and its work as an AI lab: choosing and fitting models, building datasets, training, deployment on your own machines and upkeep. It also describes Melix, our open-source tooling, and our earlier projects."] },
+        { heading: "Information only", body: ["The materials on this website are for general information. They do not create an advisory relationship or a service engagement, and they are not a legal opinion, a security or compliance certification, or a promise of any outcome."] },
+        { heading: "Do not send confidential material", body: ["The forms are for a first conversation only. Do not send confidential files, source code, customer records, patent drafts, privileged legal material, private keys, credentials or trade secrets through this website.", "If a project needs sensitive material, we will agree how to share it, and on what written terms, before anything is sent."] },
+        { heading: "Projects are governed by separate agreements", body: ["Paid services, deployments, support, licences, data handling, model delivery and work inside your environment are governed by separate written agreements. These terms do not replace them."] },
+        { heading: "Open-source projects", body: ["References to Melix and other open-source projects are for information. Each repository is governed by its own licence, notices and contribution rules."] },
+        { heading: "Intellectual property", body: ["Unless stated otherwise, the text, design, paintings, graphics and brand assets on this website belong to Random Walk or its licensors. Do not copy, change or reuse them in a way that suggests our endorsement, a partnership or a client relationship without our permission."] },
+        { heading: "What you may not do", body: ["Do not misuse the website, interfere with how it works, try to gain unauthorised access, submit harmful content, scrape it at unreasonable volume or use it to send unlawful, confidential or infringing material."] },
+        { heading: "Links to other websites", body: ["The website links to other sites, repositories, tools and services. We are not responsible for their content, availability, policies or security."] },
+        { heading: "Disclaimers and liability", body: ["The website is provided as it is and as available. To the extent the law allows, Random Walk disclaims implied warranties and is not liable for indirect, incidental, special, consequential or punitive damages arising from your use of the website."] },
+        { heading: "Governing law and changes", body: ["These terms are maintained by Random Walk株式会社 in Japan. Mandatory laws where you are may also apply. We may update these terms as the website, our services or the law changes."] },
         { heading: "Contact", body: ["Questions about these terms can be sent to legal@random-walk.co.jp."] }
       ]
     },

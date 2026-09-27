@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ogImage } from "@/lib/metadata";
 import "./globals.css";
+import "./site.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://random-walk.co.jp"),

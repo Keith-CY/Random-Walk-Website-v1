@@ -1,15 +1,16 @@
 import type { MetadataRoute } from "next";
 import { getContentEntries } from "@/lib/content";
-import { creationDetailSlugs, legalDetailSlugs, resourceDetailSlugs, serviceDetailSlugs } from "@/lib/footer-detail-pages";
+import { legalDetailSlugs } from "@/lib/footer-detail-pages";
 import { locales, localizePath, type Locale } from "@/lib/i18n";
+import { earlierWorkSlugs, workEntries } from "@/lib/work-entries";
 
 export const dynamic = "force-static";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://random-walk.co.jp").replace(/\/$/, "");
 
-// Canonical localized routes only: English compatibility aliases, /home, /melix and /articles
-// canonicalize to these paths, and /meet is intentionally unlisted.
-const staticPaths = ["/", "/company", "/services", "/creations", "/work", "/notes", "/security", "/contact", "/events", "/philosophy", "/privacy", "/terms"];
+// Canonical localized routes only: unprefixed compatibility routes canonicalize to these,
+// retired routes redirect (vercel.json), and /meet is shared by direct link and left out.
+const staticPaths = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms"];
 
 function absoluteUrl(locale: Locale, path: string) {
   return `${siteUrl}${localizePath(locale, path)}/`;
@@ -23,7 +24,7 @@ function entry(path: string, availableIn: readonly Locale[] = locales): Metadata
   }));
 }
 
-function contentPaths(type: "work" | "notes") {
+function contentPaths(type: "notes") {
   const slugs = new Map<string, Locale[]>();
   for (const locale of locales) {
     for (const { slug } of getContentEntries(type, locale)) {
@@ -36,11 +37,9 @@ function contentPaths(type: "work" | "notes") {
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticPaths.flatMap((path) => entry(path)),
-    ...serviceDetailSlugs.flatMap((slug) => entry(`/services/${slug}`)),
-    ...creationDetailSlugs.flatMap((slug) => entry(`/creations/${slug}`)),
-    ...resourceDetailSlugs.flatMap((slug) => entry(`/resources/${slug}`)),
+    ...workEntries.flatMap(({ slug }) => entry(`/work/${slug}`)),
+    ...earlierWorkSlugs.flatMap((slug) => entry(`/earlier-work/${slug}`)),
     ...legalDetailSlugs.flatMap((slug) => entry(`/legal/${slug}`)),
-    ...contentPaths("work"),
     ...contentPaths("notes")
   ];
 }

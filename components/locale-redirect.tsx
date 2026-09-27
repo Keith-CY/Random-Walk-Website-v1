@@ -1,4 +1,5 @@
 import { defaultLocale, locales, localizePath } from "@/lib/i18n";
+import { fontVariables } from "@/lib/fonts";
 
 function redirectScript(path: string) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -28,7 +29,7 @@ export function LocaleRedirect({ label, path }: { label: string; path: string })
   const fallbackPath = `${localizePath(defaultLocale, path)}/`;
 
   return (
-    <html lang={defaultLocale}>
+    <html lang={defaultLocale} className={fontVariables}>
       <body>
         <main className="rw-section rw-section-major">
           <script dangerouslySetInnerHTML={{ __html: redirectScript(path) }} />

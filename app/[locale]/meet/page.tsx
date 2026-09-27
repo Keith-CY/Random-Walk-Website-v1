@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MeetScheduler } from "@/components/meet-scheduler";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { meetPageCopy } from "@/lib/meet";
+import { company } from "@/lib/site-copy";
 import { localizedMetadata } from "@/lib/metadata";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
@@ -21,8 +22,11 @@ export default async function MeetPage({ params }: { params: Promise<{ locale: s
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
   const copy = meetPageCopy[locale];
-  const officeAddress = process.env.NEXT_PUBLIC_MEET_OFFICE_ADDRESS || copy.address.fallback;
-  const mapsUrl = process.env.NEXT_PUBLIC_MEET_MAP_URL || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officeAddress)}`;
+  const officeAddress = process.env.NEXT_PUBLIC_MEET_OFFICE_ADDRESS || company.addressFullLatin;
+  // Searching the street address returns two nearby lots, so point the map at the door itself.
+  const mapsUrl = process.env.NEXT_PUBLIC_MEET_MAP_URL || `https://www.google.com/maps/search/?api=1&query=${company.coordinates}`;
+  // Invited visitors need the exact door, so this page (noindex, direct link only) shows the full address on a map.
+  const mapEmbedUrl = process.env.NEXT_PUBLIC_MEET_MAP_EMBED_URL || `https://www.google.com/maps?q=${company.coordinates}&z=17&output=embed`;
   const apiBase = process.env.NEXT_PUBLIC_MEET_API_BASE ?? "/api/meet";
   const allowMock = process.env.NEXT_PUBLIC_MEET_ALLOW_MOCK === "true" || process.env.NODE_ENV !== "production";
 
@@ -45,6 +49,12 @@ export default async function MeetPage({ params }: { params: Promise<{ locale: s
               mapsUrl={mapsUrl}
             />
           </div>
+          <figure className="s-map">
+            <iframe title={copy.address.label} src={mapEmbedUrl} loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+            <figcaption className="s-caption">
+              {officeAddress} · <a className="s-link" href={mapsUrl} target="_blank" rel="noopener noreferrer">{copy.address.maps}</a>
+            </figcaption>
+          </figure>
         </div>
       </section>
     </main>

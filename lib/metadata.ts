@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "@/lib/i18n";
 
-const defaultDescription = "Random Walk builds private and local AI infrastructure for organizations that need model workflows inside customer-controlled environments.";
+const defaultDescription = "Random Walk is an AI lab for growing companies. We choose the right model, build the data, train it when it pays and keep it running in your own cloud, server room or Macs.";
 export const ogImage = {
   url: "/brand/og-default.png",
   width: 1200,
   height: 630,
-  alt: "Random Walk - Private AI systems under control."
+  alt: "Random Walk - An AI lab for growing companies."
 };
 
 function routeFor(locale: Locale, path: string) {

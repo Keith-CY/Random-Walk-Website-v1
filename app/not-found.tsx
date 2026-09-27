@@ -1,18 +1,27 @@
+import Image from "next/image";
 import Link from "next/link";
+import { fontVariables } from "@/lib/fonts";
+import { defaultLocale } from "@/lib/i18n";
+import { getSiteCopy, paintings } from "@/lib/site-copy";
 
 export default function NotFound() {
+  const copy = getSiteCopy(defaultLocale).notFound;
   return (
-    <html lang="en">
+    <html lang="en" className={fontVariables}>
       <body>
-        <main className="rw-container rw-section">
-          <p className="rw-eyebrow">Not found</p>
-          <h1 className="rw-page-title" style={{ marginTop: 16 }}>This page is not available.</h1>
-          <p className="rw-body-large" style={{ maxWidth: 720 }}>
-            The Random Walk site has moved to a new Local AI Infrastructure structure.
-          </p>
-          <Link className="rw-button rw-button-primary" href="/en/">
-            Go to homepage
-          </Link>
+        <main className="s-hero" style={{ minHeight: "100dvh" }}>
+          <div className="s-hero-art" style={{ height: "100dvh" }}>
+            <Image src={paintings.notFound.src} alt={paintings.notFound.alt} fill priority sizes="100vw" />
+            <div className="s-hero-veil" />
+          </div>
+          <div className="s-hero-copy">
+            <p className="s-kicker">404</p>
+            <h1 className="s-h1">{copy.title}</h1>
+            <p className="s-lede">{copy.body}</p>
+            <div className="s-actions">
+              <Link className="s-btn" href="/en/">{copy.cta}</Link>
+            </div>
+          </div>
         </main>
       </body>
     </html>

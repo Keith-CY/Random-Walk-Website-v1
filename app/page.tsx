@@ -1,20 +1,20 @@
-import { HomePageContent } from "@/components/home-page-content";
+import { HomeContent } from "@/components/home/home-content";
 import { LocalizedPageShell } from "@/components/localized-page-shell";
 import { defaultLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { homeCopy } from "@/lib/site-data";
+import { getSiteCopy } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
 
-const copy = homeCopy[defaultLocale];
+const copy = getSiteCopy(defaultLocale).home;
 
 // The root layout's title template does not apply to its own segment, so add the suffix here.
-export const metadata = { ...localizedMetadata(defaultLocale, "/", copy.hero.title, copy.hero.description), title: { absolute: `${copy.hero.title} - Random Walk` } };
+export const metadata = { ...localizedMetadata(defaultLocale, "/", copy.title, copy.description), title: { absolute: `${copy.title} - Random Walk` } };
 
 export default function RootPage() {
   return (
     <LocalizedPageShell locale={defaultLocale}>
-      <HomePageContent locale={defaultLocale} />
+      <HomeContent locale={defaultLocale} />
     </LocalizedPageShell>
   );
 }
