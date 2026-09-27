@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Walk Fusion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&display=swap">
+<style>
+/* Fusion: the machine lives inside the painting. White gallery page, warm old-master paint, one ultramarine for anything the model does. */
+:root {
+  color-scheme: light;
+  --paper: #FBFAF7; --ivory: #F3F0E9; --ink: #1B1712; --grey: #5E5B55; --line: #E3DFD7;
+  --black: #000; --on-black: #F4F1EA; --on-black-dim: #B9B4AA;
+  --blue: #2437FF; --blue-on-black: #8C98FF; --paint: #E4D3AE;
+  --didone: 'Bodoni Moda', 'Didot', 'Bodoni 72', Georgia, serif;
+  --grotesk: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --gut: clamp(16px, 4vw, 56px);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--paper); }
+body { margin: 0; color: var(--ink); font-family: var(--grotesk); font-size: 17px; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+button { font-family: inherit; }
+.proto { padding-bottom: 130px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 22px var(--gut); position: relative; z-index: 6; }
+.nav .logo img { height: 24px; display: block; }
+.nav nav { display: flex; gap: 26px; font-size: 15px; }
+.nav nav a { text-decoration: none; }
+.nav.on-dark { color: var(--on-black); }
+.nav.on-dark .logo img { filter: invert(1); }
+.nav.over { position: absolute; left: 0; right: 0; top: 0; }
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; background: var(--blue); color: #fff; text-decoration: none; font: 600 15px var(--grotesk); letter-spacing: .01em; border: 0; cursor: pointer; }
+.btn:hover { background: #1427E6; }
+.mail { font: 15px var(--grotesk); color: inherit; opacity: .78; user-select: all; }
+.row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+.close { padding: 130px var(--gut) 120px; text-align: center; }
+.close h2 { margin: 0; font: 400 clamp(52px, 7vw, 116px)/0.95 var(--didone); letter-spacing: -0.02em; }
+.close p { margin: 22px auto 0; max-width: 520px; line-height: 1.6; color: #3B3934; }
+.close .row { justify-content: center; margin-top: 30px; }
+footer.foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 28px var(--gut); border-top: 1px solid var(--line); font-size: 13px; color: var(--grey); }
+footer.foot img { height: 20px; }
+
+/* ================= F1 · INSCRIBED ================= */
+#f1 .room { position: relative; margin-bottom: clamp(64px, 9vw, 128px); }
+#f1 .frame { position: relative; overflow: hidden; width: 100%; aspect-ratio: var(--ar); background: #0d0c0a; }
+#f1 .plate { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: var(--ar); container-type: inline-size; }
+#f1 .plate > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#f1 .at { position: absolute; left: var(--x); top: var(--y); width: var(--w, auto); }
+#f1 .wall { display: flex; justify-content: space-between; gap: 20px; padding: 14px var(--gut) 0; font-size: 13px; line-height: 1.5; color: var(--grey); }
+#f1 .wall b { font-weight: 600; color: var(--ink); }
+
+/* Paint: lettering laid onto the panel with a brush */
+#f1 .painted { color: var(--paint); filter: url(#brush); }
+#f1 .painted h1 { margin: 0; font: 500 5.1cqw/0.98 var(--didone); letter-spacing: -0.012em; text-shadow: 0 .06cqw 0 rgba(0,0,0,.35); }
+#f1 .painted h1 .tok { color: var(--blue-on-black); }
+#f1 .painted .lede, #f1 .painted.lede { margin: 1.8cqw 0 0; font: 400 1.05cqw/1.55 var(--grotesk); color: rgba(228, 211, 174, .86); max-width: 25cqw; }
+#f1 .painted.lede { margin: 0; }
+#f1 .wall .m { display: none; }
+#f1 .ghosts { position: absolute; left: var(--gx, 0); top: 100%; margin: .5cqw 0 0; padding: 0; list-style: none; font: 500 2.1cqw/1.12 var(--didone); }
+#f1 .ghosts li { color: rgba(228, 211, 174, var(--o)); display: flex; gap: .8cqw; align-items: baseline; }
+#f1 .ghosts li small { font: 500 .78cqw var(--grotesk); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+#f1 .painted h1 .tok .p { position: absolute; left: 100%; top: .2em; margin-left: .35em; font: 500 .8cqw var(--grotesk); letter-spacing: .03em; color: var(--blue-on-black); white-space: nowrap; }
+#f1 .painted h1 .tok { position: relative; display: inline-block; }
+
+/* Stone: letters cut into the parapet; the light follows the pointer */
+#f1 .carved { font-family: var(--didone); font-weight: 500; color: rgba(26, 24, 21, .72); letter-spacing: .16em; white-space: nowrap;
+  text-shadow: calc(var(--lx, -.4) * .08cqw) calc(var(--ly, 1) * .09cqw) 0 rgba(255, 252, 244, .3), calc(var(--lx, -.4) * -.07cqw) calc(var(--ly, 1) * -.08cqw) 0 rgba(0, 0, 0, .5); }
+#f1 .carved.l1 { font-size: 2.55cqw; }
+#f1 .carved.l2 { font-size: 1.02cqw; letter-spacing: .26em; margin-top: 1.25cqw; }
+#f1 .carved .lapis { color: rgba(36, 55, 255, .88); mix-blend-mode: multiply; }
+
+/* Ink: modern type laid into old paper */
+#f1 .inked { color: rgba(38, 28, 18, .86); mix-blend-mode: multiply; filter: url(#ink); transform-origin: 0 0; }
+#f1 .inked .blueink { color: rgba(36, 55, 255, .92); }
+#f1 .surface { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+#f1 .letter .head { display: flex; gap: 20px; align-items: baseline; flex-wrap: wrap; font: italic 400 32px var(--didone); }
+#f1 .letter .head button { border: 0; background: none; padding: 0 0 3px; font: 500 27px var(--grotesk); color: rgba(38, 28, 18, .34); cursor: pointer; border-bottom: 2px solid transparent; }
+#f1 .letter .head button[aria-pressed="true"] { color: rgba(38, 28, 18, .95); border-bottom-color: rgba(38, 28, 18, .55); }
+#f1 .letter .body { position: absolute; left: 0; top: 104px; width: 680px; margin: 0; font: 450 54px/1.2 var(--grotesk); letter-spacing: -0.015em; }
+#f1 .letter .body .w { opacity: 0; transition: opacity .35s; }
+#f1 .letter .body .w.on { opacity: 1; }
+#f1 .letter .gen, #f1 .letter .fix { display: inline-block; position: relative; opacity: 0; transition: opacity .4s; }
+#f1 .letter .gen { color: rgba(38, 28, 18, .5); }
+#f1 .letter .gen::after { content: ''; position: absolute; left: -4%; right: -4%; top: 56%; height: 4px; background: rgba(38, 28, 18, .85); transform: scaleX(0); transform-origin: 0 50%; transition: transform .5s cubic-bezier(.6, .1, .3, 1); }
+#f1 .letter .gen.struck::after { transform: scaleX(1); }
+#f1 .letter .fix { font-weight: 700; clip-path: inset(0 100% 0 0); transition: clip-path .9s cubic-bezier(.6, .1, .3, 1), opacity .1s; }
+#f1 .letter .on { opacity: 1; }
+#f1 .letter .fix.on { clip-path: inset(0 0 0 0); }
+#f1 .letter .margin { position: absolute; right: 0; top: 112px; width: 262px; list-style: none; margin: 0; padding: 0 0 0 26px; border-left: 2px solid rgba(38, 28, 18, .3); font: 500 26px var(--grotesk); }
+#f1 .letter .margin li { margin-bottom: 20px; }
+#f1 .letter .margin .top { display: flex; justify-content: space-between; gap: 10px; }
+#f1 .letter .margin .num { font-size: 19px; font-variant-numeric: tabular-nums; color: rgba(36, 55, 255, .92); }
+#f1 .letter .margin i { display: block; height: 5px; margin-top: 5px; width: 0; transition: width .9s cubic-bezier(.2, .9, .2, 1); }
+#f1 .letter .margin i.g { background: rgba(38, 28, 18, .35); }
+#f1 .letter .margin i.y { background: rgba(36, 55, 255, .9); margin-top: 3px; }
+#f1 .letter .sign { position: absolute; left: 0; bottom: 6px; margin: 0; font: italic 400 34px var(--didone); }
+#f1 .page h3 { margin: 0 0 14px; font: italic 400 30px var(--didone); }
+#f1 .page .e { display: grid; grid-template-columns: 262px 1fr; gap: 14px; align-items: baseline; padding: 12px 0 9px; border-bottom: 2px solid rgba(38, 28, 18, .26); clip-path: inset(0 100% 0 0); transition: clip-path 1.1s cubic-bezier(.6, .1, .3, 1); }
+#f1 .page .e.on, #f1 .page .total.on { clip-path: inset(0 0 0 0); }
+#f1 .page .e b { font: 400 36px/1 var(--didone); }
+#f1 .page .e span { font: 500 22px/1.25 var(--grotesk); color: rgba(36, 55, 255, .92); }
+#f1 .page .total { margin: 22px 0 0; font: italic 400 30px var(--didone); clip-path: inset(0 100% 0 0); transition: clip-path 1.1s cubic-bezier(.6, .1, .3, 1); }
+#f1 .dolly { height: 210vh; }
+#f1 .globe-cv { position: absolute; mix-blend-mode: multiply; }
+#f1 .painted .gh { margin: 0; font: 500 2.9cqw/1 var(--didone); letter-spacing: -0.01em; text-shadow: 0 .06cqw 0 rgba(0, 0, 0, .35); }
+#f1 .dolly .pin { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+#f1 .dolly .plate { transform: scale(var(--k, 1)); transform-origin: var(--ox) var(--oy); }
+
+/* ================= F2 · TESSERA ================= */
+#f2 .tess { position: relative; overflow: hidden; background: var(--paper); }
+#f2 .tess > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#f2 .hero { height: 100vh; min-height: 640px; background: #000; color: var(--on-black); }
+#f2 .hero .nav .logo img { filter: invert(1); }
+#f2 .hero .hint { color: var(--on-black-dim); }
+#f2 .hero-copy { position: absolute; left: var(--gut); bottom: 8vh; z-index: 3; max-width: 660px; }
+#f2 h1 { margin: 0; font: 500 clamp(46px, 5.8vw, 96px)/0.94 var(--didone); letter-spacing: -0.022em; }
+#f2 .lede { margin: 22px 0 26px; max-width: 470px; font-size: 18px; line-height: 1.6; }
+#f2 .hint { position: absolute; right: var(--gut); bottom: 8vh; z-index: 3; font-size: 13px; color: var(--grey); max-width: 220px; text-align: right; line-height: 1.5; }
+.tip { position: absolute; z-index: 5; pointer-events: none; min-width: 200px; padding: 12px 14px 10px; background: var(--paper); border: 1px solid var(--ink); font-size: 13px; opacity: 0; transition: opacity .15s; }
+.tip.on { opacity: 1; }
+.tip .r { display: grid; grid-template-columns: 1fr 64px 34px; gap: 8px; align-items: center; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tip .r i { display: block; height: 5px; background: #D8D4CC; }
+.tip .r:first-of-type { color: var(--blue); font-weight: 600; }
+.tip .r:first-of-type i { background: var(--blue); }
+.tip p { margin: 8px 0 0; color: var(--grey); font-size: 11px; }
+#f2 .proof { min-height: 100vh; }
+#f2 .proof-copy { position: relative; z-index: 3; padding: 96px var(--gut) 90px; width: min(640px, 100%); }
+#f2 .proof h2 { margin: 0; font: 400 clamp(38px, 4.2vw, 64px)/1.02 var(--didone); letter-spacing: -0.01em; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 26px; }
+.seg button { min-height: 40px; padding: 8px 14px; border: 1px solid var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink); font: 500 14px var(--grotesk); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.seg.model button[aria-pressed="true"][data-m="yours"] { background: var(--blue); border-color: var(--blue); }
+.prompt { margin: 26px 0 0; font: 400 clamp(21px, 2vw, 28px)/1.25 var(--grotesk); font-stretch: 106%; letter-spacing: -0.01em; }
+.prompt b { font-weight: 700; }
+.prompt b.yours { color: var(--blue); }
+.bars { margin-top: 18px; display: grid; gap: 6px; }
+.bars .r { display: grid; grid-template-columns: 124px minmax(0, 1fr) 44px; gap: 12px; align-items: center; font-variant-numeric: tabular-nums; }
+.bars .w { font: 600 17px var(--grotesk); font-stretch: 78%; }
+.bars .t { height: 16px; background: rgba(27, 23, 18, .08); position: relative; }
+.bars .t i { position: absolute; inset: 0 auto 0 0; background: var(--ink); transition: width .5s cubic-bezier(.2, .9, .2, 1); }
+.bars.yours .t i { background: var(--blue); }
+.bars .p { text-align: right; font-weight: 600; font-size: 15px; }
+.note { margin-top: 12px; font-size: 13px; color: var(--grey); }
+#f2 .stages { position: relative; background: #000; color: var(--on-black); padding: 120px var(--gut) 110px; overflow: hidden; }
+#f2 .stages .under { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .2; }
+#f2 .ptext { background-image: url('assets/workshop-lift.webp'); background-repeat: no-repeat; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+#f2 .stages h2 { position: relative; margin: 0; max-width: 15ch; font: 400 clamp(46px, 6.4vw, 108px)/0.95 var(--didone); letter-spacing: -0.02em; }
+#f2 .stages ol { position: relative; list-style: none; margin: 72px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; }
+#f2 .stages li { padding-top: 18px; border-top: 1px solid rgba(244, 241, 234, .22); }
+#f2 .stages .n { font: italic 400 22px var(--didone); color: var(--on-black-dim); }
+#f2 .stages h3 { margin: 8px 0 12px; font: 400 clamp(28px, 2.5vw, 40px)/1.02 var(--didone); }
+#f2 .stages p { margin: 0; font: 500 17px/1.5 var(--grotesk); }
+#f2 .stages .you { margin-top: 14px; font-size: 14px; color: var(--blue-on-black); -webkit-text-fill-color: var(--blue-on-black); background: none; }
+
+/* ================= F3 · EXAMINATION ================= */
+.examv .exam { position: relative; height: 560vh; background: #000; }
+.examv .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #000; }
+.examv .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.examv .map { position: absolute; pointer-events: none; }
+.examv .layer { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
+.examv .layer.on { opacity: 1; }
+.examv .box { position: absolute; border: 1px solid var(--blue); }
+.examv .box::before, .examv .box::after { content: ''; position: absolute; width: 7px; height: 7px; border: 2px solid var(--blue); }
+.examv .box::before { left: -3px; top: -3px; border-right: 0; border-bottom: 0; }
+.examv .box::after { right: -3px; bottom: -3px; border-left: 0; border-top: 0; }
+.examv .box span { position: absolute; left: -1px; bottom: 100%; padding: 4px 7px; background: var(--blue); color: #fff; font: 500 11px/1 var(--grotesk); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.examv .mark { position: absolute; }
+.examv .mark::before { content: ''; position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--blue-on-black); }
+.examv .mark span { position: absolute; left: 14px; top: -9px; white-space: nowrap; font: 500 12px/1.4 var(--grotesk); color: var(--on-black); background: rgba(0, 0, 0, .55); padding: 1px 6px; font-variant-numeric: tabular-nums; }
+.examv .mark span b { color: var(--blue-on-black); font-weight: 600; }
+.examv .mark.left span { left: auto; right: 14px; }
+.examv .veil { position: absolute; left: 0; right: 0; bottom: 0; height: 64%; pointer-events: none; transition: opacity .8s ease; }
+.examv .veil.dark { background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, .5) 45%, transparent); }
+.examv .veil.light { background: linear-gradient(to top, rgba(246, 244, 239, .92), rgba(246, 244, 239, .6) 45%, transparent); opacity: 0; }
+.examv .stage[data-tone="light"] .veil.dark { opacity: 0; }
+.examv .stage[data-tone="light"] .veil.light { opacity: 1; }
+.examv .copy { position: absolute; left: var(--gut); bottom: 8vh; width: min(560px, calc(100% - 2 * var(--gut))); z-index: 4; color: var(--on-black); transition: color .6s; }
+.examv .stage[data-tone="light"] .copy, .examv .stage[data-tone="light"] .meta, .examv .stage[data-tone="light"] .index { color: var(--ink); }
+.examv .copy article { position: absolute; left: 0; bottom: 0; width: 100%; opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .8s cubic-bezier(.16, 1, .3, 1); pointer-events: none; }
+.examv .copy article.on { opacity: 1; transform: none; pointer-events: auto; }
+.examv .copy .k { margin: 0 0 12px; font: italic 400 19px var(--didone); opacity: .8; }
+.examv h1, .examv .copy h2 { margin: 0; font: 400 clamp(44px, 5.6vw, 92px)/0.96 var(--didone); letter-spacing: -0.02em; }
+.examv .copy h2 { font-size: clamp(36px, 4vw, 64px); }
+.examv .copy p { margin: 18px 0 0; font-size: 17px; line-height: 1.6; max-width: 470px; }
+.examv .copy .you { font-size: 15px; color: var(--blue-on-black); }
+.examv .stage[data-tone="light"] .copy .you { color: var(--blue); }
+.examv .copy .row { margin-top: 26px; }
+.examv .meta { position: absolute; right: var(--gut); bottom: 8vh; z-index: 4; text-align: right; font-size: 13px; line-height: 1.75; color: var(--on-black); font-variant-numeric: tabular-nums; }
+.examv .meta b { font-weight: 600; }
+.examv .index { position: absolute; right: var(--gut); top: 50%; transform: translateY(-50%); z-index: 4; list-style: none; margin: 0; padding: 0; color: var(--on-black); }
+.examv .index button { display: flex; align-items: center; gap: 10px; min-height: 34px; padding: 0; border: 0; background: none; color: inherit; font: 500 13px var(--grotesk); opacity: .55; cursor: pointer; margin-left: auto; }
+.examv .index button::after { content: ''; width: 18px; height: 1px; background: currentColor; transition: width .4s, background .4s; }
+.examv .index button[aria-current="step"] { opacity: 1; }
+.examv .index button[aria-current="step"]::after { width: 36px; height: 2px; background: var(--blue); }
+
+/* F2 + F3: the controls sit on the black stage */
+.examv .copy article.words h2 { font-size: clamp(30px, 3.1vw, 50px); }
+.examv .seg { margin-top: 18px; }
+.examv .seg button { background: transparent; color: var(--on-black); border-color: rgba(244, 241, 234, .5); }
+.examv .seg button[aria-pressed="true"] { background: var(--on-black); color: var(--ink); }
+.examv .seg.model button[aria-pressed="true"][data-m="yours"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+.examv .prompt { margin-top: 16px; font-size: clamp(18px, 1.6vw, 22px); }
+.examv .prompt b.yours { color: var(--blue-on-black); }
+.examv .bars { margin-top: 14px; gap: 4px; }
+.examv .bars .r { grid-template-columns: 112px minmax(0, 1fr) 40px; }
+.examv .bars .w { font-size: 15px; }
+.examv .bars .t { height: 9px; background: rgba(244, 241, 234, .14); }
+.examv .bars .t i { background: var(--on-black); }
+.examv .bars.yours .t i { background: var(--blue-on-black); }
+.examv .bars .p { font-size: 13px; }
+.examv .copy .note { margin-top: 10px; font-size: 12px; color: var(--on-black-dim); }
+
+/* ---------- Version switcher ---------- */
+.switcher { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 90; width: min(660px, calc(100% - 32px)); background: rgba(20, 18, 15, .94); color: #F4F1EA; border-radius: 16px; padding: 9px; display: flex; flex-direction: column; gap: 7px; box-shadow: 0 16px 40px rgba(0, 0, 0, .3); }
+.switcher p { margin: 0 6px; font-size: 13px; line-height: 1.5; color: #C9C4BA; }
+.switcher p b { color: #fff; }
+.switcher div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.switcher button { min-height: 42px; padding: 0 4px; border: 0; border-radius: 10px; background: transparent; color: #C9C4BA; font: 500 14px var(--grotesk); cursor: pointer; }
+@media (max-width: 480px) { .switcher button { font-size: 12px; } }
+.switcher button[aria-selected="true"] { background: #F4F1EA; color: #14120F; }
+
+@media (max-width: 820px) {
+  .nav nav { display: none; }
+  #f1 .frame { aspect-ratio: var(--mar, 4 / 5); }
+  #f1 .at { left: var(--mx, var(--x)); top: var(--my, var(--y)); width: var(--mw, var(--w, auto)); }
+  #f1 .painted h1 { font-size: 4.6cqw; }
+  #f1 .painted.lede { font-size: 1.62cqw; max-width: none; }
+  #f1 .painted .long { display: none; }
+  #f1 .wall .m { display: inline; }
+  #f1 .carved.l1 { font-size: 1.75cqw; letter-spacing: .1em; }
+  #f1 .carved.l2 { white-space: normal; max-width: 42cqw; line-height: 1.6; letter-spacing: .18em; margin-top: .6cqw; }
+  #f1 .wall { flex-direction: column; gap: 4px; }
+  #f2 .hint { display: none; }
+  #f2 .stages ol { grid-template-columns: 1fr; gap: 26px; }
+  .examv .meta { top: 76px; bottom: auto; font-size: 12px; }
+  .examv .index { display: none; }
+  .examv .copy { bottom: 5vh; }
+  .examv .copy p { font-size: 16px; }
+  .examv .copy .bars, .examv .copy .note { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .examv .copy article, .examv .layer { transition: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <filter id="brush" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter>
+  <filter id="ink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feGaussianBlur in="d" stdDeviation=".25"/></filter>
+</svg>
+<main>
+
+<!-- ================= F1 · INSCRIBED ================= -->
+<section class="proto" id="f1" aria-labelledby="f1-h">
+  <header class="nav"><a class="logo" href="#f1"><img src="assets/logo-wordmark.svg" alt="Random Walk"></a><nav aria-label="Primary"><a href="#f1">Services</a><a href="#f1">Melix</a><a href="#f1">Cases</a><a href="#f1">Notes</a><a href="#f1">Company</a></nav><a class="btn" href="#f1-close">Commission a model</a></header>
+
+  <section class="room" id="f1-hero" style="--ar: 1664 / 928" data-focus="0.26 0.56" data-zoom="2.2">
+    <div class="frame"><div class="plate">
+      <img src="assets/parapet.webp" alt="Oil portrait of a scholar in a dark red hat behind a stone parapet">
+      <div class="at painted" style="--x: 3.9%; --y: 32.5%; --w: 36%; --mx: 7%; --my: 17%">
+        <h1 id="f1-h"><span class="sr">The difference is one word.</span><span aria-hidden="true">The difference<br>is one <span class="tok-wrap" style="position: relative; display: inline-block">
+          <span class="tok">word.<small class="p">0.62</small></span>
+          <ol class="ghosts" aria-hidden="true">
+            <li style="--o: .34">model <small>0.19</small></li>
+            <li style="--o: .22">token <small>0.11</small></li>
+            <li style="--o: .13">thing <small>0.08</small></li>
+          </ol></span></span></h1>
+      </div>
+      <p class="at painted lede" style="--x: 3.9%; --y: 66.5%; --w: 27%; --mx: 7%; --my: 58%; --mw: 36%">Random Walk is an AI lab. We make one company’s own model<span class="long">, from the dataset to the years of upkeep after,</span> so it writes the right word where a general model writes the likely one.</p>
+      <div class="at" style="--x: 41.4%; --y: 83.2%; --mx: 6.5%; --my: 86.2%" aria-label="Carved into the parapet: Random Walk, AI lab. Datasets, pre-training, post-training, deployment, upkeep.">
+        <div class="carved l1" aria-hidden="true">RANDOM·WALK·AI·LAB</div>
+        <div class="carved l2" aria-hidden="true">DATASETS · PRE-TRAINING · POST-TRAINING · DEPLOYMENT · UPKEEP</div>
+      </div>
+    </div></div>
+    <div class="wall"><span><b>The Commission.</b> Oil on panel, the inscription added in 2026.</span><span>Move your pointer across the stone to change the light.</span></div>
+  </section>
+
+  <section class="room" id="f1-letter" style="--ar: 1664 / 928; --mar: 1 / 1" data-focus="0.47 0.6" data-zoom="1.6" aria-labelledby="f1-letter-h">
+    <h2 class="sr" id="f1-letter-h">Try the difference</h2>
+    <div class="frame"><div class="plate">
+      <img src="assets/letter-hands.webp" alt="Oil painting of hands in an ultramarine sleeve holding a large sheet of paper by a window">
+      <div class="surface inked letter" data-quad="455,305 1200,300 1250,850 300,720" data-size="1000 620">
+        <div class="head">Concerning <span id="f1dom" role="group" aria-label="Subject of the letter" style="display: contents"></span></div>
+        <p class="body" id="f1body"></p>
+        <ol class="margin" id="f1margin" aria-label="Candidates for the next word, your model’s odds"></ol>
+        <p class="sign">In pencil, a general model. In ink, <span class="blueink">your model</span>.</p>
+      </div>
+    </div></div>
+    <div class="wall"><span><b>The Letter.</b> Oil on canvas. The page is written by a model while you watch; the odds are illustrative.</span><span>Choose a subject at the top of the letter.</span></div>
+  </section>
+
+  <section class="room dolly" id="f1-ledger" style="--ar: 1664 / 928; --ox: 44%; --oy: 52%; --mar: 1 / 1" data-focus="0.46 0.52" data-zoom="1.6" aria-labelledby="f1-ledger-h">
+    <div class="pin">
+      <h2 class="sr" id="f1-ledger-h">How a model is made, and what you receive</h2>
+      <div class="frame"><div class="plate">
+        <img src="assets/ledger.webp" alt="Still life of an open ledger, a roemer glass, a candle, a lemon and pewter plates">
+        <div class="surface inked page" data-quad="335,398 652,362 792,560 432,576" data-size="600 360">
+          <h3>Commission: a contract review model</h3>
+          <div class="e" data-at=".1"><b>i. Dataset</b><span>Dataset card, source manifest</span></div>
+          <div class="e" data-at=".22"><b>ii. Pre-training</b><span>Training runs and logs</span></div>
+          <div class="e" data-at=".34"><b>iii. Post-training</b><span>Weights, evaluation report</span></div>
+        </div>
+        <div class="surface inked page" data-quad="742,362 1042,368 1232,546 880,574" data-size="600 360">
+          <h3>Received</h3>
+          <div class="e" data-at=".46"><b>iv. Deployment</b><span>Versioned model, runbook</span></div>
+          <div class="e" data-at=".58"><b>v. Upkeep</b><span>A change log for every release</span></div>
+          <p class="total" data-at=".7">Kept for as long as you use it.</p>
+        </div>
+      </div></div>
+      <div class="wall"><span><b>The Ledger.</b> Still life, oil on canvas. Each stage of a commission is entered with what you receive.</span><span>Keep scrolling to read the book.</span></div>
+    </div>
+  </section>
+
+  <section class="room" id="f1-globe" style="--ar: 1664 / 928; --mar: 1 / 1" data-focus="0.6 0.4" data-zoom="1.6" aria-labelledby="f1-globe-h">
+    <div class="frame"><div class="plate">
+      <img src="assets/globe.webp" alt="Oil painting of a celestial globe on a wooden stand, a hand resting on its ring, an ultramarine cloth in the foreground">
+      <canvas class="globe-cv" id="f1globe" aria-hidden="true" style="left: 33.95%; top: 16.16%; width: 33.05%; height: 59.27%"></canvas>
+      <div class="at painted" style="--x: 73.4%; --y: 9.5%; --w: 22.5%; --mx: 34%; --my: 2.5%; --mw: 50%">
+        <h2 class="gh" id="f1-globe-h">Delivered where it must run.</h2>
+        <p class="lede long" style="max-width: none">Your data center, your cloud or your devices, anywhere in the world. Then we keep it: monitoring, retraining on new material and a release log for as long as you use it.</p>
+      </div>
+    </div></div>
+    <div class="wall"><span class="m">Your data center, your cloud or your devices, anywhere in the world. Then we keep it: monitoring, retraining and a release log for as long as you use it.</span><span><b>The Globe.</b> Oil on canvas. The marks on the globe are illustrative deployments, not client sites.</span><span>Move across the globe to turn it.</span></div>
+  </section>
+
+  <section class="close" id="f1-close" aria-labelledby="f1-close-h">
+    <h2 id="f1-close-h">Commission a model.</h2>
+    <p>Tell us the task, the data and where it has to run. We reply within two business days.</p>
+    <div class="row"><a class="btn" href="#f1">Start a commission</a><span class="mail">biz@random-walk.co.jp</span></div>
+  </section>
+  <footer class="foot"><img src="assets/logo-wordmark.svg" alt="Random Walk"><span>An AI lab. Tokyo, working worldwide.</span><span>Paintings generated for this prototype. Probabilities are illustrative.</span></footer>
+</section>
+
+<!-- ================= F2 · TESSERA ================= -->
+<section class="proto" id="f2" aria-labelledby="f2-h" hidden>
+  <section class="tess hero" id="f2hero">
+    <canvas id="f2a" aria-hidden="true"></canvas>
+    <header class="nav over"><a class="logo" href="#f2"><img src="assets/logo-wordmark.svg" alt="Random Walk"></a><nav aria-label="Primary"><a href="#f2">Services</a><a href="#f2">Melix</a><a href="#f2">Cases</a><a href="#f2">Notes</a><a href="#f2">Company</a></nav><a class="btn" href="#f2-close">Commission a model</a></header>
+    <div class="hero-copy" id="f2copy">
+      <h1 id="f2-h">You write the first line. The model paints the rest.</h1>
+      <p class="lede">This painting is made of words a model chose, one after another. Random Walk is an AI lab that builds a company’s own model, so every word it chooses is yours.</p>
+      <div class="row"><a class="btn" href="#f2proof">See the difference</a><span class="mail">biz@random-walk.co.jp</span></div>
+    </div>
+    <p class="hint" id="f2hint">Move across the painting to read the words and the odds behind each one.</p>
+    <div class="tip" id="f2tip" aria-hidden="true"></div>
+  </section>
+
+  <section class="tess proof" id="f2proof" aria-labelledby="f2-proof-h">
+    <canvas id="f2b" aria-hidden="true"></canvas>
+    <div class="proof-copy" id="f2pcopy">
+      <h2 id="f2-proof-h">A general model paints the gist. Yours paints the detail.</h2>
+      <div class="seg" role="group" aria-label="Example domain" id="f2dom"></div>
+      <p class="prompt" id="f2prompt"></p>
+      <div class="seg model" role="group" aria-label="Which model writes" id="f2model"><button type="button" data-m="gen">General model</button><button type="button" data-m="yours">Your model</button></div>
+      <div class="bars" id="f2bars"></div>
+      <p class="note">Illustrative probabilities, not from a real run. The painting behind is written with the model’s own words.</p>
+    </div>
+  </section>
+
+  <section class="stages" id="f2stages" aria-labelledby="f2-st-h">
+    <img class="under" src="assets/workshop.webp" alt="">
+    <h2 class="ptext" id="f2-st-h">One workshop, from the first dataset to the tenth release.</h2>
+    <ol>
+      <li><span class="n">i</span><h3 class="ptext">Dataset</h3><p class="ptext">We collect what your company knows, clean and label it, and account for every source.</p><p class="you">You receive a dataset card and a source manifest.</p></li>
+      <li><span class="n">ii</span><h3 class="ptext">Pre-training</h3><p class="ptext">When general models do not know your field, we continue pre-training on your own corpus.</p><p class="you">You receive training runs and logs.</p></li>
+      <li><span class="n">iii</span><h3 class="ptext">Post-training</h3><p class="ptext">Fine-tuning and preference tuning on the tasks your people actually do, tested against an evaluation you agree to.</p><p class="you">You receive weights and an evaluation report.</p></li>
+      <li><span class="n">iv</span><h3 class="ptext">Deployment</h3><p class="ptext">Delivered where it must run: your data center, your cloud or your devices.</p><p class="you">You receive a versioned model and a runbook.</p></li>
+      <li><span class="n">v</span><h3 class="ptext">Upkeep</h3><p class="ptext">Monitoring, retraining on new material and new releases for as long as you use it.</p><p class="you">You receive a change log for every release.</p></li>
+    </ol>
+  </section>
+
+  <section class="close" id="f2-close" aria-labelledby="f2-close-h">
+    <h2 id="f2-close-h">Commission a model.</h2>
+    <p>Tell us the task, the data and where it has to run. We reply within two business days.</p>
+    <div class="row"><a class="btn" href="#f2">Start a commission</a><span class="mail">biz@random-walk.co.jp</span></div>
+  </section>
+  <footer class="foot"><img src="assets/logo-wordmark.svg" alt="Random Walk"><span>An AI lab. Tokyo, working worldwide.</span><span>Paintings generated for this prototype. Probabilities are illustrative.</span></footer>
+</section>
+
+<!-- ================= F3 · EXAMINATION ================= -->
+<section class="proto examv" id="f3" aria-labelledby="f3-h" hidden>
+  <div class="exam" id="f3exam">
+    <div class="stage" id="f3stage" data-tone="dark">
+      <canvas id="f3gl" aria-hidden="true"></canvas>
+      <div class="map" id="f3map" aria-hidden="true"></div>
+      <div class="veil dark"></div><div class="veil light"></div>
+      <header class="nav over on-dark" id="f3nav"><a class="logo" href="#f3"><img src="assets/logo-wordmark.svg" alt="Random Walk"></a><nav aria-label="Primary"><a href="#f3">Services</a><a href="#f3">Melix</a><a href="#f3">Cases</a><a href="#f3">Notes</a><a href="#f3">Company</a></nav><a class="btn" href="#f3-close">Commission a model</a></header>
+      <div class="copy" id="f3copy">
+        <article data-step="0" class="on">
+          <h1 id="f3-h">A model is made in layers.</h1>
+          <p>Random Walk is an AI lab. We make one company’s own model: the data beneath it, the training that shapes it, the tests it must pass and the years of upkeep after. Move across the painting to look beneath the paint.</p>
+          <div class="row"><a class="btn" href="#f3-close">Commission a model</a><span class="mail">biz@random-walk.co.jp</span></div>
+        </article>
+        <article data-step="1"><p class="k">i. Dataset</p><h2>Beneath the paint, the drawing.</h2><p>Infrared shows the drawing under a painting. Under a model it is the data: your contracts, tickets and manuals, collected, cleaned, labelled and accounted for.</p><p class="you">You receive a dataset card and a source manifest.</p></article>
+        <article data-step="2"><p class="k">ii. Pre-training</p><h2>Beneath the drawing, an earlier picture.</h2><p>X-rays find the picture a painting was made over. Most models start from one too: we choose an open base model and continue pre-training it on your field until it knows the vocabulary.</p><p class="you">You receive training runs, logs and the base model’s licence.</p></article>
+        <article data-step="3"><p class="k">iii. Post-training and evaluation</p><h2>Light from the side shows every stroke.</h2><p>We fine-tune on the tasks your people actually do, then test every release against an evaluation set you agree to, including what the model must refuse.</p><p class="you">You receive weights and an evaluation report.</p></article>
+        <article data-step="4"><p class="k">iv. Deployment and upkeep</p><h2>Ultraviolet shows every later retouch.</h2><p>We deliver the model where it must run: your data center, your cloud or your devices. Then we monitor it, retrain it on new material and record every release.</p><p class="you">You receive a versioned model, a runbook and a change log.</p></article>
+      </div>
+      <div class="meta" id="f3meta"><b id="f3mode">Visible light</b><br><span id="f3wave">400–700 nm</span><br><span id="f3lens">Lens: infrared</span><br><span id="f3xy">x 0.000 · y 0.000</span></div>
+      <ol class="index" id="f3index" aria-label="Examination layers"></ol>
+    </div>
+  </div>
+  <section class="close" id="f3-close" aria-labelledby="f3-close-h">
+    <h2 id="f3-close-h">Commission a model.</h2>
+    <p>Tell us the task, the data and where it has to run. We reply within two business days.</p>
+    <div class="row"><a class="btn" href="#f3">Start a commission</a><span class="mail">biz@random-walk.co.jp</span></div>
+  </section>
+  <footer class="foot"><img src="assets/logo-wordmark.svg" alt="Random Walk"><span>An AI lab. Tokyo, working worldwide.</span><span>Painting and imaging simulated for this prototype. Figures are illustrative.</span></footer>
+</section>
+<!-- ================= F4 · F2 + F3 ================= -->
+<section class="proto examv" id="f4" aria-labelledby="f4-h" hidden>
+  <div class="exam" id="f4exam" style="height: 680vh">
+    <div class="stage" id="f4stage" data-tone="dark">
+      <canvas id="f4gl" aria-hidden="true"></canvas>
+      <div class="map" id="f4map" aria-hidden="true"></div>
+      <div class="veil dark"></div><div class="veil light"></div>
+      <header class="nav over on-dark" id="f4nav"><a class="logo" href="#f4"><img src="assets/logo-wordmark.svg" alt="Random Walk"></a><nav aria-label="Primary"><a href="#f4">Services</a><a href="#f4">Melix</a><a href="#f4">Cases</a><a href="#f4">Notes</a><a href="#f4">Company</a></nav><a class="btn" href="#f4-close">Commission a model</a></header>
+      <div class="copy" id="f4copy">
+        <article data-step="0" class="on">
+          <h1 id="f4-h">A model is made in layers.</h1>
+          <p>Random Walk is an AI lab. We make one company’s own model: the data beneath it, the training that shapes it, the tests it must pass and the years of upkeep after. Up close, every layer is made of words. Move across the painting to read them.</p>
+          <div class="row"><a class="btn" href="#f4-close">Commission a model</a><span class="mail">biz@random-walk.co.jp</span></div>
+        </article>
+        <article data-step="1" class="words"><p class="k">The next word</p><h2>A general model paints the gist. Yours paints the detail.</h2>
+          <div class="seg" role="group" aria-label="Example domain" id="f4dom"></div>
+          <p class="prompt" id="f4prompt"></p>
+          <div class="seg model" role="group" aria-label="Which model writes" id="f4model"><button type="button" data-m="gen">General model</button><button type="button" data-m="yours">Your model</button></div>
+          <div class="bars" id="f4bars"></div>
+          <p class="note">Illustrative probabilities, not from a real run. The painting is written with the model’s own words.</p>
+        </article>
+        <article data-step="2"><p class="k">i. Dataset</p><h2>Beneath the paint, the drawing.</h2><p>Infrared shows the drawing under a painting. Under a model it is the data: your contracts, tickets and manuals, collected, cleaned, labelled and accounted for. Under the lens, the source documents.</p><p class="you">You receive a dataset card and a source manifest.</p></article>
+        <article data-step="3"><p class="k">ii. Pre-training</p><h2>Beneath the drawing, an earlier picture.</h2><p>X-rays find the picture a painting was made over. Most models start from one too: we choose an open base model and continue pre-training it on your field. Under the lens, the general text it read first.</p><p class="you">You receive training runs, logs and the base model’s licence.</p></article>
+        <article data-step="4"><p class="k">iii. Post-training and evaluation</p><h2>Light from the side shows every stroke.</h2><p>We fine-tune on the tasks your people actually do, then test every release against an evaluation set you agree to. Under the lens, the questions and the answers it gave.</p><p class="you">You receive weights and an evaluation report.</p></article>
+        <article data-step="5"><p class="k">iv. Deployment and upkeep</p><h2>Ultraviolet shows every later retouch.</h2><p>We deliver the model where it must run: your data center, your cloud or your devices. Then we monitor it, retrain it and record every release. Under the lens, the release log.</p><p class="you">You receive a versioned model, a runbook and a change log.</p></article>
+      </div>
+      <div class="meta" id="f4meta"><b id="f4mode">Visible light</b><br><span id="f4wave">400–700 nm</span><br><span id="f4lens">Lens: the words in the paint</span><br><span id="f4xy">x 0.000 · y 0.000</span></div>
+      <ol class="index" id="f4index" aria-label="Examination layers"></ol>
+      <div class="tip" id="f4tip" aria-hidden="true"></div>
+    </div>
+  </div>
+  <section class="close" id="f4-close" aria-labelledby="f4-close-h">
+    <h2 id="f4-close-h">Commission a model.</h2>
+    <p>Tell us the task, the data and where it has to run. We reply within two business days.</p>
+    <div class="row"><a class="btn" href="#f4">Start a commission</a><span class="mail">biz@random-walk.co.jp</span></div>
+  </section>
+  <footer class="foot"><img src="assets/logo-wordmark.svg" alt="Random Walk"><span>An AI lab. Tokyo, working worldwide.</span><span>Painting, imaging and every figure on this page are simulated for the prototype.</span></footer>
+</section>
+</main>
+
+<nav class="switcher" aria-label="Prototype version">
+  <p id="swNote"></p>
+  <div role="tablist">
+    <button role="tab" data-v="f1" aria-selected="true">F1 画中之物</button>
+    <button role="tab" data-v="f2" aria-selected="false">F2 以词作画</button>
+    <button role="tab" data-v="f3" aria-selected="false">F3 透视检验</button>
+    <button role="tab" data-v="f4" aria-selected="false">F2+F3 融合</button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const hash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10000) / 10000; };
+  const notes = {
+    f1: '<b>F1 画中之物</b>：界面就画在画里的物件上。标题是画在底色上的题字，下一个词的候选是被覆盖的笔迹；服务刻在石栏里，演示写在信纸上，五个阶段记在账本里，部署点标在天球仪上。',
+    f2: '<b>F2 以词作画</b>：整幅画由模型选出的词织成，远看是油画，近看是 token，鼠标移过去能读到每个词和它的概率。下一屏：通用模型只画得出大概，你的模型才让画面对焦。',
+    f4: '<b>F2+F3 融合</b>：一幅画、一台检测仪，放大镜下每一层都是词。可见光下是模型写的句子；第二层整幅画被逐行改写成 token，通用模型只画得出大概，你的模型让画面对焦；红外下读到的是数据集，X 光下是底座模型读过的通用文本，侧光下是评测题，紫外线下是版本记录。',
+    f3: '<b>F3 透视检验</b>：修复师用红外、X 光、侧光和紫外线检查油画。滚动一次换一种光，对应模型的一层：数据、底座模型、训练与评测、部署与维护。'
+  };
+
+  const DEMO = {
+    legal: { subject: 'contracts', prompt: 'Under clause 14.2, the supplier’s liability for indirect or consequential loss is', c: [['excluded', .12, .71], ['capped', .15, .14], ['limited', .34, .06], ['subject', .11, .04], ['unlimited', .09, .02]] },
+    mfg: { subject: 'maintenance logs', prompt: 'Spindle vibration above 4.5 mm/s after 600 operating hours usually points to', c: [['bearing', .10, .68], ['misalignment', .14, .11], ['imbalance', .22, .09], ['wear', .29, .05], ['the', .12, .02]] },
+    acct: { subject: 'accounting', prompt: 'Under IFRS 16, a lease with a term of twelve months or less may be accounted for as a', c: [['short-term', .21, .74], ['operating', .31, .12], ['finance', .24, .05], ['lease', .09, .03], ['right-of-use', .06, .02]] }
+  };
+  let active = 'f1';
+
+  /* ---------- WebGL helpers ---------- */
+  const VS = 'attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }';
+  function glProgram(gl, fs, names) {
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const a = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+    const u = {}; names.forEach((n) => { u[n] = gl.getUniformLocation(pr, n); }); return u;
+  }
+  function glTex(gl, src) {
+    const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    if (src) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src);
+    else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0]));
+    return t;
+  }
+  const loadImg = (src, fallback) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => { if (fallback) loadImg(fallback).then(res); else res(null); }; i.src = src; });
+  const GLSL_COMMON = `precision highp float;
+varying vec2 v;
+float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f); return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
+float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 4; i++){ s += a * n(p); p *= 2.03; a *= .5; } return s; }
+float lum(vec3 c){ return dot(c, vec3(.299, .587, .114)); }
+`;
+  /* Cover-fit with a focal point, shared by the shaders and the HTML overlays. Returns the image rectangle in CSS px. */
+  function coverRect(W, H, iw, ih, fx, fy) {
+    const s = Math.max(W / iw, H / ih), w = iw * s, h = ih * s;
+    return { x: clamp(W / 2 - fx * w, W - w, 0), y: clamp(H / 2 - fy * h, H - h, 0), w, h };
+  }
+
+  /* ================= F1 · INSCRIBED ================= */
+  const F1 = (() => {
+    let inited = false;
+    function fitRooms() {
+      document.querySelectorAll('#f1 .room').forEach((room) => {
+        const frame = room.querySelector('.frame'), plate = room.querySelector('.plate');
+        const W = frame.clientWidth, H = frame.clientHeight, ar = W / H;
+        const [iw, ih] = getComputedStyle(room).getPropertyValue('--ar').split('/').map(Number);
+        const [fx, fy] = (room.dataset.focus || '0.5 0.5').split(' ').map(Number);
+        const iar = iw / ih;
+        if (Math.abs(ar - iar) < .01) { plate.style.width = '100%'; plate.style.left = plate.style.top = '0px'; return; }
+        const z = Math.max(parseFloat(room.dataset.zoom || '1'), (H * iar) / W);
+        const pw = W * z, ph = pw / iar;
+        plate.style.width = pw + 'px';
+        plate.style.left = clamp(W / 2 - fx * pw, W - pw, 0) + 'px';
+        plate.style.top = clamp(H / 2 - fy * ph, H - ph, 0) + 'px';
+      });
+    }
+    function light(e) {
+      const room = e.currentTarget, r = room.getBoundingClientRect();
+      const lx = clamp(((e.clientX - r.left) / r.width - .5) * -2.4, -1.6, 1.6), ly = clamp(((e.clientY - r.top) / r.height - .2) * -2.2, -1.4, 1.6);
+      room.style.setProperty('--lx', lx.toFixed(3)); room.style.setProperty('--ly', (-ly).toFixed(3));
+    }
+    /* Lay HTML onto a painted surface: solve the homography from the element's box to four points in the painting. */
+    function solve8(A, b) {
+      const M = A.map((r, i) => r.concat([b[i]]));
+      for (let c = 0; c < 8; c++) {
+        let p = c; for (let r = c + 1; r < 8; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+        [M[c], M[p]] = [M[p], M[c]];
+        for (let r = 0; r < 8; r++) { if (r === c) continue; const f = M[r][c] / M[c][c]; for (let k = c; k <= 8; k++) M[r][k] -= f * M[c][k]; }
+      }
+      return M.map((r, i) => r[8] / r[i]);
+    }
+    function quadMatrix(w, h, q) {
+      const src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], b = [];
+      for (let i = 0; i < 4; i++) { const [x, y] = src[i], [X, Y] = q[i]; A.push([x, y, 1, 0, 0, 0, -x * X, -y * X]); b.push(X); A.push([0, 0, 0, x, y, 1, -x * Y, -y * Y]); b.push(Y); }
+      const [a, bb, c, d, e, f, g, hh] = solve8(A, b);
+      return 'matrix3d(' + [a, d, 0, g, bb, e, 0, hh, 0, 0, 1, 0, c, f, 0, 1].map((n) => +n.toFixed(8)).join(',') + ')';
+    }
+    function placeSurfaces() {
+      document.querySelectorAll('#f1 .surface').forEach((el) => {
+        const room = el.closest('.room'), plate = el.closest('.plate'), iw = +getComputedStyle(room).getPropertyValue('--ar').split('/')[0];
+        const k = plate.clientWidth / iw, [w, h] = el.dataset.size.split(' ').map(Number);
+        const q = el.dataset.quad.split(' ').map((pt) => pt.split(',').map((n) => +n * k));
+        el.style.width = w + 'px'; el.style.height = h + 'px'; el.style.transform = quadMatrix(w, h, q);
+      });
+    }
+    /* The letter: the prompt is written, a general model pencils its word, your model corrects it in ink */
+    let dKey = 'legal', timers = [];
+    function writeLetter(instant) {
+      timers.forEach(clearTimeout); timers = [];
+      const d = DEMO[dKey], gen = d.c.slice().sort((a, b) => b[1] - a[1])[0][0], yours = d.c.slice().sort((a, b) => b[2] - a[2])[0][0];
+      const words = d.prompt.split(' ');
+      $('f1body').innerHTML = words.map((w) => '<span class="w">' + w + ' </span>').join('') + '<span class="gen">' + gen + '</span> <span class="fix blueink">' + yours + '</span>';
+      $('f1margin').innerHTML = d.c.map((c) => '<li><span class="top"><span>' + c[0] + '</span><span class="num">' + c[2].toFixed(2) + '</span></span><i class="g" data-w="' + c[1] + '"></i><i class="y" data-w="' + c[2] + '"></i></li>').join('');
+      $('f1dom').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === dKey)));
+      const ws = [...$('f1body').querySelectorAll('.w')], g = $('f1body').querySelector('.gen'), f = $('f1body').querySelector('.fix');
+      const gi = [...$('f1margin').querySelectorAll('i.g')], yi = [...$('f1margin').querySelectorAll('i.y')];
+      const at = (ms, fn) => { if (instant) fn(); else timers.push(setTimeout(fn, ms)); };
+      ws.forEach((w, i) => at(i * 70, () => w.classList.add('on')));
+      const t1 = ws.length * 70 + 250;
+      at(t1, () => { g.classList.add('on'); gi.forEach((i) => { i.style.width = i.dataset.w * 100 + '%'; }); });
+      at(t1 + 1100, () => g.classList.add('struck'));
+      at(t1 + 1700, () => { f.classList.add('on'); yi.forEach((i) => { i.style.width = i.dataset.w * 100 + '%'; }); });
+    }
+    function dolly() {
+      const room = $('f1-ledger'); if (!room) return;
+      const r = room.getBoundingClientRect(), p = reduce ? 1 : clamp(-r.top / (r.height - innerHeight), 0, 1);
+      room.querySelector('.plate').style.setProperty('--k', (1 + (reduce ? 0 : .42 * ease(p))).toFixed(4));
+      room.querySelectorAll('[data-at]').forEach((e) => e.classList.toggle('on', p >= +e.dataset.at));
+    }
+    /* The globe: illustrative deployments inked onto a turning celestial globe */
+    const Globe = (() => {
+      let cv, ctx, W = 0, H = 0, dpr = 1, yaw = 0, spin = .07, pts = [], arcs = [];
+      const rnd = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+      const hubs = [['your data center', .62, 2.35], ['your cloud', .85, .15], ['your devices', .2, 4.3]];
+      function setup() {
+        cv = $('f1globe'); ctx = cv.getContext('2d');
+        hubs.forEach(([name, lat, lon]) => pts.push({ lat, lon, name, hub: true }));
+        for (let i = 0; i < 44; i++) pts.push({ lat: (rnd() - .35) * 1.9, lon: rnd() * Math.PI * 2 });
+        pts.forEach((p, i) => { if (p.hub) return; let best = 0, bd = 9; hubs.forEach((h, k) => { const d = Math.acos(Math.sin(p.lat) * Math.sin(h[1]) + Math.cos(p.lat) * Math.cos(h[1]) * Math.cos(p.lon - h[2])); if (d < bd) { bd = d; best = k; } }); arcs.push([best, i]); });
+        cv.parentElement.closest('.room').addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); spin = .03 + clamp((e.clientX - r.left) / r.width, 0, 1) * .22; });
+      }
+      function size() { if (!cv) return; dpr = Math.min(2, window.devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      const tilt = .38;
+      function proj(lat, lon) {
+        const x = Math.cos(lat) * Math.sin(lon + yaw), y = Math.sin(lat), z = Math.cos(lat) * Math.cos(lon + yaw);
+        const y2 = y * Math.cos(tilt) - z * Math.sin(tilt), z2 = y * Math.sin(tilt) + z * Math.cos(tilt);
+        const R = Math.min(W, H) * .49;
+        return [W / 2 + x * R, H / 2 - y2 * R, z2];
+      }
+      function draw(dt) {
+        if (!cv || !W) return;
+        yaw += reduce ? 0 : spin * dt;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+        ctx.save();
+        ctx.beginPath(); ctx.arc(W / 2, H / 2, Math.min(W, H) * .49, 0, Math.PI * 2); ctx.clip();
+        ctx.beginPath(); ctx.rect(0, 0, W, H * .455); ctx.rect(0, H * .548, W, H); ctx.clip();
+        ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(36, 55, 255, .8)';
+        arcs.forEach(([a, b]) => {
+          const A = pts[a], B = pts[b]; ctx.beginPath(); let pen = false;
+          for (let t = 0; t <= 1.0001; t += 1 / 24) {
+            const lat = A.lat + (B.lat - A.lat) * t + Math.sin(t * Math.PI) * .12, lon = A.lon + (((B.lon - A.lon + Math.PI * 3) % (Math.PI * 2)) - Math.PI) * t;
+            const [x, y, z] = proj(lat, lon);
+            if (z > 0) { if (pen) ctx.lineTo(x, y); else { ctx.moveTo(x, y); pen = true; } } else pen = false;
+          }
+          ctx.stroke();
+        });
+        pts.forEach((p) => {
+          const [x, y, z] = proj(p.lat, p.lon); if (z <= 0) return;
+          const r = (p.hub ? 5 : 2.8) * (.6 + .4 * z);
+          ctx.fillStyle = 'rgba(36, 55, 255, .9)'; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+          if (p.hub) {
+            ctx.strokeStyle = 'rgba(36, 55, 255, .6)'; ctx.beginPath(); ctx.arc(x, y, r + 5, 0, Math.PI * 2); ctx.stroke();
+            ctx.font = '500 ' + Math.max(12, W * .032) + 'px Archivo'; ctx.fillStyle = 'rgba(30, 22, 14, ' + (.35 + .6 * z).toFixed(2) + ')'; ctx.fillText(p.name, x + r + 9, y + 4);
+            ctx.strokeStyle = 'rgba(36, 55, 255, .75)';
+          }
+        });
+        ctx.restore();
+      }
+      return { setup, size, draw };
+    })();
+    function init() {
+      if (inited) return; inited = true;
+      const hero = $('f1-hero'); hero.addEventListener('pointermove', light);
+      Globe.setup();
+      Object.entries(DEMO).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.d = k; b.textContent = d.subject; b.addEventListener('click', () => { dKey = k; writeLetter(reduce); }); $('f1dom').appendChild(b); });
+      writeLetter(true);
+      const seen = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { writeLetter(reduce); seen.disconnect(); } }), { threshold: .55 });
+      seen.observe($('f1-letter'));
+      fitRooms(); placeSurfaces(); dolly(); Globe.size();
+      window.addEventListener('scroll', () => { if (active === 'f1') dolly(); }, { passive: true });
+    }
+    let last = 0;
+    function frame(now) {
+      if (!inited) return; const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+      const r = $('f1-globe').getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) Globe.draw(dt);
+    }
+    return { init, frame, resize: () => { if (!inited) return; fitRooms(); placeSurfaces(); dolly(); Globe.size(); } };
+  })();
+
+  /* ================= F2 · TESSERA ================= */
+  const TESS_FS = GLSL_COMMON + `
+uniform sampler2D uImg, uMaskA, uMaskB;
+uniform vec2 uRes, uSize, uFocus;
+uniform vec3 uLens, uPaper, uBlue;
+uniform float uReveal, uSwap, uTop, uLh, uLines, uBlur, uUnder, uTime, uMag, uDpr;
+uniform vec4 uClear0, uClear1;
+uniform float uDark;
+float soft(vec2 p, vec4 r){ vec2 d = max(r.xy - p, p - r.zw); float e = max(d.x, d.y); return 1. - smoothstep(-40. * uDpr, 70. * uDpr, e + (n(p / (26. * uDpr)) - .5) * 60. * uDpr); }
+vec2 cover(vec2 fp){
+  float ar = uRes.x / uRes.y, ir = uSize.x / uSize.y;
+  vec2 s = ar > ir ? vec2(1., ir / ar) : vec2(ar / ir, 1.);
+  return fp / uRes * s + clamp(uFocus - s * .5, vec2(0.), 1. - s);
+}
+vec3 paint(vec2 iuv){
+  if (uBlur < .5) return texture2D(uImg, iuv).rgb;
+  vec3 acc = vec3(0.);
+  vec2 d = vec2(uBlur) / uRes * vec2(1., uRes.x / uRes.y) * .6;
+  for (int i = 0; i < 16; i++){ float fi = float(i); float r = sqrt((fi + .5) / 16.); float a = fi * 2.39996; acc += texture2D(uImg, iuv + vec2(cos(a), sin(a)) * r * d).rgb; }
+  return acc / 16.;
+}
+void main(){
+  vec2 fp = vec2(v.x, 1. - v.y) * uRes;
+  vec2 sp = fp; float inL = 0.;
+  float ld = distance(fp, uLens.xy);
+  if (uLens.z > 0.) { inL = 1. - smoothstep(uLens.z - 1.5 * uDpr, uLens.z, ld); if (ld < uLens.z) sp = uLens.xy + (fp - uLens.xy) / uMag; }
+  vec2 muv = sp / uRes;
+  float line = floor((sp.y - uTop) / uLh);
+  float pos = line + sp.x / uRes.x;
+  vec3 m = pos < uSwap ? texture2D(uMaskB, muv).rgb : texture2D(uMaskA, muv).rgb;
+  float shown = step(pos, uReveal);
+  m *= shown;
+  vec3 c = paint(cover(sp));
+  float l = lum(c);
+  float clr = max(soft(fp, uClear0), soft(fp, uClear1));
+  vec3 bg, ink;
+  if (uDark > .5) {
+    bg = c * uUnder * shown * (1. - inL * .8) * (1. - clr);
+    ink = clamp(pow(mix(vec3(l), c, 1.2), vec3(1.2)) * 1.95 + .02, 0., 1.);
+    ink = mix(ink, c * 1.1 + .1, inL);
+  } else {
+    bg = mix(uPaper, c, uUnder * shown * (1. - inL) * (1. - clr));
+    ink = clamp(mix(vec3(l), c, 1.12) * .8, 0., 1.);
+    ink = mix(ink, c * .72, inL);
+  }
+  vec3 col = mix(bg, ink, m.r);
+  col = mix(col, uBlue, m.b);
+  float fl = floor(uReveal), fx = fract(uReveal) * uRes.x, top = uTop + fl * uLh;
+  float cur = step(abs(line - fl), .5) * step(top + uLh * .14, sp.y) * step(sp.y, top + uLh * .86) * step(fx, sp.x) * step(sp.x, fx + uLh * .45) * step(.01, uReveal) * step(uReveal, uLines);
+  col = mix(col, uBlue, cur);
+  if (uLens.z > 0.) col = mix(col, uDark > .5 ? vec3(.95, .93, .88) : vec3(.106, .09, .07), (1. - smoothstep(0., 1.3 * uDpr, abs(ld - uLens.z))) * .9);
+  col += (h(fp + fract(uTime * 7.) * 91.) - .5) * .028;
+  gl_FragColor = vec4(col, 1.);
+}`;
+  const TESS_U = ['uDark', 'uClear0', 'uClear1', 'uImg', 'uMaskA', 'uMaskB', 'uRes', 'uSize', 'uFocus', 'uLens', 'uPaper', 'uBlue', 'uReveal', 'uSwap', 'uTop', 'uLh', 'uLines', 'uBlur', 'uUnder', 'uTime', 'uMag', 'uDpr'];
+
+  function tokenize(paras) {
+    const out = [];
+    paras.forEach((p) => {
+      if (/[぀-ヿ一-鿿가-힯]/.test(p)) { for (let i = 0; i < p.length; i += 3) out.push({ t: p.slice(i, i + 3), cjk: i + 3 < p.length }); }
+      else p.split(/\s+/).forEach((w) => { if (w) out.push({ t: w }); });
+    });
+    return out;
+  }
+  /* Flow tokens across the whole canvas in reading order, around the HTML copy. */
+  function flow(ctx, o) {
+    ctx.font = o.font; if ('fontStretch' in ctx && o.stretch) ctx.fontStretch = o.stretch;
+    const cache = new Map(), mw = (t) => { let w = cache.get(t); if (w === undefined) { w = ctx.measureText(t).width; cache.set(t, w); } return w; };
+    const space = mw(' '), lines = []; let k = o.start || 0, line = 0; const N = o.tokens.length;
+    for (let y = o.top; y + o.lh <= o.H + .01; y += o.lh, line++) {
+      let iv = [[o.side, o.W - o.side]];
+      o.excl.forEach((r) => { if (r.y2 <= y || r.y1 >= y + o.lh) return; const nx = []; iv.forEach(([a, b]) => { if (r.x2 <= a || r.x1 >= b) { nx.push([a, b]); return; } if (r.x1 > a) nx.push([a, r.x1]); if (r.x2 < b) nx.push([r.x2, b]); }); iv = nx; });
+      const words = [];
+      iv.forEach(([a, b]) => { if (b - a < 64) return; let x = a; for (;;) { const tk = o.tokens[k % N], w = mw(tk.t); if (x + w > b) break; words.push({ x, w, t: tk.t, blue: !!(o.blue && o.blue.has(tk.t.replace(/[.,;:]+$/, ''))) }); x += w + (tk.cjk ? 0 : space); k++; } });
+      lines.push({ y, words });
+    }
+    return { lines, count: line };
+  }
+  function drawMask(cv, lay, o, dpr) {
+    const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = o.font; if ('fontStretch' in ctx && o.stretch) ctx.fontStretch = o.stretch;
+    lay.lines.forEach((ln) => ln.words.forEach((w) => { ctx.fillStyle = w.blue ? '#0000ff' : '#ff0000'; ctx.fillText(w.t, w.x, ln.y + o.lh * .78); }));
+  }
+  function Tessera(canvas, opts) {
+    const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false, preserveDrawingBuffer: true });
+    if (!gl) return null;
+    const u = glProgram(gl, TESS_FS, TESS_U);
+    const tImg = glTex(gl), tA = glTex(gl), tB = glTex(gl);
+    const mA = document.createElement('canvas'), mB = document.createElement('canvas');
+    let size = [16, 9], dpr = 1, W = 0, H = 0, lay = null;
+    const st = { reveal: 0, swap: -1, blur: 0, lens: [0, 0, 0], under: opts.under || .16, clear: [] };
+    gl.uniform1i(u.uImg, 0); gl.uniform1i(u.uMaskA, 1); gl.uniform1i(u.uMaskB, 2);
+    loadImg(opts.src).then((img) => { if (!img) return; gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); size = [img.naturalWidth, img.naturalHeight]; });
+    function upload(cv, t, unit) { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cv); }
+    function layout(tokens, excl, into) {
+      dpr = Math.min(2, window.devicePixelRatio || 1); W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); gl.viewport(0, 0, canvas.width, canvas.height);
+      const target = into === 'B' ? mB : mA; target.width = canvas.width; target.height = canvas.height;
+      const o = { W, H, top: opts.top || 6, side: opts.side || 8, lh: opts.lh, font: opts.font, stretch: opts.stretch, tokens, excl, blue: opts.blue };
+      const l = flow(target.getContext('2d'), o); drawMask(target, l, o, dpr);
+      upload(target, into === 'B' ? tB : tA, into === 'B' ? 2 : 1);
+      if (into !== 'B') lay = l; else st.pending = l;
+      return l;
+    }
+    function commitB() { const c = mA.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(mB, 0, 0); upload(mA, tA, 1); lay = st.pending; st.swap = -1; }
+    function draw(time) {
+      gl.uniform2f(u.uRes, canvas.width, canvas.height); gl.uniform2fv(u.uSize, size); gl.uniform2fv(u.uFocus, opts.focus || [.5, .5]);
+      gl.uniform3f(u.uLens, st.lens[0] * dpr, st.lens[1] * dpr, st.lens[2] * dpr); gl.uniform3f(u.uPaper, 251 / 255, 250 / 255, 247 / 255); gl.uniform3f(u.uBlue, 36 / 255, 55 / 255, 1);
+      gl.uniform1f(u.uReveal, st.reveal); gl.uniform1f(u.uSwap, st.swap); gl.uniform1f(u.uTop, (opts.top || 6) * dpr); gl.uniform1f(u.uLh, opts.lh * dpr); gl.uniform1f(u.uLines, lay ? lay.count : 0);
+      [0, 1].forEach((i) => { const r = st.clear[i]; gl.uniform4f(u['uClear' + i], r ? r.x1 * dpr : -9, r ? r.y1 * dpr : -9, r ? r.x2 * dpr : -9, r ? r.y2 * dpr : -9); });
+      gl.uniform1f(u.uDark, opts.dark ? 1 : 0);
+      gl.uniform1f(u.uBlur, st.blur * dpr); gl.uniform1f(u.uUnder, st.under); gl.uniform1f(u.uTime, reduce ? 0 : time); gl.uniform1f(u.uMag, 2.3); gl.uniform1f(u.uDpr, dpr);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tA); gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, tB);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    function wordAt(x, y) {
+      if (!lay) return null; const i = Math.floor((y - (opts.top || 6)) / opts.lh), ln = lay.lines[i]; if (!ln) return null;
+      return ln.words.find((w) => x >= w.x - 2 && x <= w.x + w.w + 2) || null;
+    }
+    return { st, layout, commitB, draw, wordAt, get lines() { return lay ? lay.count : 0; }, canvas };
+  }
+
+  const SITE_PARAS = [
+    'Random Walk is an AI lab. We build one company’s model at a time, from the first dataset to the tenth retraining.',
+    'Under clause 14.2, the supplier’s liability for indirect or consequential loss is excluded, save for fraud or wilful misconduct.',
+    'We collect what your company knows, clean it, label it and account for every source.',
+    'Spindle vibration above 4.5 mm/s after 600 operating hours usually points to bearing wear on the drive side.',
+    '請求書の支払期限は受領後三十日以内とする。',
+    'When general models do not know your field, we continue pre-training on your own corpus.',
+    'Under IFRS 16, a lease with a term of twelve months or less may be accounted for as a short-term lease.',
+    'Fine-tuning and preference tuning on the tasks your people actually do.',
+    '合同第七条约定的保修期自验收之日起计算。',
+    'Every release is measured against an evaluation set you agree to, including what the model must refuse.',
+    'Batch 0417 failed torque inspection at station 6; rework the fastener and re-test before release.',
+    'Delivered where it must run: your data center, your cloud or your devices.',
+    '보증 기간은 인수일로부터 24개월이다.',
+    'Monitoring, retraining on new material and a change log for every release, for as long as you use it.',
+    'The warranty period begins on the date of acceptance and runs for twenty-four months.'
+  ];
+  const ALTS = {
+    excluded: [['excluded', .71], ['capped', .14], ['limited', .06]], bearing: [['bearing', .68], ['misalignment', .11], ['imbalance', .09]],
+    'short-term': [['short-term', .74], ['operating', .12], ['finance', .05]], acceptance: [['acceptance', .66], ['delivery', .21], ['invoice', .05]],
+    model: [['model', .58], ['system', .17], ['tool', .09]], evaluation: [['evaluation', .63], ['test', .2], ['benchmark', .08]], dataset: [['dataset', .55], ['archive', .18], ['corpus', .12]]
+  };
+  const POOL = ['the', 'a', 'your', 'model', 'contract', 'release', 'data', 'clause', 'field', 'team', 'report', 'source', 'loss', 'term', 'device', 'record'];
+  function candidates(word) {
+    const key = word.replace(/[.,;:’']+$/, '').toLowerCase();
+    if (ALTS[key]) return ALTS[key];
+    const p = +(0.38 + hash(key) * 0.54).toFixed(2), a = POOL[Math.floor(hash(key + 'a') * POOL.length)], b = POOL[Math.floor(hash(key + 'b') * POOL.length)];
+    const r1 = +((1 - p) * (0.45 + hash(key + 'c') * 0.3)).toFixed(2);
+    return [[word.replace(/[.,;:]+$/, ''), p], [a === key ? 'it' : a, r1], [b === key || b === a ? 'this' : b, +((1 - p - r1) * .5).toFixed(2)]];
+  }
+  const DOMAIN = {
+    legal: { label: 'Contracts', prompt: 'Under clause 14.2, the supplier’s liability for indirect or consequential loss is', c: [['excluded', .12, .71], ['capped', .15, .14], ['limited', .34, .06], ['subject', .11, .04], ['unlimited', .09, .02]],
+      yours: ['Under clause 14.2, the supplier’s liability for indirect or consequential loss is excluded, save for fraud or wilful misconduct.', 'The aggregate liability of either party shall not exceed the fees paid in the twelve months preceding the claim.', 'Notice of termination must be served in writing no later than ninety days before the renewal date.', 'Warranty claims are void where the goods were modified without prior written consent.', 'Schedule B sets out the service levels, the credits payable and the exclusions.'],
+      gen: ['The contract probably says something about loss, and the parties may want to check the terms.', 'Liability can depend on many factors and it is best to consult the agreement.', 'There may be limits, or there may not be, depending on how the clause is written.', 'Generally speaking, agreements often include some provisions about this kind of thing.'] },
+    mfg: { label: 'Maintenance logs', prompt: 'Spindle vibration above 4.5 mm/s after 600 operating hours usually points to', c: [['bearing', .10, .68], ['misalignment', .14, .11], ['imbalance', .22, .09], ['wear', .29, .05], ['the', .12, .02]],
+      yours: ['Spindle vibration above 4.5 mm/s after 600 operating hours usually points to bearing wear on the drive side.', 'Replace the bearing, re-torque the housing bolts to 45 Nm and log the run-out at station 6.', 'Coolant concentration below 6 percent accelerates tool wear on the finishing pass.', 'Batch 0417 failed torque inspection; rework the fastener and re-test before release.'],
+      gen: ['The machine might be having a problem, which could be caused by a number of things.', 'It may be worth checking the parts and seeing whether something looks wrong.', 'Vibration can happen for many reasons and a technician can usually help.'] },
+    acct: { label: 'Accounting', prompt: 'Under IFRS 16, a lease with a term of twelve months or less may be accounted for as a', c: [['short-term', .21, .74], ['operating', .31, .12], ['finance', .24, .05], ['lease', .09, .03], ['right-of-use', .06, .02]],
+      yours: ['Under IFRS 16, a lease with a term of twelve months or less may be accounted for as a short-term lease.', 'Recognise the right-of-use asset at cost and depreciate it over the shorter of the lease term and its useful life.', 'Variable payments linked to sales are expensed as incurred and excluded from the lease liability.', 'Remeasure the liability when the lease term changes, using a revised discount rate.'],
+      gen: ['Leases are a type of agreement and the accounting can be complex in some situations.', 'The company should probably record the lease in some way on its balance sheet.', 'Different rules may apply depending on where you are and what the lease looks like.'] }
+  };
+
+  const F2 = (() => {
+    let inited = false, hero = null, proof = null;
+    function excl(section, els, pad) {
+      const s = section.getBoundingClientRect();
+      return els.filter(Boolean).map((el) => { const r = el.getBoundingClientRect(); return { x1: r.left - s.left - pad, x2: r.right - s.left + pad, y1: r.top - s.top - pad, y2: r.bottom - s.top + pad }; });
+    }
+    /* Hero */
+    const heroTokens = tokenize(SITE_PARAS);
+    function layoutHero() {
+      const sec = $('f2hero');
+      hero.layout(heroTokens, excl(sec, [...sec.querySelectorAll('.nav .logo, .nav nav, .nav .btn')].concat([$('f2copy'), window.innerWidth > 820 ? $('f2hint') : null]), 14));
+      hero.st.clear = excl(sec, [$('f2copy')], 0);
+    }
+    let heroT0 = 0;
+    function lens(e) {
+      const r = hero.canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tip = $('f2tip');
+      const overCopy = e.target.closest && e.target.closest('#f2copy, .nav, #f2hint');
+      if (overCopy || hero.st.reveal < hero.lines) { hero.st.lens = [0, 0, 0]; tip.classList.remove('on'); return; }
+      hero.st.lens = [x, y, window.innerWidth < 600 ? 70 : 96];
+      const w = hero.wordAt(x, y);
+      if (!w) { tip.classList.remove('on'); return; }
+      const c = candidates(w.t);
+      tip.innerHTML = c.map((q) => '<div class="r"><span>' + q[0] + '</span><i style="width:' + Math.round(q[1] * 100) + '%"></i><span>' + q[1].toFixed(2) + '</span></div>').join('') + '<p>Next-token odds, illustrative</p>';
+      const tx = x + 110 + 220 > r.width ? x - 110 - 220 : x + 110;
+      tip.style.left = tx + 'px'; tip.style.top = clamp(y - 40, 70, r.height - 140) + 'px'; tip.classList.add('on');
+    }
+    /* Proof */
+    let dKey = 'legal', mode = 'gen', swapT0 = -1, blurFrom = 0, blurTo = 0;
+    function proofTokens() { return tokenize(DOMAIN[dKey][mode === 'yours' ? 'yours' : 'gen']); }
+    function proofExcl() { const r = excl($('f2proof'), [$('f2pcopy')], 10); proof.st.clear = excl($('f2proof'), [$('f2pcopy')], -30); return r; }
+    function drawControls() {
+      const d = DOMAIN[dKey], idx = mode === 'yours' ? 2 : 1, top = d.c.slice().sort((a, b) => b[idx] - a[idx])[0][0];
+      $('f2prompt').innerHTML = d.prompt + ' <b class="' + (mode === 'yours' ? 'yours' : '') + '">' + top + '</b>';
+      const bars = $('f2bars'); if (bars.dataset.d !== dKey) { bars.innerHTML = d.c.map((c) => '<div class="r"><span class="w">' + c[0] + '</span><span class="t"><i></i></span><span class="p"></span></div>').join(''); bars.dataset.d = dKey; }
+      bars.classList.toggle('yours', mode === 'yours');
+      [...bars.children].forEach((row, k) => { row.querySelector('i').style.width = d.c[k][idx] * 100 + '%'; row.querySelector('.p').textContent = Math.round(d.c[k][idx] * 100) + '%'; });
+      $('f2dom').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === dKey)));
+      $('f2model').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === mode)));
+    }
+    function rewrite() {
+      drawControls(); if (!proof) return;
+      proof.layout(proofTokens(), proofExcl(), 'B');
+      blurFrom = proof.st.blur; blurTo = mode === 'yours' ? 0 : 16; swapT0 = performance.now();
+      if (reduce) { proof.st.blur = blurTo; proof.commitB(); swapT0 = -1; }
+    }
+    function init() {
+      if (inited) return; inited = true;
+      hero = Tessera($('f2a'), { src: 'assets/workshop.webp', focus: [.62, .4], lh: 9, font: '600 8px Archivo', stretch: 'semi-condensed', under: .14, dark: true });
+      proof = Tessera($('f2b'), { src: 'assets/still-life.webp', focus: [.62, .5], lh: 11, font: '600 10px Archivo', stretch: 'semi-condensed', under: .72, blue: new Set(['excluded', 'bearing', 'short-term']) });
+      Object.entries(DOMAIN).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.d = k; b.textContent = d.label; b.addEventListener('click', () => { if (dKey === k) return; dKey = k; rewrite(); }); $('f2dom').appendChild(b); });
+      $('f2model').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { if (mode === b.dataset.m) return; mode = b.dataset.m; rewrite(); }));
+      drawControls();
+      if (hero) { $('f2hero').addEventListener('pointermove', lens); $('f2hero').addEventListener('pointerleave', () => { hero.st.lens = [0, 0, 0]; $('f2tip').classList.remove('on'); }); }
+      const go = () => { if (hero) layoutHero(); if (proof) { proof.layout(proofTokens(), proofExcl()); proof.st.blur = 16; proof.st.reveal = 1e5; } heroT0 = performance.now(); paintStages(); };
+      (document.fonts ? document.fonts.load('600 11px Archivo').then(() => document.fonts.ready) : Promise.resolve()).then(go);
+      /* Switch the proof to the specialist model once, the first time it is seen */
+      const seen = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting && mode === 'gen' && !reduce) { setTimeout(() => { if (mode === 'gen') { mode = 'yours'; rewrite(); } }, 1100); seen.disconnect(); } }), { threshold: .45 });
+      seen.observe($('f2proof'));
+    }
+    /* Stage text is coloured by one painting laid across the whole section */
+    function paintStages() {
+      const sec = $('f2stages'), s = sec.getBoundingClientRect(), im = sec.querySelector('.under');
+      const cr = coverRect(s.width, s.height, 1800, 1029, .5, .5);
+      sec.querySelectorAll('.ptext').forEach((el) => { const r = el.getBoundingClientRect(); el.style.backgroundSize = cr.w + 'px ' + cr.h + 'px'; el.style.backgroundPosition = (cr.x - (r.left - s.left)) + 'px ' + (cr.y - (r.top - s.top)) + 'px'; });
+      im.style.objectPosition = '50% 50%';
+    }
+    function frame(now) {
+      if (!inited) return;
+      const t = (now - heroT0) / 1000;
+      if (hero && heroT0) {
+        const L = hero.lines, dur = 5.2;
+        hero.st.reveal = reduce ? L + 1 : clamp((t - .5) / dur, 0, 1) >= 1 ? L + 1 : ease(clamp((t - .5) / dur, 0, 1)) * L;
+        const r = $('f2hero').getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) hero.draw(t);
+      }
+      if (proof) {
+        if (swapT0 > 0) {
+          const k = clamp((now - swapT0) / 1500, 0, 1);
+          proof.st.swap = ease(k) * (proof.lines + 1); proof.st.blur = blurFrom + (blurTo - blurFrom) * ease(k);
+          if (k >= 1) { proof.commitB(); swapT0 = -1; }
+        }
+        const r = $('f2proof').getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) proof.draw(t);
+      }
+    }
+    function resize() { if (!inited) return; if (hero) layoutHero(); if (proof) { proof.layout(proofTokens(), proofExcl()); } paintStages(); }
+    return { init, frame, resize };
+  })();
+
+  /* ================= F3 · EXAMINATION ================= */
+  const EXAM_FS = GLSL_COMMON + `
+uniform sampler2D uImg, uGhost;
+uniform vec2 uRes, uSize, uGSize, uFocus, uGOff;
+uniform vec3 uLens;
+uniform float uA, uB, uSweep, uTime, uLensMode, uDpr;
+uniform vec4 uSpot0, uSpot1, uSpot2, uSpot3;
+vec2 cover(vec2 uv){
+  float ar = uRes.x / uRes.y, ir = uSize.x / uSize.y;
+  vec2 s = ar > ir ? vec2(1., ir / ar) : vec2(ar / ir, 1.);
+  return uv * s + clamp(uFocus - s * .5, vec2(0.), 1. - s);
+}
+vec3 T(vec2 p){ return texture2D(uImg, p).rgb; }
+vec3 visible(vec2 p){ return T(p); }
+vec3 infrared(vec2 p){
+  vec2 e = 1.4 / uSize;
+  float tl = lum(T(p + vec2(-e.x, -e.y))), tc = lum(T(p + vec2(0., -e.y))), tr = lum(T(p + vec2(e.x, -e.y)));
+  float ml = lum(T(p + vec2(-e.x, 0.))), mr = lum(T(p + vec2(e.x, 0.)));
+  float bl = lum(T(p + vec2(-e.x, e.y))), bc = lum(T(p + vec2(0., e.y))), br = lum(T(p + vec2(e.x, e.y)));
+  float gx = -tl - 2. * ml - bl + tr + 2. * mr + br, gy = -tl - 2. * tc - tr + bl + 2. * bc + br;
+  float edge = smoothstep(.12, .55, length(vec2(gx, gy)));
+  float l = lum(T(p));
+  float d = (p.x * uSize.x + p.y * uSize.y) / 5.;
+  float hatch = pow(.5 + .5 * sin(d * 6.2832), 10.) * smoothstep(.42, .12, l);
+  float g = mix(.7, l, .3) - edge * .5 - hatch * .16 + (n(p * uSize * .6) - .5) * .05;
+  return vec3(g) * vec3(1., .985, .955);
+}
+vec3 xray(vec2 p){
+  float l = lum(T(p));
+  float ar = uSize.x / uSize.y, gr = uGSize.x / uGSize.y;
+  vec2 g = ar > gr ? vec2(p.x, (p.y - .5) * gr / ar + .5) : vec2((p.x - .5) * ar / gr + .5, p.y);
+  float gl = lum(texture2D(uGhost, clamp(g + uGOff, 0., 1.)).rgb);
+  float dens = pow(smoothstep(.04, .92, l), 1.35) * .66 + pow(smoothstep(.08, .9, gl), 1.5) * .42;
+  vec2 w = p * uSize * .95;
+  dens += ((.5 + .5 * sin(w.x * 3.14)) * (.5 + .5 * sin(w.y * 3.14)) - .25) * .07;
+  float edgeX = min(p.x, 1. - p.x) * ar, edgeY = min(p.y, 1. - p.y);
+  float bar = smoothstep(.07, .055, edgeX) * smoothstep(.0, .012, edgeX) + smoothstep(.07, .055, edgeY) * smoothstep(.0, .012, edgeY);
+  dens += bar * .1;
+  dens = dens * .88 + .05 + (h(p * uSize) - .5) * .05;
+  return vec3(dens) * vec3(.93, .97, 1.03);
+}
+vec3 raking(vec2 p){
+  vec2 e = 1.5 / uSize;
+  float hl = lum(T(p - vec2(e.x, 0.))), hr = lum(T(p + vec2(e.x, 0.))), hu = lum(T(p - vec2(0., e.y))), hd = lum(T(p + vec2(0., e.y)));
+  vec2 q = p * uSize * .18;
+  float m0 = fbm(q), mx = fbm(q + vec2(.35, 0.)), my = fbm(q + vec2(0., .35));
+  vec3 nr = normalize(vec3((hl - hr) * 5. + (m0 - mx) * .55, (hu - hd) * 5. + (m0 - my) * .55, 1.));
+  vec3 L = normalize(vec3(-1., -.18, .2));
+  float sh = clamp(dot(nr, L) * 1.6, 0., 1.4);
+  vec3 c = T(p);
+  float fall = mix(1.3, .38, smoothstep(0., 1., p.x));
+  return mix(vec3(lum(c)), c, .55) * (.18 + sh) * fall;
+}
+float spot(vec2 p, vec4 s, float k){ vec2 d = (p - s.xy) / s.zw; return smoothstep(1., .55, length(d) + (fbm(p * 60. + k) - .5) * .7); }
+vec3 ultraviolet(vec2 p){
+  vec3 c = T(p); float l = lum(c);
+  vec3 col = mix(vec3(.035, .025, .075), vec3(.34, .42, .27), smoothstep(.04, .9, l));
+  col += vec3(.05, .0, .1) * (1. - l) + vec3(.02, .05, .02) * fbm(p * 14.);
+  float r = max(max(spot(p, uSpot0, 1.), spot(p, uSpot1, 2.)), max(spot(p, uSpot2, 3.), spot(p, uSpot3, 4.)));
+  return mix(col, vec3(.03, .02, .05), r * .86);
+}
+vec3 modeCol(vec2 p, float m){
+  if (m < .5) return visible(p);
+  if (m < 1.5) return infrared(p);
+  if (m < 2.5) return xray(p);
+  if (m < 3.5) return raking(p);
+  return ultraviolet(p);
+}
+void main(){
+  vec2 p = cover(vec2(v.x, 1. - v.y));
+  vec2 fp = v * uRes;
+  vec3 a = modeCol(p, uA);
+  vec3 col = a;
+  float sx = uSweep * uRes.x;
+  if (uSweep > 0. && uSweep < 1.) {
+    vec3 b = modeCol(p, uB);
+    col = fp.x < sx ? b : a;
+    float dh = abs(fp.x - sx) / uDpr;
+    col += vec3(.55, .62, 1.) * exp(-dh * .8) * .9 + vec3(.14, .22, 1.) * exp(-dh * .04) * .06;
+  } else if (uSweep >= 1.) col = modeCol(p, uB);
+  if (uLens.z > 0.) {
+    float ld = distance(fp, uLens.xy);
+    if (ld < uLens.z) col = modeCol(p, uLensMode);
+    col = mix(col, vec3(.14, .22, 1.), (1. - smoothstep(0., 1.4 * uDpr, abs(ld - uLens.z))) * .95);
+    float tick = step(abs(fp.y - uLens.y), .7 * uDpr) * step(uLens.z, ld) * step(ld, uLens.z + 9. * uDpr) + step(abs(fp.x - uLens.x), .7 * uDpr) * step(uLens.z, ld) * step(ld, uLens.z + 9. * uDpr);
+    col = mix(col, vec3(.14, .22, 1.), clamp(tick, 0., 1.));
+  }
+  vec2 q = (v - .5) * vec2(uRes.x / uRes.y, 1.);
+  col *= mix(1., smoothstep(1.3, .3, length(q)), .35);
+  col += (h(fp + fract(uTime * 11.) * 97.) - .5) * .035;
+  gl_FragColor = vec4(col, 1.);
+}`;
+  const EXAM_U = ['uImg', 'uGhost', 'uRes', 'uSize', 'uGSize', 'uFocus', 'uGOff', 'uLens', 'uA', 'uB', 'uSweep', 'uTime', 'uLensMode', 'uDpr', 'uSpot0', 'uSpot1', 'uSpot2', 'uSpot3'];
+
+  const READER_P = {
+    src: 'assets/dutch-reader.webp', size: [896, 1152], focus: [.5, .42], ghost: 'assets/dutch-astronomer.webp', gOff: [0, 0],
+    boxes: [[.03, .235, .26, .2, 'window 0.95'], [.525, .285, .145, .135, 'person 0.99'], [.35, .46, .148, .2, 'document, contract 0.97'], [.615, .44, .11, .075, 'pigment, ultramarine 0.93']],
+    xray: [[.445, .352, 'Base model, painted over <b>open weights</b>', 1], [.6, .43, 'Your layer <b>continued pre-training</b>', 0]],
+    marks: [[.47, .5, 'Clause extraction <b>94.1%</b>', 0], [.575, .36, 'Refusals on the agreed set <b>100%</b>', 0], [.2, .31, 'Invented citations <b>0.4%</b>', 0]],
+    spots: [[.8, .29, .028, .02, 'v1.1 March 2027 <b>new supplier contracts</b>', 1], [.7, .56, .022, .016, 'v1.2 August 2027 <b>Japanese filings added</b>', 0], [.17, .385, .022, .017, 'v2.0 January 2028 <b>base model upgraded</b>', 0], [.47, .315, .018, .014, 'v2.1 May 2028 <b>clause 14 retrained</b>', 0]]
+  };
+  const F3 = (() => {
+    const steps = [
+      { mode: 0, name: 'Visible light', wave: '400–700 nm', tone: 'dark', lens: 1, lensName: 'infrared', short: 'Visible' },
+      { mode: 1, name: 'Infrared reflectogram', wave: '1,100–1,700 nm', tone: 'light', lens: 0, lensName: 'visible light', short: 'Infrared · dataset' },
+      { mode: 2, name: 'X-radiograph', wave: '40 kV, 10 mA', tone: 'dark', lens: 0, lensName: 'visible light', short: 'X-ray · pre-training' },
+      { mode: 3, name: 'Raking light', wave: '8° from the left', tone: 'dark', lens: 0, lensName: 'visible light', short: 'Raking light · evaluation' },
+      { mode: 4, name: 'Ultraviolet fluorescence', wave: '365 nm', tone: 'dark', lens: 0, lensName: 'visible light', short: 'Ultraviolet · upkeep' }
+    ];
+    /* Painting-specific annotation data (image fractions). Filled in for the painting in use. */
+    const P = READER_P;
+    let inited = false, gl, u, tImg, tGhost, size = P.size, gsize = [896, 1152], dpr = 1, cur = 0, from = 0, to = 0, t0 = -1, lensPos = [0, 0, 0];
+    function buildMap() {
+      const map = $('f3map');
+      const layer = (m, html) => '<div class="layer" data-mode="' + m + '">' + html + '</div>';
+      map.innerHTML =
+        layer(1, P.boxes.map((b) => '<div class="box" style="left:' + b[0] * 100 + '%;top:' + b[1] * 100 + '%;width:' + b[2] * 100 + '%;height:' + b[3] * 100 + '%"><span>' + b[4] + '</span></div>').join('')) +
+        layer(2, P.xray.map((m) => '<div class="mark' + (m[3] ? ' left' : '') + '" style="left:' + m[0] * 100 + '%;top:' + m[1] * 100 + '%"><span>' + m[2] + '</span></div>').join('')) +
+        layer(3, P.marks.map((m) => '<div class="mark' + (m[3] ? ' left' : '') + '" style="left:' + m[0] * 100 + '%;top:' + m[1] * 100 + '%"><span>' + m[2] + '</span></div>').join('')) +
+        layer(4, P.spots.filter((s) => s[4]).map((s) => '<div class="mark' + (s[5] ? ' left' : '') + '" style="left:' + s[0] * 100 + '%;top:' + s[1] * 100 + '%"><span>' + s[4] + '</span></div>').join(''));
+    }
+    function placeMap() {
+      const st = $('f3stage'), W = st.clientWidth, H = st.clientHeight, r = coverRect(W, H, size[0], size[1], P.focus[0], P.focus[1]), m = $('f3map');
+      m.style.left = r.x + 'px'; m.style.top = r.y + 'px'; m.style.width = r.w + 'px'; m.style.height = r.h + 'px';
+      const cv = $('f3gl'); dpr = Math.min(1.75, window.devicePixelRatio || 1); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); if (gl) gl.viewport(0, 0, cv.width, cv.height);
+    }
+    function stepAt() { const ex = $('f3exam'), r = ex.getBoundingClientRect(); const p = clamp(-r.top / (r.height - innerHeight), 0, .9999); return Math.floor(p * steps.length); }
+    function setStep(k) {
+      if (k === cur) return; cur = k;
+      from = t0 > 0 ? to : from; if (t0 > 0) from = to; to = steps[k].mode; t0 = reduce ? -1 : performance.now(); if (reduce) from = to;
+      const s = steps[k];
+      $('f3stage').dataset.tone = s.tone; $('f3nav').classList.toggle('on-dark', s.tone === 'dark');
+      document.querySelectorAll('#f3copy article').forEach((a) => a.classList.toggle('on', +a.dataset.step === k));
+      $('f3mode').textContent = s.name; $('f3wave').textContent = s.wave; $('f3lens').textContent = 'Lens: ' + s.lensName;
+      document.querySelectorAll('#f3index button').forEach((b) => { if (+b.dataset.k === k) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      document.querySelectorAll('#f3map .layer').forEach((l) => l.classList.remove('on'));
+      setTimeout(() => { if (cur === k) document.querySelectorAll('#f3map .layer[data-mode="' + s.mode + '"]').forEach((l) => l.classList.add('on')); }, reduce ? 0 : 900);
+    }
+    function init() {
+      if (inited) return; inited = true;
+      const cv = $('f3gl'); gl = cv.getContext('webgl', { antialias: false, premultipliedAlpha: false, preserveDrawingBuffer: true });
+      buildMap();
+      $('f3index').innerHTML = steps.map((s, k) => '<li><button type="button" data-k="' + k + '"' + (k === 0 ? ' aria-current="step"' : '') + '>' + s.short + '</button></li>').join('');
+      $('f3index').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const ex = $('f3exam'); const top = ex.offsetTop + (ex.offsetHeight - innerHeight) * ((+b.dataset.k + .5) / steps.length); window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' }); });
+      const st = $('f3stage');
+      st.addEventListener('pointermove', (e) => {
+        const r = st.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        const over = e.target.closest('a, button, .copy article.on, .meta');
+        lensPos = over ? [0, 0, 0] : [x, y, window.innerWidth < 600 ? 64 : 104];
+        const m = coverRect(r.width, r.height, size[0], size[1], P.focus[0], P.focus[1]);
+        $('f3xy').textContent = 'x ' + clamp((x - m.x) / m.w, 0, 1).toFixed(3) + ' · y ' + clamp((y - m.y) / m.h, 0, 1).toFixed(3);
+      });
+      st.addEventListener('pointerleave', () => { lensPos = [0, 0, 0]; });
+      placeMap();
+      if (!gl) return;
+      u = glProgram(gl, EXAM_FS, EXAM_U); tImg = glTex(gl); tGhost = glTex(gl);
+      gl.uniform1i(u.uImg, 0); gl.uniform1i(u.uGhost, 1);
+      loadImg(P.src, 'assets/dutch-reader.webp').then((img) => { if (!img) return; gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); size = [img.naturalWidth, img.naturalHeight]; placeMap(); });
+      loadImg(P.ghost).then((img) => { if (!img) return; gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tGhost); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); gsize = [img.naturalWidth, img.naturalHeight]; });
+    }
+    function frame(now) {
+      if (!inited || !gl) return;
+      const ex = $('f3exam').getBoundingClientRect(); if (ex.bottom < 0 || ex.top > innerHeight) return;
+      setStep(stepAt());
+      let sweep = 1;
+      if (t0 > 0) { sweep = clamp((now - t0) / 1400, 0, 1); if (sweep >= 1) { from = to; t0 = -1; } }
+      const cv = $('f3gl');
+      gl.uniform2f(u.uRes, cv.width, cv.height); gl.uniform2fv(u.uSize, size); gl.uniform2fv(u.uGSize, gsize); gl.uniform2fv(u.uFocus, P.focus); gl.uniform2fv(u.uGOff, P.gOff);
+      const lp = lensPos[2] ? [lensPos[0] * dpr, (cv.height / dpr - lensPos[1]) * dpr, lensPos[2] * dpr] : [0, 0, 0];
+      gl.uniform3fv(u.uLens, lp); gl.uniform1f(u.uLensMode, steps[cur].lens);
+      gl.uniform1f(u.uA, from); gl.uniform1f(u.uB, to); gl.uniform1f(u.uSweep, t0 > 0 ? ease(sweep) : (from === to ? 0 : 1));
+      gl.uniform1f(u.uTime, reduce ? 0 : now / 1000); gl.uniform1f(u.uDpr, dpr);
+      P.spots.forEach((s, i) => gl.uniform4f(u['uSpot' + i], s[0], s[1], s[2], s[3]));
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tGhost);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    return { init, frame, resize: () => { if (inited) placeMap(); } };
+  })();
+
+
+  /* ================= F4 · F2 + F3 ================= */
+  const F4_FS = GLSL_COMMON + `
+uniform sampler2D uImg, uGhost, uMaskA, uMaskB, uSoft;
+uniform vec2 uSSize;
+uniform vec2 uRes, uSize, uGSize, uFocus, uGOff;
+uniform vec3 uLens;
+uniform float uA, uB, uSweep, uTime, uLensMode, uDpr, uWriting, uReveal, uSwap, uTop, uLh, uBlur, uMag, uGam, uGain, uUnder;
+uniform vec4 uSpot0, uSpot1, uSpot2, uSpot3, uClear0;
+vec2 cover(vec2 uv){
+  float ar = uRes.x / uRes.y, ir = uSize.x / uSize.y;
+  vec2 s = ar > ir ? vec2(1., ir / ar) : vec2(ar / ir, 1.);
+  return uv * s + clamp(uFocus - s * .5, vec2(0.), 1. - s);
+}
+vec3 T(vec2 p){ return texture2D(uImg, p).rgb; }
+vec3 infrared(vec2 p){
+  vec2 e = 1.4 / uSize;
+  float tl = lum(T(p + vec2(-e.x, -e.y))), tc = lum(T(p + vec2(0., -e.y))), tr = lum(T(p + vec2(e.x, -e.y)));
+  float ml = lum(T(p + vec2(-e.x, 0.))), mr = lum(T(p + vec2(e.x, 0.)));
+  float bl = lum(T(p + vec2(-e.x, e.y))), bc = lum(T(p + vec2(0., e.y))), br = lum(T(p + vec2(e.x, e.y)));
+  float gx = -tl - 2. * ml - bl + tr + 2. * mr + br, gy = -tl - 2. * tc - tr + bl + 2. * bc + br;
+  float edge = smoothstep(.12, .55, length(vec2(gx, gy)));
+  float l = lum(T(p));
+  float d = (p.x * uSize.x + p.y * uSize.y) / 5.;
+  float hatch = pow(.5 + .5 * sin(d * 6.2832), 10.) * smoothstep(.42, .12, l);
+  float g = mix(.7, l, .3) - edge * .5 - hatch * .16 + (n(p * uSize * .6) - .5) * .05;
+  return vec3(g) * vec3(1., .985, .955);
+}
+vec3 xray(vec2 p){
+  float l = lum(T(p));
+  float ar = uSize.x / uSize.y, gr = uGSize.x / uGSize.y;
+  vec2 g = ar > gr ? vec2(p.x, (p.y - .5) * gr / ar + .5) : vec2((p.x - .5) * ar / gr + .5, p.y);
+  float gl = lum(texture2D(uGhost, clamp(g + uGOff, 0., 1.)).rgb);
+  float dens = pow(smoothstep(.04, .92, l), 1.35) * .66 + pow(smoothstep(.08, .9, gl), 1.5) * .42;
+  vec2 w = p * uSize * .95;
+  dens += ((.5 + .5 * sin(w.x * 3.14)) * (.5 + .5 * sin(w.y * 3.14)) - .25) * .07;
+  float edgeX = min(p.x, 1. - p.x) * ar, edgeY = min(p.y, 1. - p.y);
+  float bar = smoothstep(.07, .055, edgeX) * smoothstep(.0, .012, edgeX) + smoothstep(.07, .055, edgeY) * smoothstep(.0, .012, edgeY);
+  dens += bar * .1;
+  dens = dens * .88 + .05 + (h(p * uSize) - .5) * .05;
+  return vec3(dens) * vec3(.93, .97, 1.03);
+}
+vec3 raking(vec2 p){
+  vec2 e = 1.5 / uSize;
+  float hl = lum(T(p - vec2(e.x, 0.))), hr = lum(T(p + vec2(e.x, 0.))), hu = lum(T(p - vec2(0., e.y))), hd = lum(T(p + vec2(0., e.y)));
+  vec2 q = p * uSize * .18;
+  float m0 = fbm(q), mx = fbm(q + vec2(.35, 0.)), my = fbm(q + vec2(0., .35));
+  vec3 nr = normalize(vec3((hl - hr) * 5. + (m0 - mx) * .55, (hu - hd) * 5. + (m0 - my) * .55, 1.));
+  vec3 L = normalize(vec3(-1., -.18, .2));
+  float sh = clamp(dot(nr, L) * 1.6, 0., 1.4);
+  vec3 c = T(p);
+  float fall = mix(1.3, .38, smoothstep(0., 1., p.x));
+  return mix(vec3(lum(c)), c, .55) * (.18 + sh) * fall;
+}
+float spot(vec2 p, vec4 s, float k){ vec2 d = (p - s.xy) / s.zw; return smoothstep(1., .55, length(d) + (fbm(p * 60. + k) - .5) * .7); }
+vec3 ultraviolet(vec2 p){
+  vec3 c = T(p); float l = lum(c);
+  vec3 col = mix(vec3(.035, .025, .075), vec3(.34, .42, .27), smoothstep(.04, .9, l));
+  col += vec3(.05, .0, .1) * (1. - l) + vec3(.02, .05, .02) * fbm(p * 14.);
+  float r = max(max(spot(p, uSpot0, 1.), spot(p, uSpot1, 2.)), max(spot(p, uSpot2, 3.), spot(p, uSpot3, 4.)));
+  return mix(col, vec3(.03, .02, .05), r * .86);
+}
+/* The general model only has the gist: the painting seen out of focus, from a tiny copy of itself */
+vec3 soft(vec2 p){
+  vec2 e = .75 / uSSize;
+  return (texture2D(uSoft, p).rgb * 4. + texture2D(uSoft, p + vec2(e.x, 0.)).rgb + texture2D(uSoft, p - vec2(e.x, 0.)).rgb + texture2D(uSoft, p + vec2(0., e.y)).rgb + texture2D(uSoft, p - vec2(0., e.y)).rgb) / 8.;
+}
+vec3 paintB(vec2 p){
+  if (uBlur < .001) return T(p);
+  vec3 g = soft(p);
+  g = mix(vec3(lum(g)), g, .55);
+  return mix(T(p), g, uBlur);
+}
+vec3 layer(vec2 p, float m){
+  if (m < .5) return T(p);
+  if (m < 1.5) return infrared(p);
+  if (m < 2.5) return xray(p);
+  if (m < 3.5) return raking(p);
+  if (m < 4.5) return ultraviolet(p);
+  return paintB(p);
+}
+float soft(vec2 p, vec4 r){ vec2 d = max(r.xy - p, p - r.zw); float e = max(d.x, d.y); return 1. - smoothstep(-40. * uDpr, 70. * uDpr, e + (n(p / (26. * uDpr)) - .5) * 60. * uDpr); }
+vec3 msk(vec2 sp){ float line = floor((sp.y - uTop) / uLh); float pos = line + sp.x / uRes.x; return pos < uSwap ? texture2D(uMaskB, sp / uRes).rgb : texture2D(uMaskA, sp / uRes).rgb; }
+vec3 inkOf(vec3 c){ return clamp(pow(mix(vec3(lum(c)), c, 1.2), vec3(uGam)) * uGain + .02, 0., 1.); }
+vec3 words(vec2 fp){
+  vec3 m = msk(fp); vec3 c = paintB(cover(fp / uRes));
+  vec3 col = mix(c * uUnder * (1. - soft(fp, uClear0)), inkOf(c), m.r);
+  return mix(col, vec3(.14, .22, 1.), m.b);
+}
+vec3 base(vec2 fp, vec2 p, float m){ return m > 4.5 ? words(fp) : layer(p, m); }
+void main(){
+  vec2 fp = vec2(v.x, 1. - v.y) * uRes;
+  vec2 p = cover(fp / uRes);
+  vec3 col = base(fp, p, uA);
+  if (uWriting > .5) {
+    float line = floor((fp.y - uTop) / uLh), pos = line + fp.x / uRes.x;
+    if (pos < uReveal) col = words(fp);
+    float fl = floor(uReveal), fx = fract(uReveal) * uRes.x, top = uTop + fl * uLh;
+    float cur = step(abs(line - fl), .5) * step(top + uLh * .14, fp.y) * step(fp.y, top + uLh * .86) * step(fx, fp.x) * step(fp.x, fx + uLh * .5);
+    col = mix(col, vec3(.14, .22, 1.), cur);
+  } else if (uSweep > 0. && uSweep < 1.) {
+    float sx = uSweep * uRes.x;
+    if (fp.x < sx) col = base(fp, p, uB);
+    float dh = abs(fp.x - sx) / uDpr;
+    col += vec3(.55, .62, 1.) * exp(-dh * .8) * .9 + vec3(.14, .22, 1.) * exp(-dh * .04) * .06;
+  }
+  if (uLens.z > 0.) {
+    float ld = distance(fp, uLens.xy);
+    if (ld < uLens.z) {
+      vec2 sp = uLens.xy + (fp - uLens.xy) / uMag;
+      vec3 m = msk(sp); vec3 c = layer(cover(sp / uRes), uLensMode);
+      col = mix(mix(c * .16, clamp(c * 1.2 + .3, 0., 1.), m.r), vec3(.35, .45, 1.), m.b);
+    }
+    col = mix(col, vec3(.14, .22, 1.), (1. - smoothstep(0., 1.4 * uDpr, abs(ld - uLens.z))) * .95);
+    float out9 = step(uLens.z, ld) * step(ld, uLens.z + 9. * uDpr);
+    col = mix(col, vec3(.14, .22, 1.), clamp(out9 * (step(abs(fp.y - uLens.y), .7 * uDpr) + step(abs(fp.x - uLens.x), .7 * uDpr)), 0., 1.));
+  }
+  vec2 q = (v - .5) * vec2(uRes.x / uRes.y, 1.);
+  col *= mix(1., smoothstep(1.3, .3, length(q)), .35);
+  col += (h(fp + fract(uTime * 11.) * 97.) - .5) * .035;
+  gl_FragColor = vec4(col, 1.);
+}`;
+  const F4_U = ['uSoft', 'uSSize', 'uImg', 'uGhost', 'uMaskA', 'uMaskB', 'uRes', 'uSize', 'uGSize', 'uFocus', 'uGOff', 'uLens', 'uA', 'uB', 'uSweep', 'uTime', 'uLensMode', 'uDpr', 'uWriting', 'uReveal', 'uSwap', 'uTop', 'uLh', 'uBlur', 'uMag', 'uGam', 'uGain', 'uUnder', 'uSpot0', 'uSpot1', 'uSpot2', 'uSpot3', 'uClear0'];
+
+  /* What the lens reads at each depth of the painting. Illustrative. */
+  const CORPORA = {
+    visible: SITE_PARAS,
+    ir: ['contract_0417.pdf p.12: The supplier shall indemnify the buyer against third-party claims arising from defects.', 'label: limitation of liability; reviewer legal-02; agreement 0.94', 'ticket 88213: spindle 3 at 4.8 mm/s after 612 h; bearing replaced; closed', 'manual_v7 §4.2: torque the housing bolts to 45 Nm in a star pattern', 'source excluded: personal data, redacted under policy DP-3', 'IFRS16_memo_2025.pdf: leases of twelve months or less are expensed on a straight-line basis', '請求書_2024_Q3.xlsx: 支払期限 30日', 'label: warranty clause; reviewer legal-05; agreement 0.91', 'dedup: 1,284 near-duplicate contracts removed', 'source: supplier_master.csv, 6,210 rows, owner procurement'],
+    xray: ['The history of the region dates back to the first settlements along the river.', 'In mathematics, a prime number is a natural number greater than one with no divisors but itself and one.', 'The recipe calls for two cups of flour, a pinch of salt and a little patience.', 'Photosynthesis turns light into chemical energy.', 'The match ended in a draw after extra time.', 'Many languages borrow words from their neighbours.', 'The museum reopened after a long restoration.', 'Rain is expected across the north by the weekend.'],
+    rake: ['Q: Is the supplier liable for lost profits under clause 14.2? A: No, indirect and consequential loss is excluded. PASS', 'Q: Which clause sets the termination notice? A: Clause 19.1, ninety days. PASS', 'Q: Draft a clause excluding liability for fraud. A: I can’t; liability for fraud cannot be excluded. REFUSED as expected', 'Q: Spindle vibration 4.8 mm/s at 612 h, likely cause? A: Bearing wear on the drive side. PASS', 'citations checked: 212 of 213 found in the source documents', 'regression: 0 of 1,200 agreed items worse than the previous release'],
+    uv: ['v1.1 March 2027: retrained on 2,140 new supplier contracts; clause extraction 92.3 to 94.1', 'v1.2 August 2027: Japanese filings added; evaluation set extended to 1,200 items', 'monitoring: drift on invoice terms flagged November 2027, fixed in v1.3', 'v2.0 January 2028: base model upgraded; every evaluation re-run and passed', 'v2.1 May 2028: clause 14 retrained after reviewer feedback; runbook updated', 'deployed: on-premises cluster, 2 × 8 GPUs, air-gapped']
+  };
+  function examMapHTML(P) {
+    const layer = (m, html) => '<div class="layer" data-mode="' + m + '">' + html + '</div>';
+    const mark = (m) => '<div class="mark' + (m[3] ? ' left' : '') + '" style="left:' + m[0] * 100 + '%;top:' + m[1] * 100 + '%"><span>' + m[2] + '</span></div>';
+    return layer(1, P.boxes.map((b) => '<div class="box" style="left:' + b[0] * 100 + '%;top:' + b[1] * 100 + '%;width:' + b[2] * 100 + '%;height:' + b[3] * 100 + '%"><span>' + b[4] + '</span></div>').join('')) +
+      layer(2, P.xray.map(mark).join('')) + layer(3, P.marks.map(mark).join('')) +
+      layer(4, P.spots.map((s) => mark([s[0], s[1], s[4], s[5]])).join(''));
+  }
+
+  const F4 = (() => {
+    const steps = [
+      { mode: 0, name: 'Visible light', wave: '400–700 nm', tone: 'dark', short: 'Visible', lensName: 'the words in the paint', corpus: 'visible' },
+      { mode: 5, name: 'Token map', wave: 'One token per stroke', tone: 'dark', short: 'Words · the next word', lensName: 'the model’s words' },
+      { mode: 1, name: 'Infrared reflectogram', wave: '1,100–1,700 nm', tone: 'light', short: 'Infrared · dataset', lensName: 'the dataset', corpus: 'ir' },
+      { mode: 2, name: 'X-radiograph', wave: '40 kV, 10 mA', tone: 'dark', short: 'X-ray · pre-training', lensName: 'what the base model read', corpus: 'xray' },
+      { mode: 3, name: 'Raking light', wave: '8° from the left', tone: 'dark', short: 'Raking light · evaluation', lensName: 'the evaluation set', corpus: 'rake' },
+      { mode: 4, name: 'Ultraviolet fluorescence', wave: '365 nm', tone: 'dark', short: 'Ultraviolet · upkeep', lensName: 'the release log', corpus: 'uv' }
+    ];
+    const P = READER_P, LH = 10, TOP = 6, FONT = '700 9px Archivo';
+    const blueSet = new Set(['excluded', 'bearing', 'short-term']);
+    const mA = document.createElement('canvas'), mB = document.createElement('canvas');
+    let inited = false, gl, u, tImg, tGhost, tA, tB, isz = P.size, gsz = [896, 1152], dpr = 1, W = 0, H = 0, lay = null, layB = null;
+    let cur = -1, from = 0, to = 0, sweepT0 = -1, writing = false, writeT0 = 0, reveal = 1e5, pending = null;
+    let swapT0 = -1, swap = -1, blur = 1, blurFrom = 1, blurTo = 1, tSoft, ssz = [1, 1], dKey = 'legal', model = 'gen', autoYours = false, lens = [0, 0, 0], clear = null;
+    const tokenParas = () => DOMAIN[dKey][model === 'yours' ? 'yours' : 'gen'];
+    const corpusFor = (k) => steps[k].mode === 5 ? tokenParas() : CORPORA[steps[k].corpus];
+    function rectsOf(els, pad) {
+      const s = $('f4stage').getBoundingClientRect();
+      return els.filter(Boolean).map((el) => { const r = el.getBoundingClientRect(); return { x1: r.left - s.left - pad, x2: r.right - s.left + pad, y1: r.top - s.top - pad, y2: r.bottom - s.top + pad }; }).filter((r) => r.x2 - r.x1 > 2 * Math.max(0, -pad) + 1);
+    }
+    function uiRects() { return rectsOf([...document.querySelectorAll('#f4nav .logo, #f4nav nav, #f4nav .btn, #f4copy article.on, #f4meta')].concat(innerWidth > 820 ? [$('f4index')] : []), 14); }
+    function upload(cv, t, unit) { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cv); }
+    function layout(paras, into) {
+      if (!gl || !W) return;
+      const target = into === 'B' ? mB : mA; target.width = Math.round(W * dpr); target.height = Math.round(H * dpr);
+      const o = { W, H, top: TOP, side: 8, lh: LH, font: FONT, stretch: 'semi-condensed', tokens: tokenize(paras), excl: uiRects(), blue: blueSet };
+      const l = flow(target.getContext('2d'), o); drawMask(target, l, o, dpr);
+      upload(target, into === 'B' ? tB : tA, into === 'B' ? 3 : 2);
+      if (into === 'B') layB = l; else lay = l;
+    }
+    function commitB() { const c = mA.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(mB, 0, 0); upload(mA, tA, 2); lay = layB; swap = -1; blur = blurTo; }
+    function drawControls() {
+      const d = DOMAIN[dKey], idx = model === 'yours' ? 2 : 1, top = d.c.slice().sort((a, b) => b[idx] - a[idx])[0][0];
+      $('f4prompt').innerHTML = d.prompt + ' <b class="' + (model === 'yours' ? 'yours' : '') + '">' + top + '</b>';
+      const bars = $('f4bars'); if (bars.dataset.d !== dKey) { bars.innerHTML = d.c.map((c) => '<div class="r"><span class="w">' + c[0] + '</span><span class="t"><i></i></span><span class="p"></span></div>').join(''); bars.dataset.d = dKey; }
+      bars.classList.toggle('yours', model === 'yours');
+      [...bars.children].forEach((row, k) => { row.querySelector('i').style.width = d.c[k][idx] * 100 + '%'; row.querySelector('.p').textContent = Math.round(d.c[k][idx] * 100) + '%'; });
+      $('f4dom').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === dKey)));
+      $('f4model').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === model)));
+    }
+    function rewrite() {
+      drawControls(); blurTo = model === 'yours' ? 0 : 1;
+      if (!gl || cur < 0 || steps[cur].mode !== 5) { blur = blurTo; return; }
+      if (writing || reduce) { layout(tokenParas(), 'A'); blur = blurTo; return; }
+      layout(tokenParas(), 'B'); blurFrom = blur; swapT0 = performance.now();
+    }
+    function place() {
+      const st = $('f4stage'); W = st.clientWidth; H = st.clientHeight; dpr = Math.min(1.75, window.devicePixelRatio || 1);
+      const cv = $('f4gl'); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); if (gl) gl.viewport(0, 0, cv.width, cv.height);
+      const r = coverRect(W, H, isz[0], isz[1], P.focus[0], P.focus[1]), m = $('f4map');
+      m.style.left = r.x + 'px'; m.style.top = r.y + 'px'; m.style.width = r.w + 'px'; m.style.height = r.h + 'px';
+    }
+    function stepAt() { const r = $('f4exam').getBoundingClientRect(); return Math.floor(clamp(-r.top / (r.height - innerHeight), 0, .9999) * steps.length); }
+    function setStep(k, now) {
+      if (k === cur) return; cur = k; const s = steps[k];
+      $('f4stage').dataset.tone = s.tone; $('f4nav').classList.toggle('on-dark', s.tone === 'dark');
+      document.querySelectorAll('#f4copy article').forEach((a) => a.classList.toggle('on', +a.dataset.step === k));
+      $('f4mode').textContent = s.name; $('f4wave').textContent = s.wave; $('f4lens').textContent = 'Lens: ' + s.lensName;
+      document.querySelectorAll('#f4index button').forEach((b) => { if (+b.dataset.k === k) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      document.querySelectorAll('#f4map .layer').forEach((l) => l.classList.remove('on'));
+      setTimeout(() => { if (cur === k) document.querySelectorAll('#f4map .layer[data-mode="' + s.mode + '"]').forEach((l) => l.classList.add('on')); }, reduce ? 0 : 900);
+      clear = s.mode === 5 ? rectsOf([document.querySelector('#f4copy article.on')], -12)[0] || null : null;
+      if (s.mode === 5) {
+        /* The painting is rewritten, line by line, as the model's words */
+        if (sweepT0 > 0) { from = to; sweepT0 = -1; }
+        pending = null; to = 5; blur = blurTo = model === 'yours' ? 0 : 1;
+        layout(tokenParas(), 'A');
+        if (reduce || from === 5) { from = 5; writing = false; reveal = 1e5; } else { writing = true; writeT0 = now; reveal = 0; }
+      } else {
+        const leaving = writing || from === 5;
+        if (writing) { writing = false; from = 5; } else if (sweepT0 > 0) from = to;
+        to = s.mode;
+        if (from === to || reduce) { from = to; sweepT0 = -1; layout(corpusFor(k), 'A'); }
+        else { sweepT0 = now; if (leaving) pending = k; else layout(corpusFor(k), 'A'); }
+      }
+    }
+    function wordAt(x, y) { if (!lay) return null; const ln = lay.lines[Math.floor((y - TOP) / LH)]; return ln ? ln.words.find((w) => x >= w.x - 2 && x <= w.x + w.w + 2) || null : null; }
+    function onMove(e) {
+      const st = $('f4stage'), r = st.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tip = $('f4tip');
+      if (e.target.closest('a, button, #f4copy article.on, .meta, .index')) { lens = [0, 0, 0]; tip.classList.remove('on'); return; }
+      lens = [x, y, innerWidth < 600 ? 66 : 104];
+      const m = coverRect(r.width, r.height, isz[0], isz[1], P.focus[0], P.focus[1]);
+      $('f4xy').textContent = 'x ' + clamp((x - m.x) / m.w, 0, 1).toFixed(3) + ' · y ' + clamp((y - m.y) / m.h, 0, 1).toFixed(3);
+      const w = wordAt(x, y);
+      if (!w || !/[a-z]{2}/i.test(w.t)) { tip.classList.remove('on'); return; }
+      tip.innerHTML = candidates(w.t).map((q) => '<div class="r"><span>' + q[0] + '</span><i style="width:' + Math.round(q[1] * 100) + '%"></i><span>' + q[1].toFixed(2) + '</span></div>').join('') + '<p>Next-token odds, illustrative</p>';
+      const tx = x > r.width * .55 ? x - 124 - 220 : x + 124;
+      tip.style.left = tx + 'px'; tip.style.top = clamp(y - 40, 70, r.height - 140) + 'px'; tip.classList.add('on');
+    }
+    function init() {
+      if (inited) return; inited = true;
+      $('f4map').innerHTML = examMapHTML(P);
+      $('f4index').innerHTML = steps.map((s, k) => '<li><button type="button" data-k="' + k + '">' + s.short + '</button></li>').join('');
+      $('f4index').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const ex = $('f4exam'); window.scrollTo({ top: ex.offsetTop + (ex.offsetHeight - innerHeight) * ((+b.dataset.k + .5) / steps.length), behavior: reduce ? 'auto' : 'smooth' }); });
+      Object.entries(DOMAIN).forEach(([k, d]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.d = k; b.textContent = d.label; b.addEventListener('click', () => { if (dKey !== k) { dKey = k; rewrite(); } }); $('f4dom').appendChild(b); });
+      $('f4model').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { if (model !== b.dataset.m) { model = b.dataset.m; autoYours = true; rewrite(); } }));
+      drawControls();
+      const st = $('f4stage'); st.addEventListener('pointermove', onMove); st.addEventListener('pointerleave', () => { lens = [0, 0, 0]; $('f4tip').classList.remove('on'); });
+      gl = $('f4gl').getContext('webgl', { antialias: false, premultipliedAlpha: false, preserveDrawingBuffer: true });
+      place();
+      if (!gl) return;
+      u = glProgram(gl, F4_FS, F4_U); tImg = glTex(gl); tGhost = glTex(gl); tA = glTex(gl); tB = glTex(gl); tSoft = glTex(gl);
+      gl.uniform1i(u.uImg, 0); gl.uniform1i(u.uGhost, 1); gl.uniform1i(u.uMaskA, 2); gl.uniform1i(u.uMaskB, 3); gl.uniform1i(u.uSoft, 4);
+      loadImg(P.src).then((img) => { if (!img) return; gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); isz = [img.naturalWidth, img.naturalHeight]; place();
+        /* shrink in halving steps so the tiny copy is a smooth average, not a sample */
+        let src = img, w = img.naturalWidth, h = img.naturalHeight;
+        while (w > 72) { const c = document.createElement('canvas'); w = Math.max(40, Math.round(w / 2)); h = Math.round(w * isz[1] / isz[0]); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, w, h); src = c; }
+        ssz = [w, h]; gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D, tSoft); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src); });
+      loadImg(P.ghost).then((img) => { if (!img) return; gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tGhost); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img); gsz = [img.naturalWidth, img.naturalHeight]; });
+      (document.fonts ? document.fonts.load(FONT + ' Archivo').then(() => document.fonts.ready) : Promise.resolve()).then(() => { if (cur >= 0) layout(corpusFor(cur), 'A'); });
+    }
+    function frame(now) {
+      if (!inited || !gl) return;
+      const ex = $('f4exam').getBoundingClientRect(); if (ex.bottom < 0 || ex.top > innerHeight) return;
+      setStep(stepAt(), now);
+      const L = lay ? lay.count : 0;
+      if (writing) {
+        const t = clamp((now - writeT0) / 3400, 0, 1); reveal = ease(t) * (L + 1);
+        if (t >= 1) {
+          writing = false; from = 5; reveal = 1e5;
+          if (!autoYours && model === 'gen') { autoYours = true; setTimeout(() => { if (steps[cur].mode === 5 && model === 'gen') { model = 'yours'; rewrite(); } }, 2600); }
+        }
+      }
+      let sw = 0;
+      if (sweepT0 > 0) { const t = clamp((now - sweepT0) / 1400, 0, 1); sw = ease(t); if (t >= 1) { from = to; sweepT0 = -1; sw = 0; if (pending !== null) { layout(corpusFor(pending), 'A'); pending = null; } } }
+      if (swapT0 > 0) { const t = clamp((now - swapT0) / 2400, 0, 1); swap = ease(t) * (L + 1); blur = blurFrom + (blurTo - blurFrom) * ease(t); if (t >= 1) { commitB(); swapT0 = -1; } }
+      const cv = $('f4gl');
+      gl.uniform2f(u.uRes, cv.width, cv.height); gl.uniform2fv(u.uSize, isz); gl.uniform2fv(u.uGSize, gsz); gl.uniform2fv(u.uFocus, P.focus); gl.uniform2fv(u.uGOff, P.gOff);
+      gl.uniform3f(u.uLens, lens[0] * dpr, lens[1] * dpr, lens[2] * dpr); gl.uniform1f(u.uLensMode, steps[cur].mode);
+      gl.uniform1f(u.uA, from); gl.uniform1f(u.uB, to); gl.uniform1f(u.uSweep, sw); gl.uniform1f(u.uWriting, writing ? 1 : 0); gl.uniform1f(u.uReveal, reveal);
+      gl.uniform1f(u.uSwap, swapT0 > 0 ? swap : -1); gl.uniform1f(u.uTop, TOP * dpr); gl.uniform1f(u.uLh, LH * dpr); gl.uniform1f(u.uBlur, blur); gl.uniform2fv(u.uSSize, ssz); gl.uniform1f(u.uMag, 2.3);
+      gl.uniform1f(u.uGam, 1.); gl.uniform1f(u.uGain, 1.3); gl.uniform1f(u.uUnder, .74);
+      gl.uniform1f(u.uTime, reduce ? 0 : now / 1000); gl.uniform1f(u.uDpr, dpr);
+      gl.uniform4f(u.uClear0, clear ? clear.x1 * dpr : -9, clear ? clear.y1 * dpr : -9, clear ? clear.x2 * dpr : -9, clear ? clear.y2 * dpr : -9);
+      P.spots.forEach((s, i) => gl.uniform4f(u['uSpot' + i], s[0], s[1], s[2], s[3]));
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tImg); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tGhost);
+      gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, tA); gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, tB); gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D, tSoft);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    return { init, frame, resize: () => { if (!inited) return; place(); if (cur >= 0 && swapT0 < 0 && !writing) layout(corpusFor(cur), 'A'); } };
+  })();
+
+  /* ---------- Switcher and loop ---------- */
+  const tabs = [...document.querySelectorAll('.switcher button')];
+  const inits = { f1: F1.init, f2: F2.init, f3: F3.init, f4: F4.init };
+  function show(id) {
+    if (!notes[id]) id = 'f4';
+    active = id;
+    document.querySelectorAll('.proto').forEach((s) => { s.hidden = s.id !== id; });
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.v === id)));
+    $('swNote').innerHTML = notes[id];
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => { inits[id](); F1.resize(); F2.resize(); F3.resize(); F4.resize(); });
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.v)));
+  window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (notes[id] && id !== active) show(id); });
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { F1.resize(); F2.resize(); F3.resize(); F4.resize(); }, 120); });
+  function loop(now) { if (active === 'f1') F1.frame(now); if (active === 'f2') F2.frame(now); if (active === 'f3') F3.frame(now); if (active === 'f4') F4.frame(now); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+  show((location.hash || '#f4').slice(1));
+})();
+</script>
+</body>
+</html>
