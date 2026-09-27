@@ -64,6 +64,20 @@ describe("routes", () => {
   });
 });
 
+describe("booking functions", () => {
+  // package.json is "type": "module", so Vercel runs these as Node ESM, which cannot resolve extensionless paths.
+  test("import local modules with explicit .js extensions", () => {
+    for (const file of ["slots.ts", "book.ts"]) {
+      const source = read("api", "meet", file);
+      for (const [, specifier] of source.matchAll(/from "(\.[^"]+)"/g)) expect(specifier.endsWith(".js")).toBe(true);
+    }
+  });
+
+  test("are not redirected to a trailing slash", () => {
+    expect(JSON.parse(read("vercel.json")).trailingSlash).toBeUndefined();
+  });
+});
+
 describe("copy", () => {
   test("every locale has site copy", () => {
     for (const locale of locales) expect(getSiteCopy(locale).nav.items.length).toBe(5);

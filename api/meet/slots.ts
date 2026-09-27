@@ -1,4 +1,4 @@
-import { getMeetCapacityHoldsForDate, isMeetCapacityHeld } from "../../lib/meet-capacity";
+import { getMeetCapacityHoldsForDate, isMeetCapacityHeld } from "../../lib/meet-capacity.js";
 
 const meetTimeZone = "Asia/Tokyo";
 const meetLeadDays = 2;

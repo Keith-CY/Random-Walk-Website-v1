@@ -1,5 +1,5 @@
-import { buildCalBookingFieldsResponses } from "../../lib/cal-booking";
-import { isMeetCapacityHeld } from "../../lib/meet-capacity";
+import { buildCalBookingFieldsResponses } from "../../lib/cal-booking.js";
+import { isMeetCapacityHeld } from "../../lib/meet-capacity.js";
 
 const meetTimeZone = "Asia/Tokyo";
 const meetLeadDays = 2;
