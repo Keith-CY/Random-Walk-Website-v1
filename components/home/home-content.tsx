@@ -21,7 +21,6 @@ export function HomeContent({ locale }: { locale: Locale }) {
         content={getExaminationContent(locale)}
         marks={exam.marks}
         ui={exam.ui}
-        joiner={exam.joiner}
       />
       <CloseSection locale={locale} />
     </main>

@@ -32,7 +32,7 @@ export type Domain = {
   prompt: string;
   /** [word, base model probability, trained model probability] */
   candidates: [string, number, number][];
-  /** Paragraphs as each model writes them. In Chinese, Japanese and Korean, "|" marks the edges of a word. */
+  /** Paragraphs as each model writes them. */
   trained: string[];
   base: string[];
 };
@@ -64,12 +64,9 @@ export type Lexicon = {
 
 export type ExaminationCopy = {
   lang: string;
-  /** What goes between the prompt and the next word: a space, or nothing in Chinese and Japanese. */
-  joiner: string;
   steps: StepCopy[];
-  domains: Domain[];
-  /** The words the trained model gets right; drawn in blue. */
-  highlighted: string[];
+  /** Names of the demo's subjects, in the order of the English demo in ./content.ts. */
+  domainLabels: string[];
   /** What the lens reads beneath the paint at each depth; infrared always reads datasetSteps. */
   corpora: Record<Exclude<Corpus, "infrared">, string[]>;
   /** Labels for the marks on the painting, in the order of painting.boxes, .xray, .raking and .spots. */
@@ -95,6 +92,7 @@ export type ExaminationContent = {
   lang: string;
   steps: Step[];
   domains: Domain[];
+  /** The words the trained model gets right; drawn in blue. */
   highlighted: string[];
   corpora: Record<Corpus, string[]>;
   lexicon: Lexicon;

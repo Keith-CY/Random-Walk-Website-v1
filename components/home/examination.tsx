@@ -21,10 +21,9 @@ export type ExaminationProps = {
   content: ExaminationContent;
   marks: ExaminationCopy["marks"];
   ui: ExaminationCopy["ui"];
-  joiner: string;
 };
 
-export function Examination({ locale, nav, lensHint, email, still, content, marks, ui, joiner }: ExaminationProps) {
+export function Examination({ locale, nav, lensHint, email, still, content, marks, ui }: ExaminationProps) {
   const { steps, domains } = content;
   const examRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -154,14 +153,14 @@ export function Examination({ locale, nav, lensHint, email, still, content, mark
                       </button>
                     ))}
                   </div>
-                  <p className="x-prompt">
-                    {domain.prompt}{joiner}<b data-trained={model === "trained"}>{topWord}</b>
+                  <p className="x-prompt" lang="en">
+                    {domain.prompt} <b data-trained={model === "trained"}>{topWord}</b>
                   </p>
                   <div className="x-seg x-model" role="group" aria-label={ui.model}>
                     <button type="button" aria-pressed={model === "base"} onClick={() => setModel("base")}>{ui.base}</button>
                     <button type="button" aria-pressed={model === "trained"} data-trained onClick={() => setModel("trained")}>{ui.trained}</button>
                   </div>
-                  <div className="x-bars" data-trained={model === "trained"}>
+                  <div className="x-bars" lang="en" data-trained={model === "trained"}>
                     {domain.candidates.map((c) => (
                       <div className="x-bar" key={c[0]}>
                         <span className="x-bar-word">{c[0]}</span>

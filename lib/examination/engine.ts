@@ -188,8 +188,10 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     H = el.stage.clientHeight;
     // The shader runs per pixel, so cap the pixel count: phones render at 1x, large screens at up to ~2.2 MP.
     const coarse = window.matchMedia("(pointer: coarse)").matches;
-    dpr = Math.min(coarse ? 1 : 1.5, window.devicePixelRatio || 1);
-    dpr = Math.min(dpr, Math.sqrt(2_200_000 / Math.max(1, W * H)));
+    // Phones get one pixel per point and a tight budget; they have no lens and overheat easily. Desktops
+    // get up to two, because the lens magnifies the words 2.3 times and needs the pixels to stay sharp.
+    dpr = Math.min(coarse ? 1 : 2, window.devicePixelRatio || 1);
+    dpr = Math.min(dpr, Math.sqrt((coarse ? 2_200_000 : 5_000_000) / Math.max(1, W * H)));
     el.canvas.width = Math.round(W * dpr);
     el.canvas.height = Math.round(H * dpr);
     gl!.viewport(0, 0, el.canvas.width, el.canvas.height);

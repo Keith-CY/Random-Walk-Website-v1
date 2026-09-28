@@ -35,21 +35,19 @@ function pieces(run: string, lang: string): string[] {
 
 /**
  * Splits paragraphs into the words the lens reads. Latin text breaks at spaces. Chinese, Japanese and
- * Korean break at word edges; text between a pair of "|" stays one word, so a highlighted word always stands on its own.
+ * Korean break at word edges.
  */
 export function tokenize(paragraphs: readonly string[], lang = "en"): Token[] {
   const out: Token[] = [];
   for (const p of paragraphs) {
     if (cjk.test(p)) {
       const start = out.length;
-      for (const [i, run] of p.split("|").entries()) {
-        for (const piece of i % 2 ? [run] : pieces(run, lang)) {
-          if (!piece) continue;
-          if (/^\s+$/.test(piece)) {
-            if (out.length > start) out[out.length - 1].cjk = false;
-          } else {
-            out.push({ t: piece, cjk: true });
-          }
+      for (const piece of pieces(p, lang)) {
+        if (!piece) continue;
+        if (/^\s+$/.test(piece)) {
+          if (out.length > start) out[out.length - 1].cjk = false;
+        } else {
+          out.push({ t: piece, cjk: true });
         }
       }
       if (out.length > start) out[out.length - 1].cjk = false;

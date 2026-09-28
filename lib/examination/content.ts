@@ -3,73 +3,14 @@ import { ja } from "../translations/ja";
 import { ko } from "../translations/ko";
 import { zh } from "../translations/zh";
 import { phraseParts } from "../phrases";
-import { datasetSteps, stepFrames, type ExaminationContent, type ExaminationCopy } from "./data";
+import { datasetSteps, stepFrames, type Domain, type ExaminationContent, type ExaminationCopy, type Lexicon } from "./data";
 
 // The words of the home page examination. Scores, dataset steps and the release log are real;
 // the next-word odds and the objects labelled on the painting are made up for the demo.
 // Server components read this and hand the browser only the current language.
 
-const en: ExaminationCopy = {
-  lang: "en",
-  joiner: " ",
-  steps: [
-    {
-      index: "Visible",
-      instrument: "Visible light",
-      setting: "400–700 nm",
-      lens: "the words in the paint",
-      title: "A model is made in layers.",
-      body: "Look closely at an old painting and you find it was built slowly: a drawing, an underpainting, glaze upon glaze. A good model is made the same way. Random Walk is an AI lab for growing companies: we choose the right model, build the data, train it when it pays and keep it running in your own cloud, server room or Macs."
-    },
-    {
-      index: "The next word",
-      instrument: "Token map",
-      setting: "One word per stroke",
-      lens: "the model's words",
-      kicker: "The next word",
-      title: "A general model paints the gist. Yours paints the detail."
-    },
-    {
-      index: "Infrared · data",
-      instrument: "Infrared reflectogram",
-      setting: "1,100–1,700 nm",
-      lens: "steps from our dataset",
-      kicker: "i. Data",
-      title: "Beneath the paint, the drawing.",
-      body: "Infrared passes through paint and finds the lines drawn first. Beneath a model, those lines are its data. Ours are drawn from the software companies open every morning, and the same workshop turns your documents, tickets and screen recordings into training data within days.",
-      receive: "You receive a dataset card listing every source, every exclusion and the audited error rate."
-    },
-    {
-      index: "X-ray · base model",
-      instrument: "X-radiograph",
-      setting: "40 kV, 10 mA",
-      lens: "what the base model read",
-      kicker: "ii. Base model",
-      title: "Beneath the drawing, an earlier picture.",
-      body: "X-rays often find a second painting under the first. Models are made the same way, over an open base model someone else trained. We choose that foundation for your task, your languages and your hardware, and paint over it only where your field demands.",
-      receive: "You receive the base model's license, the training runs and their logs."
-    },
-    {
-      index: "Raking light · evaluation",
-      instrument: "Raking light",
-      setting: "8° from the left",
-      lens: "the tests it must pass",
-      kicker: "iii. Training and evaluation",
-      title: "Light from the side shows every stroke.",
-      body: "We train on the work your people actually do, and agree a test with you before anything ships. Every release is held up to it beside the base model and a plain rules-based tool.",
-      receive: "You receive the model weights and an evaluation report you can re-run."
-    },
-    {
-      index: "Ultraviolet · upkeep",
-      instrument: "Ultraviolet fluorescence",
-      setting: "365 nm",
-      lens: "the release log",
-      kicker: "iv. Deployment and upkeep",
-      title: "Ultraviolet shows every later retouch.",
-      body: "We deploy where your data already lives: on vLLM in your cloud or server room, or on your Macs with Melix. Then we watch the model, retrain it on new material and sign every release.",
-      receive: "You receive a versioned model, a runbook and a change log."
-    }
-  ],
+// The next-word demo reads in English in every language; only the subject buttons are translated.
+const demo: { domains: Domain[]; highlighted: string[]; alternatives: Lexicon["alternatives"] } = {
   domains: [
     {
       key: "contracts",
@@ -128,6 +69,74 @@ const en: ExaminationCopy = {
     }
   ],
   highlighted: ["twelve", "reset", "sixty"],
+  alternatives: {
+    twelve: [["twelve", 0.68], ["fees", 0.11], ["the", 0.07]],
+    reset: [["reset", 0.64], ["check", 0.12], ["restart", 0.09]],
+    sixty: [["sixty", 0.71], ["thirty", 0.12], ["30", 0.06]]
+  }
+};
+
+const en: ExaminationCopy = {
+  lang: "en",
+  steps: [
+    {
+      index: "Visible",
+      instrument: "Visible light",
+      setting: "400–700 nm",
+      lens: "the words in the paint",
+      title: "A model is made in layers.",
+      body: "Look closely at an old painting and you find it was built slowly: a drawing, an underpainting, glaze upon glaze. A good model is made the same way. Random Walk is an AI lab for growing companies: we choose the right model, build the data, train it when it pays and keep it running in your own cloud, server room or Macs."
+    },
+    {
+      index: "The next word",
+      instrument: "Token map",
+      setting: "One word per stroke",
+      lens: "the model's words",
+      kicker: "The next word",
+      title: "A general model paints the gist. Yours paints the detail."
+    },
+    {
+      index: "Infrared · data",
+      instrument: "Infrared reflectogram",
+      setting: "1,100–1,700 nm",
+      lens: "steps from our dataset",
+      kicker: "i. Data",
+      title: "Beneath the paint, the drawing.",
+      body: "Infrared passes through paint and finds the lines drawn first. Beneath a model, those lines are its data. Ours are drawn from the software companies open every morning, and the same workshop turns your documents, tickets and screen recordings into training data within days.",
+      receive: "You receive a dataset card listing every source, every exclusion and the audited error rate."
+    },
+    {
+      index: "X-ray · base model",
+      instrument: "X-radiograph",
+      setting: "40 kV, 10 mA",
+      lens: "what the base model read",
+      kicker: "ii. Base model",
+      title: "Beneath the drawing, an earlier picture.",
+      body: "X-rays often find a second painting under the first. Models are made the same way, over an open base model someone else trained. We choose that foundation for your task, your languages and your hardware, and paint over it only where your field demands.",
+      receive: "You receive the base model's license, the training runs and their logs."
+    },
+    {
+      index: "Raking light · evaluation",
+      instrument: "Raking light",
+      setting: "8° from the left",
+      lens: "the tests it must pass",
+      kicker: "iii. Training and evaluation",
+      title: "Light from the side shows every stroke.",
+      body: "We train on the work your people actually do, and agree a test with you before anything ships. Every release is held up to it beside the base model and a plain rules-based tool.",
+      receive: "You receive the model weights and an evaluation report you can re-run."
+    },
+    {
+      index: "Ultraviolet · upkeep",
+      instrument: "Ultraviolet fluorescence",
+      setting: "365 nm",
+      lens: "the release log",
+      kicker: "iv. Deployment and upkeep",
+      title: "Ultraviolet shows every later retouch.",
+      body: "We deploy where your data already lives: on vLLM in your cloud or server room, or on your Macs with Melix. Then we watch the model, retrain it on new material and sign every release.",
+      receive: "You receive a versioned model, a runbook and a change log."
+    }
+  ],
+  domainLabels: ["Contracts", "Support", "Accounts"],
   corpora: {
     visible: [
       "Random Walk is an AI lab for growing companies. We choose the right model, build the data, train it when it pays and keep it running.",
@@ -179,9 +188,6 @@ const en: ExaminationCopy = {
   },
   lexicon: {
     alternatives: {
-      twelve: [["twelve", 0.68], ["fees", 0.11], ["the", 0.07]],
-      reset: [["reset", 0.64], ["check", 0.12], ["restart", 0.09]],
-      sixty: [["sixty", 0.71], ["thirty", 0.12], ["30", 0.06]],
       model: [["model", 0.58], ["system", 0.17], ["tool", 0.09]],
       release: [["release", 0.61], ["version", 0.2], ["update", 0.08]],
       data: [["data", 0.55], ["records", 0.18], ["files", 0.12]]
@@ -217,10 +223,10 @@ export function getExaminationContent(locale: Locale): ExaminationContent {
     lang: copy.lang,
     // Word edges are worked out here, on the server, so the browser renders exactly what was prerendered.
     steps: stepFrames.map((frame, i) => ({ ...frame, ...copy.steps[i], titleParts: phraseParts(copy.steps[i].title) })),
-    domains: copy.domains,
-    highlighted: copy.highlighted,
+    domains: demo.domains.map((domain, i) => ({ ...domain, label: copy.domainLabels[i] })),
+    highlighted: demo.highlighted,
     corpora: { ...copy.corpora, infrared: datasetSteps },
-    lexicon: copy.lexicon,
+    lexicon: { ...copy.lexicon, alternatives: { ...demo.alternatives, ...copy.lexicon.alternatives } },
     tip: copy.ui.tip
   };
 }
