@@ -3,11 +3,10 @@ import { defaultLocale, locales, type Locale } from "@/lib/i18n";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://random-walk.co.jp").replace(/\/$/, "");
 
-const defaultDescription = "Random Walk is an AI lab for growing companies. We choose the right model, build the data, train it when it pays and keep it running in your own cloud, server room or Macs.";
 
 export const ogLocales: Record<Locale, string> = { en: "en_US", zh: "zh_CN", ja: "ja_JP", ko: "ko_KR" };
 
-// Share images rendered for each public page (public/og/<name>.jpg), named after the page's path.
+// Share images rendered for each public page in each language (public/og/<locale>/<name>.jpg), named after the page's path.
 export const ogImageNames = [
   "home", "services", "datasets", "work", "work-mac-computer-use", "work-business-arenas", "work-turnvector", "work-sayit",
   "melix", "company", "contact", "notes", "notes-evaluate-local-lora", "notes-private-deployment-boundaries",
@@ -15,12 +14,13 @@ export const ogImageNames = [
   "security", "privacy", "terms", "legal-responsible-use", "legal-security-review"
 ] as const;
 
+/** For pages outside a language route. */
 export const ogImage = { url: "/og/default.jpg", width: 1200, height: 630, alt: "Random Walk - An AI lab for growing companies." };
 
-export function ogImageFor(path: string, alt: string) {
+export function ogImageFor(locale: Locale, path: string, alt: string) {
   const name = path.replace(/^\/|\/$/g, "").replace(/\//g, "-") || "home";
   const known = (ogImageNames as readonly string[]).includes(name);
-  return known ? { url: `/og/${name}.jpg`, width: 1200, height: 630, alt } : ogImage;
+  return { url: `/og/${locale}/${known ? name : "home"}.jpg`, width: 1200, height: 630, alt };
 }
 
 function routeFor(locale: Locale, path: string) {
@@ -30,9 +30,9 @@ function routeFor(locale: Locale, path: string) {
 
 export type PageMeta = { type?: "website" | "article"; publishedTime?: string; modifiedTime?: string };
 
-export function localizedMetadata(locale: Locale, path: string, title: string, description = defaultDescription, meta: PageMeta = {}): Metadata {
+export function localizedMetadata(locale: Locale, path: string, title: string, description: string, meta: PageMeta = {}): Metadata {
   const canonical = routeFor(locale, path);
-  const image = ogImageFor(path, `${title} - Random Walk`);
+  const image = ogImageFor(locale, path, `${title} - Random Walk`);
 
   return {
     title,

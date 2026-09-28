@@ -100,11 +100,11 @@ export const meetPageCopy: Record<
 > = {
   en: {
     metadataTitle: "Choose a visit time",
-    metadataDescription: "Choose a time to visit Random Walk's office for a focused in-person conversation.",
+    metadataDescription: "Choose a time to visit Random Walk in Higashiyamato, Tokyo.",
     hero: {
-      eyebrow: "Office visit",
-      title: "Choose a visit time.",
-      description: "Please select a visit time. We will reserve time at our office for your meeting. If the schedule needs to change, we will follow up through your contact details."
+      eyebrow: "Visit us",
+      title: "Choose a time to visit.",
+      description: "Pick a date and time to meet us at our office in Higashiyamato, Tokyo. We will hold it for you, and write to you if anything needs to change."
     },
     address: {
       label: "Visit location",
@@ -138,26 +138,26 @@ export const meetPageCopy: Record<
       namePlaceholder: "Your name",
       emailPlaceholder: "you@example.com",
       phonePlaceholder: "+81 ...",
-      messagePlaceholder: "Briefly share who will visit and what you would like to discuss.",
-      submit: "Request visit",
+      messagePlaceholder: "Who is coming, and what would you like to talk about?",
+      submit: "Request the visit",
       submitting: "Sending...",
       error: "We could not submit this request. Please try again or email biz@random-walk.co.jp.",
       fieldError: "Please check this field."
     },
     confirmation: {
       title: "Request received.",
-      body: "We will reserve time at our office for your selected meeting. If the schedule needs to change, we will follow up through your contact details.",
+      body: "We are holding this time for you at our office. If anything needs to change, we will write to you.",
       another: "Choose another time",
       reference: "Reference"
     }
   },
   zh: {
     metadataTitle: "选择到访时间",
-    metadataDescription: "选择一个到访 Random Walk 办公室的时间。",
+    metadataDescription: "选择一个时间，到东京东大和市拜访 Random Walk。",
     hero: {
       eyebrow: "到访预约",
       title: "选择到访时间。",
-      description: "请选择一个到访时间。我们会在办公室为本次会面预留时间；如果该时间需要调整，会通过你的联系方式跟进。"
+      description: "选好日期和时间，来我们位于东京东大和市的办公室见面。我们会为你预留这段时间；如需调整，会写信告诉你。"
     },
     address: {
       label: "到访地点",
@@ -199,18 +199,18 @@ export const meetPageCopy: Record<
     },
     confirmation: {
       title: "已收到预约请求。",
-      body: "我们会在办公室为所选时间预留会面。如时间需要调整，会通过你的联系方式跟进。",
+      body: "我们已在办公室为你预留这段时间。如需调整，会写信告诉你。",
       another: "选择其他时间",
       reference: "参考编号"
     }
   },
   ja: {
     metadataTitle: "訪問時間を選択",
-    metadataDescription: "Random Walk のオフィスでの対面相談時間を選択してください。",
+    metadataDescription: "東京都東大和市の Random Walk オフィスへのご訪問日時をお選びください。",
     hero: {
-      eyebrow: "Office visit",
-      title: "訪問時間を選択してください。",
-      description: "訪問時間をお選びください。オフィスでの面談時間を確保します。日程の調整が必要な場合は、ご連絡先にお知らせします。"
+      eyebrow: "オフィス訪問",
+      title: "ご訪問の日時をお選びください。",
+      description: "東京都東大和市のオフィスでお会いする日時をお選びください。その時間をお取りしておきます。変更が必要な場合は、メールでご連絡します。"
     },
     address: {
       label: "訪問先",
@@ -252,18 +252,18 @@ export const meetPageCopy: Record<
     },
     confirmation: {
       title: "リクエストを受け付けました。",
-      body: "選択された時間にオフィスでの面談時間を確保します。日程の調整が必要な場合は、ご連絡先にお知らせします。",
+      body: "オフィスでこの時間をお取りしました。変更が必要な場合は、メールでご連絡します。",
       another: "別の時間を選ぶ",
       reference: "参照番号"
     }
   },
   ko: {
     metadataTitle: "방문 시간 선택",
-    metadataDescription: "Random Walk 사무실 방문 시간을 선택하세요.",
+    metadataDescription: "도쿄 히가시야마토시의 Random Walk 사무실 방문 시간을 선택하세요.",
     hero: {
-      eyebrow: "Office visit",
+      eyebrow: "사무실 방문",
       title: "방문 시간을 선택하세요.",
-      description: "방문 시간을 선택해 주세요. 해당 시간에는 사무실에서 미팅을 준비합니다. 일정 조정이 필요하면 남겨주신 연락처로 안내드리겠습니다."
+      description: "도쿄 히가시야마토시 사무실에서 만날 날짜와 시간을 골라 주세요. 그 시간을 비워 두고, 바뀌어야 할 일이 생기면 이메일로 알려 드리겠습니다."
     },
     address: {
       label: "방문 장소",
@@ -305,7 +305,7 @@ export const meetPageCopy: Record<
     },
     confirmation: {
       title: "요청을 받았습니다.",
-      body: "선택한 시간에 사무실 미팅을 준비합니다. 일정 조정이 필요하면 남겨주신 연락처로 안내드리겠습니다.",
+      body: "사무실에서 이 시간을 비워 두었습니다. 바뀌어야 할 일이 생기면 이메일로 알려 드리겠습니다.",
       another: "다른 시간 선택",
       reference: "참조 번호"
     }

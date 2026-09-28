@@ -1,24 +1,24 @@
+import { exhibit, type Exhibit } from "./exhibits";
 import type { DetailPageCopy } from "./footer-detail-pages";
+import type { Locale } from "./i18n";
+import { ja } from "./translations/ja";
+import { ko } from "./translations/ko";
+import { zh } from "./translations/zh";
 
-// Copy for the long-form detail pages in the rebuilt site. English is the source; the other
-// languages reuse it until the English is final and translated.
-export type Exhibit = { src: string; alt: string; width: number; height: number; caption: string };
+// Copy for the long-form detail pages. English is the source; lib/translations/* hold the other languages.
+export type { Exhibit };
 export type DocumentCopy = Omit<DetailPageCopy, "assetId" | "taxonomy"> & { exhibit?: Exhibit };
+export type EarlierWorkSlug = "neuron" | "1-tok" | "fiber-link" | "utxo-data" | "distributed-paradigm";
+export type LegalDetailSlug = "responsible-use" | "security-review";
 
-const cover = (name: string, title: string, width: number, height: number): Exhibit => ({
-  src: `/images/product-covers/${name}.png`,
-  alt: `${title} product page`,
-  width,
-  height,
-  caption: `${title}, from the product's own site.`
-});
+const cover = (name: EarlierWorkSlug, title: string) => exhibit(name, `${title} product page`, `${title}, from the product's own site.`);
 
-export const earlierWork: Record<string, DocumentCopy> = {
+export const earlierWork: Record<EarlierWorkSlug, DocumentCopy> = {
   neuron: {
     eyebrow: "Earlier work",
     title: "Neuron",
     description: "An open-source desktop wallet for Nervos CKB: hold assets, take part in governance and work with CKB scripts from one app.",
-    exhibit: cover("neuron", "Neuron", 1536, 1024),
+    exhibit: cover("neuron", "Neuron"),
     officialLink: { label: "Visit Neuron", href: "http://neuron.magickbase.com/" },
     sections: [
       {
@@ -37,7 +37,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
     eyebrow: "Earlier work",
     title: "1-TOK",
     description: "A marketplace for AI agent work, where usage is metered by the tokens an agent produces and payment follows the work as it streams.",
-    exhibit: cover("1-tok", "1-TOK", 1536, 1024),
+    exhibit: cover("1-tok", "1-TOK"),
     statusTag: "Product experiment",
     officialLink: { label: "Visit 1-TOK", href: "http://1-tok.pro/" },
     sections: [
@@ -57,7 +57,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
     eyebrow: "Earlier work",
     title: "Fiber Link",
     description: "Tipping, creator rewards, balances and withdrawals for community platforms, settled over CKB's Fiber Network without asking members to handle on-chain steps.",
-    exhibit: cover("fiber-link", "Fiber Link", 1619, 971),
+    exhibit: cover("fiber-link", "Fiber Link"),
     officialLink: { label: "Visit Fiber Link", href: "http://fiberlink.me/" },
     sections: [
       {
@@ -67,7 +67,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
       },
       {
         title: "Who it was for",
-        description: "Community platforms and creator programmes that wanted rewards to feel as simple as a like.",
+        description: "Community platforms and creator programs that wanted rewards to feel as simple as a like.",
         points: []
       }
     ]
@@ -76,7 +76,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
     eyebrow: "Earlier work",
     title: "UTXO Data",
     description: "Indexed activity from UTXO-based blockchains, served through APIs and analytics for monitoring, investigation and products.",
-    exhibit: cover("utxo-data", "UTXO Data", 1536, 1024),
+    exhibit: cover("utxo-data", "UTXO Data"),
     officialLink: { label: "Open UTXO Data", href: "https://p.magickbase.com/" },
     sections: [
       {
@@ -95,7 +95,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
     eyebrow: "Earlier work",
     title: "Distributed Paradigm",
     description: "Kuai, a framework for building distributed applications on CKB as actors that coordinate by passing messages.",
-    exhibit: cover("distributed-paradigm", "Distributed Paradigm", 1683, 935),
+    exhibit: cover("distributed-paradigm", "Distributed Paradigm"),
     officialLink: { label: "View Kuai on GitHub", href: "https://github.com/ckb-js/kuai" },
     sections: [
       {
@@ -112,7 +112,7 @@ export const earlierWork: Record<string, DocumentCopy> = {
   }
 };
 
-export const legalDetails: Record<"responsible-use" | "security-review", DocumentCopy> = {
+export const legalDetails: Record<LegalDetailSlug, DocumentCopy> = {
   "responsible-use": {
     eyebrow: "Responsible use",
     title: "Agree the limits before the model is built.",
@@ -121,7 +121,7 @@ export const legalDetails: Record<"responsible-use" | "security-review", Documen
     secondaryLink: { label: "Security review", href: "/legal/security-review" },
     outputsAtGlance: [
       { label: "Material", description: "What may be used, what is left out, and what is returned or deleted at the end." },
-      { label: "Behaviour", description: "What the model is for, what it must not do and where it is weak." },
+      { label: "Behavior", description: "What the model is for, what it must not do and where it is weak." },
       { label: "Review points", description: "Where you check the work before it goes any further." },
       { label: "Decisions", description: "Who owns each business, domain and operational call." },
       { label: "Known limits", description: "Weak cases and open questions, kept where everyone can see them." }
@@ -134,7 +134,7 @@ export const legalDetails: Record<"responsible-use" | "security-review", Documen
         points: ["Sources that may be used", "Material that is excluded or restricted", "What happens to copies and anything derived from them", "What is returned or deleted when the work ends"]
       },
       {
-        eyebrow: "Behaviour",
+        eyebrow: "Behavior",
         title: "What the model should and should not do",
         description: "We describe the model by its purpose, its limits and its weak spots.",
         points: ["The tasks it is meant to do", "Outputs it must not produce", "Uses it is not meant for", "Cases that are sensitive or ambiguous"]
@@ -169,7 +169,7 @@ export const legalDetails: Record<"responsible-use" | "security-review", Documen
       title: "Write the limits down before deployment.",
       description: "A model is easier to trust when everyone agreed in advance what it may use, what it may do and who signs it off.",
       fit: ["You want a model with clear limits on what it may use and do.", "You want to review the work before it is deployed.", "You can name who owns each final decision."],
-      notFit: ["You need legal or regulatory advice from this page.", "You want to use material nobody has reviewed.", "You expect engineering to replace your own judgement."],
+      notFit: ["You need legal or regulatory advice from this page.", "You want to use material nobody has reviewed.", "You expect engineering to replace your own judgment."],
       ctaTitle: "Start a project",
       ctaDescription: "Bring the kinds of material involved, what the model should do, where you want to review it and who decides."
     }
@@ -221,7 +221,7 @@ export const legalDetails: Record<"responsible-use" | "security-review", Documen
       {
         eyebrow: "After delivery",
         title: "Keeping it reviewable",
-        description: "The material stays organised so your team can inspect it long after we hand over.",
+        description: "The material stays organized so your team can inspect it long after we hand over.",
         points: ["Evaluation material grouped by task", "Run notes and delivery decisions", "Notes on any exceptions", "Follow-up items kept in view"]
       },
       {
@@ -248,3 +248,14 @@ export const legalDetails: Record<"responsible-use" | "security-review", Documen
     }
   }
 };
+
+const earlierWorkCopies: Record<Locale, Record<EarlierWorkSlug, DocumentCopy>> = { en: earlierWork, zh: zh.earlierWork, ja: ja.earlierWork, ko: ko.earlierWork };
+const legalDetailCopies: Record<Locale, Record<LegalDetailSlug, DocumentCopy>> = { en: legalDetails, zh: zh.legalDetails, ja: ja.legalDetails, ko: ko.legalDetails };
+
+export function getEarlierWork(locale: Locale, slug: string): DocumentCopy | null {
+  return (earlierWorkCopies[locale] as Record<string, DocumentCopy>)[slug] ?? null;
+}
+
+export function getLegalDetail(locale: Locale, slug: string): DocumentCopy | null {
+  return (legalDetailCopies[locale] as Record<string, DocumentCopy>)[slug] ?? null;
+}

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { DetailDocument } from "@/components/site/detail-document";
-import { earlierWork } from "@/lib/detail-copy";
+import { getEarlierWork } from "@/lib/detail-copy";
 import { isLocale, locales } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
 import { getSiteCopy } from "@/lib/site-copy";
@@ -16,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const copy = earlierWork[slug];
+  const copy = getEarlierWork(locale, slug);
   if (!copy) notFound();
   return localizedMetadata(locale, `/earlier-work/${slug}`, copy.title, copy.description);
 }
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function EarlierWorkEntryPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const copy = earlierWork[slug];
+  const copy = getEarlierWork(locale, slug);
   if (!copy) notFound();
   const labels = getSiteCopy(locale).earlierWork;
   return <DetailDocument copy={copy} locale={locale} back={{ label: labels.back, href: "/earlier-work" }} />;

@@ -3,16 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Phrased } from "@/components/site/phrased";
 import { SiteNav } from "@/components/site/site-nav";
-import { domains, painting, steps } from "@/lib/examination/data";
+import { painting, type ExaminationContent, type ExaminationCopy } from "@/lib/examination/data";
 import { createExamination, type Examination as Engine, type Model } from "@/lib/examination/engine";
 import { localizePath, type Locale } from "@/lib/i18n";
-import { company, getSiteCopy, paintings } from "@/lib/site-copy";
+import type { Painting, SiteCopy } from "@/lib/site-copy";
 
 const pct = (n: number) => `${n * 100}%`;
 
-export function Examination({ locale }: { locale: Locale }) {
-  const copy = getSiteCopy(locale);
+export type ExaminationProps = {
+  locale: Locale;
+  nav: SiteCopy["nav"];
+  lensHint: string;
+  email: string;
+  still: Painting;
+  content: ExaminationContent;
+  marks: ExaminationCopy["marks"];
+  ui: ExaminationCopy["ui"];
+  joiner: string;
+};
+
+export function Examination({ locale, nav, lensHint, email, still, content, marks, ui, joiner }: ExaminationProps) {
+  const { steps, domains } = content;
   const examRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,7 +66,7 @@ export function Examination({ locale }: { locale: Locale }) {
         },
         onAutoTrained: () => setModel("trained")
       },
-      { reduce, fontFamily }
+      { reduce, fontFamily, content }
     );
     engineRef.current = engine;
     if (!engine) stage.dataset.still = "true";
@@ -62,6 +75,8 @@ export function Examination({ locale }: { locale: Locale }) {
       engine?.destroy();
       engineRef.current = null;
     };
+    // The content is fixed for the page's language; the engine is built once per mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -86,37 +101,30 @@ export function Examination({ locale }: { locale: Locale }) {
     <section className="x-exam" ref={examRef} aria-labelledby="exam-title">
       <div className="x-stage" ref={stageRef} data-tone={current.tone}>
         <div className="x-still-frame">
-          <Image className="x-still" src={paintings.home.src} alt={paintings.home.alt} fill priority sizes="100vw" />
+          <Image className="x-still" src={still.src} alt={still.alt} fill priority sizes="100vw" />
         </div>
         <canvas className="x-canvas" ref={canvasRef} aria-hidden="true" />
         <div className="x-map" ref={mapRef} aria-hidden="true">
           <div className="x-layer" data-on={markMode === 1}>
-            {painting.boxes.map(([x, y, w, h, label]) => (
-              <div className="x-box" key={label} style={{ left: pct(x), top: pct(y), width: pct(w), height: pct(h) }}>
-                <span>{label}</span>
+            {painting.boxes.map(([x, y, w, h, score], i) => (
+              <div className="x-box" key={i} style={{ left: pct(x), top: pct(y), width: pct(w), height: pct(h) }}>
+                <span>{marks.boxes[i]} {score.toFixed(2)}</span>
               </div>
             ))}
           </div>
-          {([[2, painting.xray], [3, painting.raking]] as const).map(([mode, marks]) => (
+          {([[2, painting.xray, marks.xray], [3, painting.raking, marks.raking], [4, painting.spots, marks.spots]] as const).map(([mode, points, labels]) => (
             <div className="x-layer" data-on={markMode === mode} key={mode}>
-              {marks.map(([x, y, label, left]) => (
-                <div className="x-mark" data-left={left} key={label} style={{ left: pct(x), top: pct(y) }}>
-                  <span>{label}</span>
+              {points.map(([x, y], i) => (
+                <div className="x-mark" key={i} style={{ left: pct(x), top: pct(y) }}>
+                  <span>{labels[i]}</span>
                 </div>
               ))}
             </div>
           ))}
-          <div className="x-layer" data-on={markMode === 4}>
-            {painting.spots.map(([x, y, , , label, left]) => (
-              <div className="x-mark" data-left={left} key={label} style={{ left: pct(x), top: pct(y) }}>
-                <span>{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
         <div className="x-veil" />
         <div className="x-nav">
-          <SiteNav locale={locale} tone={current.tone === "day" ? "paper" : "night"} />
+          <SiteNav locale={locale} copy={nav} tone={current.tone === "day" ? "paper" : "night"} />
         </div>
 
         <div className="x-copy">
@@ -124,22 +132,22 @@ export function Examination({ locale }: { locale: Locale }) {
             <article className="x-article" data-step={k} data-on={k === step} inert={k !== step} key={s.title} data-lens-off>
               {s.kicker ? <p className="s-kicker">{s.kicker}</p> : null}
               {k === 0 ? (
-                <h1 className="x-title" id="exam-title">{s.title}</h1>
+                <h1 className="x-title s-phrased" id="exam-title"><Phrased text={s.title} parts={s.titleParts ?? [s.title]} /></h1>
               ) : (
-                <h2 className="x-title x-title-sub">{s.title}</h2>
+                <h2 className="x-title x-title-sub s-phrased"><Phrased text={s.title} parts={s.titleParts ?? [s.title]} /></h2>
               )}
               {s.body ? <p className="x-body">{s.body}</p> : null}
-              {k === 0 ? <p className="x-hint">{copy.home.lensHint}</p> : null}
+              {k === 0 ? <p className="x-hint">{lensHint}</p> : null}
               {s.receive ? <p className="x-receive">{s.receive}</p> : null}
               {k === 0 ? (
                 <div className="s-actions">
-                  <Link className="s-btn" href={localizePath(locale, "/contact")}>{copy.nav.cta}</Link>
-                  <span className="s-mail">{company.email}</span>
+                  <Link className="s-btn" href={localizePath(locale, "/contact")}>{nav.cta}</Link>
+                  <span className="s-mail">{email}</span>
                 </div>
               ) : null}
               {s.mode === 5 ? (
                 <div className="x-demo">
-                  <div className="x-seg" role="group" aria-label="Example subject">
+                  <div className="x-seg" role="group" aria-label={ui.subject}>
                     {domains.map((d) => (
                       <button type="button" key={d.key} aria-pressed={d.key === domainKey} onClick={() => setDomainKey(d.key)}>
                         {d.label}
@@ -147,11 +155,11 @@ export function Examination({ locale }: { locale: Locale }) {
                     ))}
                   </div>
                   <p className="x-prompt">
-                    {domain.prompt} <b data-trained={model === "trained"}>{topWord}</b>
+                    {domain.prompt}{joiner}<b data-trained={model === "trained"}>{topWord}</b>
                   </p>
-                  <div className="x-seg x-model" role="group" aria-label="Which model writes">
-                    <button type="button" aria-pressed={model === "base"} onClick={() => setModel("base")}>Base model</button>
-                    <button type="button" aria-pressed={model === "trained"} data-trained onClick={() => setModel("trained")}>Trained on your data</button>
+                  <div className="x-seg x-model" role="group" aria-label={ui.model}>
+                    <button type="button" aria-pressed={model === "base"} onClick={() => setModel("base")}>{ui.base}</button>
+                    <button type="button" aria-pressed={model === "trained"} data-trained onClick={() => setModel("trained")}>{ui.trained}</button>
                   </div>
                   <div className="x-bars" data-trained={model === "trained"}>
                     {domain.candidates.map((c) => (
@@ -169,12 +177,12 @@ export function Examination({ locale }: { locale: Locale }) {
         </div>
 
         <dl className="x-meta" data-lens-off>
-          <div><dt className="x-sr">Light</dt><dd className="x-meta-strong">{current.instrument}</dd></div>
-          <div><dt className="x-sr">Setting</dt><dd>{current.setting}</dd></div>
-          <div><dt className="x-sr">Lens</dt><dd>Lens: {current.lens}</dd></div>
-          <div><dt className="x-sr">Position</dt><dd ref={xyRef} className="s-num">x 0.000 · y 0.000</dd></div>
+          <div><dt className="x-sr">{ui.light}</dt><dd className="x-meta-strong">{current.instrument}</dd></div>
+          <div><dt className="x-sr">{ui.setting}</dt><dd>{current.setting}</dd></div>
+          <div><dt className="x-sr">{ui.lens}</dt><dd>{ui.lensValue.replace("{lens}", current.lens)}</dd></div>
+          <div><dt className="x-sr">{ui.position}</dt><dd ref={xyRef} className="s-num">x 0.000 · y 0.000</dd></div>
         </dl>
-        <ol className="x-index" aria-label="Layers of the painting" data-lens-off>
+        <ol className="x-index" aria-label={ui.layers} data-lens-off>
           {steps.map((s, k) => (
             <li key={s.index}>
               <button type="button" aria-current={k === step ? "step" : undefined} onClick={() => goTo(k)}>

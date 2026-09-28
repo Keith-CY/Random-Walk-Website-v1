@@ -1,137 +1,60 @@
 ---
-title: "model を選ぶ前に 配備境界 を定義する"
+title: "モデルを選ぶ前に、どこで動かすかを決める"
 locale: "ja"
 date: "2026-05-16"
+updated: "2026-09-28"
 author: "Random Walk"
 tags:
-  - "local-ai"
-  - "security"
-  - "配備"
-summary: "private モデル作業 が data movement、ランタイム location、アクセス経路 から始まる理由。"
+  - "デプロイ"
+  - "セキュリティ"
+  - "モデル選定"
+summary: "リーダーボードで一番のモデルが、御社にとっては間違ったモデルかもしれません。どこで動くか、何に触れてよいか、誰が面倒を見るかを決めてから選びます。"
 ---
 
-## Boundary before model
+## リーダーボードは出発点ではない
 
-Model choice は 配備境界 に従うべきです。
+ベンチマークで首位のモデルでも、選ぶべきではないことがあります。御社のデータがある場所で動かせない、御社が渡してよいデータを使えない、私たちが離れた後に御社のチームで面倒を見られない。そうであれば、スコアに意味はありません。
 
-単体では強く見える model でも、ワークフロー が置かれるべき場所で動かせず、許可された data path を使えず、顧客チームへ保守可能な形で hand over できないなら、実際の system には適さない場合があります。
+だから私たちは、まず境界を決め、モデルはその後に選びます。
 
-models を評価する前に、operating shape を定義します：
+## 最初に決める 5 つのこと
 
-- model がどこで実行を許可されるか
-- どの data が ランタイム に入り、または ランタイム から出られるか
-- 誰が ワークフロー を trigger、レビュー、maintain できるか
-- environment がどの reソース ceiling を課すか
-- delivery 後にどの 証拠 と 引き継ぎメモ を残す必要があるか
+### どこで動くか
 
-Boundary は paperwork ではありません。technical design の一部です。
+御社の Mac、サーバールーム、クラウドアカウント、エアギャップ環境、あるいは承認済みのリモートサービス。どれを選ぶかで、候補に入るモデルと外れるモデルが決まります。
 
-## Boundary に含まれるもの
+### 何に触れてよいか
 
-### Data movement
+モデルがどの資料から学び、どの資料を読んでよいか。出力、ログ、プロンプト、一時ファイルのうち、何が環境の外に出てよいか。終了時に何を残し、返却し、削除するかも決めます。
 
-どの 資料 をコピー、変換、キャッシュ、エクスポート、またはローカル保持できるかを定義します。
+### 誰が使い、誰が変えられるか
 
-- モデル作業 に許可された ソース 資料
-- Temporary files と intermediate 成果物
-- Logs、prompts、出力、レビュー 資料
-- Deletion、return、または retention expectations
+日々誰が動かすか、誰が変更できるか、誰がその仕事をレビューするか、最初の引き渡しの後は誰が引き継ぐか。
 
-### Runtime location
+### マシンが何を許すか
 
-model と supporting ワークフロー が実際にどこで動作できるかを定義します。
+メモリ、速度、一度に読み込む必要のある文章の量、ストレージ、そして同時に何人が使うか。
 
-- Local workstation
-- On-premise machine
-- Customer-制御led private environment
-- Restricted または disconnected environment
-- 許可される場合の scoped remote ランタイム
+### 何を残していくか
 
-### Access path
+テストの例、実行記録、既知の限界に関するメモ、ロールバックの手順、オペレーター向けのメモ。モデルを動かすチームが、それを理解できるように。
 
-誰が ワークフロー を操作できるか、どの 画面 を通じて操作できるかを定義します。
+## 境界が選択をどう変えるか
 
-- Operator access
-- Admin access
-- Review access
-- sensitive actions の前の approval points
-- first delivery 後の handoff responsibility
+これらの答えは、どのベンチマークよりも多くのことを決めることがよくあります。たとえば次のことです。
 
-### Reソース ceiling
+- モデルを自社のマシンで動かすか、承認済みのリモートサービスで動かすか
+- ハードウェアに収めるために圧縮が必要か
+- モデルを丸ごと入れ替えるより、小さなモデルにアダプターを載せるほうがよいか
+- テストで重視するのは速度か、正確さか、書式か、レビューのしやすさか
+- 誰かが使い始める前に、ロールバックの手順を実証しておく必要があるか
 
-model を選ぶ前に、実際の operating limits を定義します。
+Mac のソフトウェアを操作するモデルを学習させたとき、Qwen3.5-9B を選んだのはまさにこの理由からです。画面を読めて、しかも Mac 1 台で動くからです。
 
-- Available memory または VRAM
-- Acceptable latency
-- Context length requirements
-- Storage と cache limits
-- Batch、queue、または concurrency assumptions
+## 私たちの進める順番
 
-### Handoff and 証拠 path
+- **境界。** どこで動くか、何に触れてよいか、誰が面倒を見るか、マシンが何を許すか。
+- **候補リスト。** その境界の内側に収まるモデル、アダプター、ランタイムだけ。
+- **テスト。** 御社のタスクの例、わかっている難しいケース、速度とレビューの基準を、候補リストに対して実行します。
 
-implementation 後も理解可能でなければならないものを定義します。
-
-- Evaluation 例
-- Run records
-- Known-limit notes
-- Rollback path
-- Operator notes と next-step constraints
-
-## Boundary が model choice をどう変えるか
-
-Boundary は、benchmark result よりも model decision を大きく変えることがあります。
-
-model が技術的に魅力的であっても、environment を operating limits の外へ押し出す、顧客が使えない data path を要求する、またはチームが保守できない handoff complexity を生むなら、不適切です。
-
-Boundary decisions は次に影響します：
-
-- model をローカルで動かすべきか、scoped remote ランタイム で動かすべきか
-- quantization が必要かどうか
-- アダプター-based work が full model replacement より望ましいかどうか
-- 評価 が latency、behavior、format stability、レビューability のどれに焦点を置くべきか
-- 配備 に user-facing activation 前の rollback path が必要かどうか
-
-境界 の内側で生きられる models から選びます。model を選んだ後に 境界 を定義してはいけません。
-
-## Review questions
-
-- model はどこで実行を許可されるか？
-- どの ソース 資料 が ランタイム に入れるか？
-- どの 出力、logs、または temporary files が environment から出られるか？
-- 誰が inference、評価、または 適応 を trigger できるか？
-- どの hardware、memory、latency limits が重要か？
-- reuse または 配備 前に何が 顧客レビュー を必要とするか？
-- behavior が変わった場合の rollback path は何か？
-- handoff 後の operation は誰が所有するか？
-
-これらの答えが不明確なら、model shortlist は時期尚早です。
-
-## 有用な パターン
-
-### 1. Boundary
-
-配備 environment、data movement limits、アクセス経路、reソース ceiling、handoff expectations を定義します。
-
-### 2. Candidate model path
-
-その 境界 の内側に収まる models、アダプター、ランタイムs、quantization choices を shortlist します。
-
-### 3. Evaluation 証拠
-
-タスク 例、known-limit ケース、latency expectations、レビュー criteria に対して candidate path をテストします。
-
-これにより、モデル作業 は実際に operated できる environment に結びついたままになります。
-
-## Takeaway
-
-「the best model」から始めないでください。
-
-配備境界 から始めます：
-
-- Data movement
-- Runtime location
-- Access path
-- Reソース ceiling
-- Evidence と handoff
-
-そして、その shape の内側で動き、レビュー され、maintained できる model path を選びます。
+境界の内側で生きられるモデルの中から選びます。モデルを選んでから境界を引くのは、最初からやり直すことを意味します。

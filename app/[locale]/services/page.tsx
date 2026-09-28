@@ -2,7 +2,7 @@ import { CloseSection } from "@/components/site/close-section";
 import { PaintingHero } from "@/components/site/painting-hero";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { getSiteCopy, paintings } from "@/lib/site-copy";
+import { getPaintings, getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -11,16 +11,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const copy = getSiteCopy(locale).services;
-  return localizedMetadata(locale, "/services", "Services", copy.lede);
+  return localizedMetadata(locale, "/services", copy.kicker, copy.lede);
 }
 
 function ServicesContent({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale).services;
   return (
     <main>
-      <PaintingHero painting={paintings.services} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="services-title" />
+      <PaintingHero painting={getPaintings(locale).services} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="services-title" />
 
-      <section className="s-section" aria-label="Two levels">
+      <section className="s-section" aria-label={copy.levelsLabel}>
         <div className="s-wrap">
           <div className="s-levels">
             {copy.levels.map((level) => (

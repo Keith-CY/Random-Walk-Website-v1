@@ -2,7 +2,7 @@ import { CloseSection } from "@/components/site/close-section";
 import { PaintingHero } from "@/components/site/painting-hero";
 import { isLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { company, getSiteCopy, paintings } from "@/lib/site-copy";
+import { company, getPaintings, getSiteCopy } from "@/lib/site-copy";
 import { eventPresenceItems } from "@/lib/site-data";
 import { notFound } from "next/navigation";
 
@@ -11,18 +11,20 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/company", "Company", getSiteCopy(locale).company.lede);
+  const copy = getSiteCopy(locale).company;
+  return localizedMetadata(locale, "/company", copy.kicker, copy.lede);
 }
 
 export default async function CompanyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const copy = getSiteCopy(locale).company;
-  const events = eventPresenceItems.en;
+  const site = getSiteCopy(locale);
+  const copy = site.company;
+  const events = eventPresenceItems[locale];
 
   return (
     <main>
-      <PaintingHero painting={paintings.company} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="company-title" />
+      <PaintingHero painting={getPaintings(locale).company} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="company-title" />
 
       <section className="s-section" aria-labelledby="token-plant-title">
         <div className="s-wrap s-split">
@@ -36,7 +38,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ locale
           <h2 className="s-h2" id="events-title">{copy.eventsTitle}</h2>
           <div className="s-table-wrap" style={{ marginTop: 0 }}>
             <table className="s-table">
-              <thead><tr><th scope="col">Event</th><th scope="col">Where</th><th scope="col">When</th></tr></thead>
+              <thead><tr>{copy.eventsHead.map((h) => <th scope="col" key={h}>{h}</th>)}</tr></thead>
               <tbody>
                 {events.map((event) => (
                   <tr key={event.slug}>
@@ -56,11 +58,11 @@ export default async function CompanyPage({ params }: { params: Promise<{ locale
           <h2 className="s-h2" id="registered-title">{copy.registeredTitle}</h2>
           <div>
             <dl className="s-dl" style={{ marginTop: 0 }}>
-              <dt>Registered name</dt><dd>{company.name} ({company.nameLatin})</dd>
-              <dt>Corporate number</dt><dd className="s-num">{company.corporateNumber}</dd>
-              <dt>Registered</dt><dd>{company.registered}</dd>
-              <dt>Address</dt><dd>{company.addressBlock}<br />{company.addressBlockLatin}</dd>
-              <dt>Email</dt><dd>{company.email}</dd>
+              <dt>{copy.registered.name}</dt><dd>{company.name} ({company.nameLatin})</dd>
+              <dt>{copy.registered.number}</dt><dd className="s-num">{company.corporateNumber}</dd>
+              <dt>{copy.registered.date}</dt><dd><time dateTime={company.registeredIso}>{copy.registeredOn}</time></dd>
+              <dt>{copy.registered.address}</dt><dd>{site.addressBlock.map((line, i) => <span key={line}>{i ? <br /> : null}{line}</span>)}</dd>
+              <dt>{copy.registered.email}</dt><dd>{company.email}</dd>
             </dl>
             <p className="s-caption" style={{ marginTop: 16 }}>{copy.registeredNote}</p>
           </div>

@@ -28,7 +28,7 @@ export function LegalDocument({ content, locale }: { content: LegalPageContent; 
                 {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </section>
             ))}
-            <OperatorDetails />
+            <OperatorDetails locale={locale} />
           </div>
         </div>
       </section>

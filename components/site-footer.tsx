@@ -14,7 +14,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             <img src="/brand/logo-wordmark.svg" alt="Random Walk" width={170} height={30} />
             <p>{copy.line}</p>
           </div>
-          <nav className="s-footer-groups" aria-label="Footer">
+          <nav className="s-footer-groups" aria-label={copy.label}>
             {copy.groups.map((group) => (
               <div key={group.title}>
                 <h2>{group.title}</h2>

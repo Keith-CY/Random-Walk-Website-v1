@@ -4,7 +4,7 @@ import { CloseSection } from "@/components/site/close-section";
 import { isLocale, localizePath } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
 import { getSiteCopy } from "@/lib/site-copy";
-import { workEntries } from "@/lib/work-entries";
+import { getWorkEntries } from "@/lib/work-entries";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -12,7 +12,8 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/work", "Work", getSiteCopy(locale).work.lede);
+  const copy = getSiteCopy(locale).work;
+  return localizedMetadata(locale, "/work", copy.kicker, copy.lede);
 }
 
 export default async function WorkPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,7 +29,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
           <h1 className="s-h1" id="work-title">{copy.title}</h1>
           <p className="s-lede">{copy.lede}</p>
           <div className="s-cards" style={{ marginTop: 64 }}>
-            {workEntries.map((entry) => (
+            {getWorkEntries(locale).map((entry) => (
               <Link className="s-card" key={entry.slug} href={localizePath(locale, `/work/${entry.slug}`)}>
                 {entry.painting ? (
                   <div className="s-card-art">

@@ -1,137 +1,60 @@
 ---
-title: "先定义 部署边界，再选择模型"
+title: "先定模型在哪里运行，再选模型"
 locale: "zh"
 date: "2026-05-16"
+updated: "2026-09-28"
 author: "Random Walk"
 tags:
-  - "local-ai"
-  - "security"
   - "部署"
-summary: "为什么 private 模型工作 始于 data movement、运行时 location 与 访问路径。"
+  - "安全"
+  - "模型选择"
+summary: "排行榜上最好的模型，可能正是不适合你的那一个。先定下它在哪里运行、可以接触什么、由谁照看，再做选择。"
 ---
 
-## Boundary 先于 model
+## 排行榜不是起点
 
-Model choice 应当跟随 部署边界。
+在基准测试中名列前茅的模型，仍然可能是错误的选择。如果它无法在你的数据所在之处运行，无法使用你被允许交给它的数据，或者在我们离开后你的团队照看不了它，那它的分数就无关紧要。
 
-一个 model 即使孤立来看表现很强，如果它无法在 工作流 需要存在的位置运行，无法使用被允许的 data path，或无法以可维护的方式 hand over 给客户团队，也可能并不适合真实系统。
+所以我们先划定边界，再选择模型。
 
-在评估 models 之前，先定义 operating shape：
+## 先定下五件事
 
-- model 被允许在哪里运行
-- 哪些 data 可以进入或离开 运行时
-- 谁可以 trigger、评审 或 maintain 工作流
-- environment 施加了怎样的 re来源 ceiling
-- delivery 之后必须保留哪些 证据 与 交接说明
+### 在哪里运行
 
-Boundary 不是文书工作。它是 technical design 的一部分。
+你的 Mac、你的机房、你的云账户、物理隔离的机房，或你批准过的远程服务。每一种都会排除一些模型，也会留下一些模型。
 
-## Boundary 包含什么
+### 可以接触什么
 
-### Data movement
+模型可以从哪些材料中学习或读取，哪些东西可以离开环境：输出、日志、提示词、临时文件。并决定结束时保留、归还或删除什么。
 
-定义哪些 材料 可以被复制、转换、缓存、导出，或保持本地。
+### 谁可以使用和更改
 
-- 允许用于 模型工作 的 来源 材料
-- Temporary files 与 intermediate 工件
-- Logs、prompts、输出 与 评审 材料
-- Deletion、return 或 retention expectations
+谁日常运行它，谁能更改它，谁审查它的工作，第一次交付之后由谁接手。
 
-### Runtime location
+### 机器允许什么
 
-定义 model 与 supporting 工作流 实际可以在哪里运行。
+内存、速度、一次需要读入多少文本、存储空间，以及会有多少人同时使用。
 
-- Local workstation
-- On-premise machine
-- Customer-控制led private environment
-- Restricted 或 disconnected environment
-- Scoped remote 运行时，如果被允许
+### 必须留下什么
 
-### Access path
+测试样例、运行记录、已知局限的说明、回滚路径和操作说明，让运行模型的团队真正了解它。
 
-定义谁可以操作 工作流，以及通过哪个 界面 操作。
+## 边界如何改变选择
 
-- Operator access
-- Admin access
-- Review access
-- 敏感 actions 之前的 approval points
-- first delivery 之后的 handoff responsibility
+这些答案往往比任何基准测试更有决定性。它们决定了：
 
-### Re来源 ceiling
+- 模型是在你自己的机器上运行，还是在批准过的远程服务中运行
+- 是否必须压缩模型以适配硬件
+- 在较小的模型上加适配器，是否比直接换掉模型更好
+- 测试应侧重速度、准确性、格式，还是审查的便利程度
+- 是否必须在任何人使用之前证明回滚路径可行
 
-在选择 model 之前，定义实际 operating limits。
+我们训练模型操作 Mac 软件时选择 Qwen3.5-9B，正是出于这个原因：它能读懂屏幕，又能在单台 Mac 上运行。
 
-- Available memory 或 VRAM
-- Acceptable latency
-- Context length requirements
-- Storage 与 cache limits
-- Batch、queue 或 concurrency assumptions
+## 我们的工作顺序
 
-### Handoff and 证据 path
+- **边界。** 在哪里运行、可以接触什么、由谁照看、机器允许什么。
+- **候选清单。** 只列出能放进这个边界的模型、适配器和运行时。
+- **测试。** 用你的任务样例、已知的难点、速度和审查标准，对候选清单逐一测试。
 
-定义 implementation 之后仍必须可理解的内容。
-
-- Evaluation examples
-- Run records
-- Known-limit notes
-- Rollback path
-- Operator notes 与 next-step constraints
-
-## Boundary 如何改变 model choice
-
-Boundary 对 model decision 的影响，可能比 benchmark result 更大。
-
-一个 model 也许在技术上很有吸引力，但如果它把 environment 推到 operating limits 之外，要求客户无法使用的 data path，或制造团队无法维护的 handoff complexity，它就并不合适。
-
-Boundary decisions 会影响：
-
-- model 应在本地运行，还是在 限定范围的 remote 运行时 中运行
-- 是否需要 quantization
-- 适配器-based work 是否优于 full model replacement
-- 评估 是否应聚焦 latency、behavior、format stability 或 评审ability
-- 部署 是否需要在 user-facing activation 之前具备 rollback path
-
-从能够存在于 边界 内的 models 中选择。不要在选择 model 之后再定义 边界。
-
-## Review questions
-
-- model 被允许在哪里运行？
-- 哪些 来源 材料 可以进入 运行时？
-- 哪些 输出、logs 或 temporary files 可以离开 environment？
-- 谁可以 trigger inference、评估 或 适配？
-- 哪些 hardware、memory 与 latency limits 重要？
-- 在 reuse 或 部署 前，哪些内容需要 客户评审？
-- 如果 behavior 改变，rollback path 是什么？
-- handoff 之后谁拥有 operation？
-
-如果这些答案不清楚，model shortlist 就为时过早。
-
-## 一个有用的 模式
-
-### 1. Boundary
-
-定义 部署 environment、data movement limits、访问路径、re来源 ceiling 与 handoff expectations。
-
-### 2. Candidate model path
-
-筛选能够适应该 边界 的 models、适配器、运行时s 与 quantization choices。
-
-### 3. Evaluation 证据
-
-用 task examples、known-limit cases、latency expectations 与 评审 criteria 测试 candidate path。
-
-这让 模型工作 始终连接到一个真正能够被 operated 的 environment。
-
-## Takeaway
-
-不要从“the best model”开始。
-
-从 部署边界 开始：
-
-- Data movement
-- Runtime location
-- Access path
-- Re来源 ceiling
-- Evidence 与 handoff
-
-然后选择能够在这个 shape 内运行、被 评审，并被维护的 model path。
+从能在边界内生存的模型里挑选。先选定模型再去划边界，就意味着从头再来。

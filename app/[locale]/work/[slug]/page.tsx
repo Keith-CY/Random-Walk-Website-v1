@@ -17,7 +17,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const entry = getWorkEntry(slug);
+  const entry = getWorkEntry(locale, slug);
   if (!entry) notFound();
   return localizedMetadata(locale, `/work/${slug}`, entry.title, entry.summary);
 }
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function WorkEntryPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const entry = getWorkEntry(slug);
+  const entry = getWorkEntry(locale, slug);
   if (!entry) notFound();
   const copy = getSiteCopy(locale).work;
 
@@ -43,7 +43,7 @@ export default async function WorkEntryPage({ params }: { params: Promise<{ loca
         </section>
       )}
 
-      <section className="s-section" aria-label="Facts">
+      <section className="s-section" aria-label={copy.facts}>
         <div className="s-wrap">
           <dl className="s-facts" style={{ marginTop: 0 }}>
             {entry.facts.map((f) => (
@@ -70,7 +70,7 @@ export default async function WorkEntryPage({ params }: { params: Promise<{ loca
       {entry.table ? (
         <section className="s-section" aria-label={entry.table.caption}>
           <div className="s-wrap s-split">
-            <h2 className="s-h2">Scores</h2>
+            <h2 className="s-h2">{copy.scores}</h2>
             <div className="s-table-wrap" style={{ marginTop: 0 }}>
               <table className="s-table">
                 <caption>{entry.table.caption}</caption>

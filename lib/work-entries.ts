@@ -1,24 +1,38 @@
-import { paintings, type Painting } from "./site-copy";
+import type { Locale } from "./i18n";
+import { getPaintings, type Painting, type PaintingKey } from "./site-copy";
+import { ja } from "./translations/ja";
+import { ko } from "./translations/ko";
+import { zh } from "./translations/zh";
 
-export type WorkEntry = {
-  slug: string;
+export type WorkSlug = "mac-computer-use" | "business-arenas" | "turnvector" | "sayit";
+
+/** The words of a work entry; every language writes its own. */
+export type WorkEntryCopy = {
+  slug: WorkSlug;
   kicker: string;
   title: string;
   summary: string;
-  painting: Painting | null;
   status?: string;
   facts: { label: string; value: string }[];
   sections: { title: string; body: string[] }[];
   table?: { caption: string; head: string[]; rows: string[][] };
 };
 
-export const workEntries: WorkEntry[] = [
+export type WorkEntry = WorkEntryCopy & { painting: Painting | null };
+
+const workPaintings: Record<WorkSlug, PaintingKey | null> = {
+  "mac-computer-use": "macComputerUse",
+  "business-arenas": "businessArenas",
+  turnvector: "turnvector",
+  sayit: null
+};
+
+const en: WorkEntryCopy[] = [
   {
     slug: "mac-computer-use",
     kicker: "Model Train",
     title: "Teaching a model to use a Mac",
     summary: "A dataset for the Mac software companies use today, and a Qwen3.5-9B model trained on it.",
-    painting: paintings.macComputerUse,
     facts: [
       { label: "Dataset", value: "15,854 steps in 450 tasks" },
       { label: "Base model", value: "Qwen3.5-9B" },
@@ -50,7 +64,6 @@ export const workEntries: WorkEntry[] = [
     kicker: "Showcases",
     title: "Models at the counting-house desk",
     summary: "Live 3D arenas where models do real office work, each scored against a rules-based tool.",
-    painting: paintings.businessArenas,
     facts: [
       { label: "Reconciliation, rules engine", value: "36" },
       { label: "Reconciliation, local 27B model", value: "72" },
@@ -84,7 +97,6 @@ export const workEntries: WorkEntry[] = [
     kicker: "Token Plant",
     title: "Many models, one machine",
     summary: "TurnVector lets several AI models share one Apple Silicon machine, keeping every conversation responsive.",
-    painting: paintings.turnvector,
     status: "In development",
     facts: [
       { label: "Status", value: "In development" },
@@ -108,8 +120,7 @@ export const workEntries: WorkEntry[] = [
     slug: "sayit",
     kicker: "Product",
     title: "SayIt",
-    summary: "Dictation on the Mac that never leaves the machine.",
-    painting: null,
+    summary: "Dictation that never leaves your Mac.",
     facts: [{ label: "Runs on", value: "Apple Silicon Macs" }],
     sections: [
       {
@@ -120,9 +131,22 @@ export const workEntries: WorkEntry[] = [
   }
 ];
 
-export function getWorkEntry(slug: string) {
-  return workEntries.find((entry) => entry.slug === slug);
+const copies: Record<Locale, WorkEntryCopy[]> = { en, zh: zh.work, ja: ja.work, ko: ko.work };
+
+export function getWorkEntries(locale: Locale): WorkEntry[] {
+  const art = getPaintings(locale);
+  return copies[locale].map((entry) => {
+    const key = workPaintings[entry.slug];
+    return { ...entry, painting: key ? art[key] : null };
+  });
 }
+
+export function getWorkEntry(locale: Locale, slug: string) {
+  return getWorkEntries(locale).find((entry) => entry.slug === slug);
+}
+
+/** English entries, for the sitemap and tests. */
+export const workEntries = getWorkEntries("en");
 
 /** Web3 products from before the AI lab, kept on a low-key page. */
 export const earlierWorkSlugs = ["neuron", "1-tok", "fiber-link", "utxo-data", "distributed-paradigm"] as const;

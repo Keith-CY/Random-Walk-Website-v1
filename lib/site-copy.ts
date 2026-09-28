@@ -1,39 +1,43 @@
 import type { Locale } from "./i18n";
+import { exhibit } from "./exhibits";
+import { ja } from "./translations/ja";
+import { ko } from "./translations/ko";
+import { zh } from "./translations/zh";
 
-// Copy for the rebuilt site. English is the source of truth; zh, ja and ko reuse it until the
-// English is final and translated (see docs/site-content-draft.md).
+// Copy for the rebuilt site. English is the source; lib/translations/* hold the other languages.
+// Server components read it and pass what the browser needs down as props.
 
 export type Painting = { src: string; alt: string; width: number; height: number };
 
-const painting = (name: string, alt: string): Painting => ({ src: `/paintings/${name}.jpg`, alt, width: 1664, height: 1040 });
-
-export const paintings = {
-  home: painting("home", "An oil painting of an observatory hall: a beam of sunlight from a round opening falls on a graduated brass line in the floor, where a scholar in an indigo robe kneels to mark it with dividers."),
-  homeXray: painting("home-xray", "The same observatory hall at night, an astronomer at a brass telescope and a lantern on the floor."),
-  services: painting("services", "An oil painting of a clockmaker's shop: a lady reaches for a smartwatch hanging among gold pocket watches while a longcase clock is fitted for a gentleman."),
-  datasets: painting("datasets", "An oil painting of three apprentices copying an anatomical drawing from a modern display that stands among inkwells, while their master checks the copies."),
-  macComputerUse: painting("mac-computer-use", "An oil painting of an old master guiding a young clerk who works on an open MacBook Pro among quills and an Imari cup."),
-  businessArenas: painting("business-arenas", "An oil painting of clerks reconciling ledgers in a counting house, a roll of receipt paper spilling over the table."),
-  turnvector: painting("turnvector", "An oil painting of three musicians sharing one harpsichord by candlelight, a Mac Studio on the side table."),
-  melix: painting("melix", "A still life of a pewter jug, a peeled lemon, an Imari bowl, walnuts and a Mac Studio on a stone ledge."),
-  company: painting("company", "An oil painting of a painter's workshop, assistants in robes seen from behind at their easels."),
-  contact: painting("contact", "An oil painting of a merchant writing a letter of commission at a black and gold lacquer writing box."),
-  notFound: painting("not-found", "A vanitas still life: an empty gilded frame, a snuffed candle, an hourglass, a pocket watch and a wilting tulip."),
-  noteAssay: painting("note-assay", "An oil painting of an assay office: an assayer tests a gold bar on a touchstone beside a brass balance, a small modern flash drive among the weights."),
-  noteAlcove: painting("note-alcove", "An oil painting of a cabinetmaker measuring an empty alcove with a brass-tipped rod before building a clock to fit it, a modern laser measure on the floor.")
+const paintingFiles = {
+  home: "home",
+  homeXray: "home-xray",
+  services: "services",
+  datasets: "datasets",
+  macComputerUse: "mac-computer-use",
+  businessArenas: "business-arenas",
+  turnvector: "turnvector",
+  melix: "melix",
+  company: "company",
+  contact: "contact",
+  notFound: "not-found",
+  noteAssay: "note-assay",
+  noteAlcove: "note-alcove"
 } as const;
 
+export type PaintingKey = keyof typeof paintingFiles;
+
 /** Each note has its own painting; notes without one fall back to the workshop. */
-export const notePaintings: Record<string, Painting> = {
-  "evaluate-local-lora": paintings.noteAssay,
-  "private-deployment-boundaries": paintings.noteAlcove
+const notePaintingKeys: Record<string, PaintingKey> = {
+  "evaluate-local-lora": "noteAssay",
+  "private-deployment-boundaries": "noteAlcove"
 };
 
 export const company = {
   name: "Random Walk株式会社",
   nameLatin: "Random Walk K.K.",
   corporateNumber: "7040001125050",
-  registered: "14 September 2022",
+  registeredIso: "2022-09-14",
   addressBlock: "東京都東大和市新堀1丁目",
   addressBlockLatin: "Shinbori 1-chome, Higashiyamato, Tokyo, Japan",
   addressFull: "〒207-0012 東京都東大和市新堀1丁目1432-83-203",
@@ -44,6 +48,26 @@ export const company = {
 } as const;
 
 const en = {
+  meta: {
+    siteTitle: "An AI lab for growing companies"
+  },
+  paintings: {
+    home: "An oil painting of an observatory hall: a beam of sunlight from a round opening falls on a graduated brass line in the floor, where a scholar in an indigo robe kneels to mark it with dividers.",
+    homeXray: "The same observatory hall at night, an astronomer at a brass telescope and a lantern on the floor.",
+    services: "An oil painting of a clockmaker's shop: a lady reaches for a smartwatch hanging among gold pocket watches while a longcase clock is fitted for a gentleman.",
+    datasets: "An oil painting of three apprentices copying an anatomical drawing from a modern display that stands among inkwells, while their master checks the copies.",
+    macComputerUse: "An oil painting of an old master guiding a young clerk who works on an open MacBook Pro among quills and an Imari cup.",
+    businessArenas: "An oil painting of clerks reconciling ledgers in a counting house, a roll of receipt paper spilling over the table.",
+    turnvector: "An oil painting of three musicians sharing one harpsichord by candlelight, a Mac Studio on the side table.",
+    melix: "A still life of a pewter jug, a peeled lemon, an Imari bowl, walnuts and a Mac Studio on a stone ledge.",
+    company: "An oil painting of a painter's workshop, assistants in robes seen from behind at their easels.",
+    contact: "An oil painting of a merchant writing a letter of commission at a black and gold lacquer writing box.",
+    notFound: "A vanitas still life: an empty gilded frame, a snuffed candle, an hourglass, a pocket watch and a wilting tulip.",
+    noteAssay: "An oil painting of an assay office: an assayer tests a gold bar on a touchstone beside a brass balance, a small modern flash drive among the weights.",
+    noteAlcove: "An oil painting of a cabinetmaker measuring an empty alcove with a brass-tipped rod before building a clock to fit it, a modern laser measure on the floor."
+  } satisfies Record<PaintingKey, string>,
+  /** The neighbourhood, as the public pages show it. */
+  addressBlock: [company.addressBlock, company.addressBlockLatin] as string[],
   nav: {
     items: [
       { label: "Services", href: "/services" },
@@ -55,16 +79,18 @@ const en = {
     cta: "Start a project",
     menu: "Menu",
     language: "Change language",
-    home: "Random Walk home"
+    home: "Random Walk home",
+    primary: "Main"
   },
   footer: {
-    line: "An AI lab for growing companies. We choose the model, build the data, train it where it pays, and keep it running on your own machines.",
+    line: "An AI lab for growing companies. We choose the model, build the data, train it when it pays and keep it running on your own machines.",
     groups: [
       { title: "The lab", links: [{ label: "Services", href: "/services" }, { label: "Datasets", href: "/datasets" }, { label: "Work", href: "/work" }, { label: "Melix", href: "/melix" }] },
       { title: "Company", links: [{ label: "About", href: "/company" }, { label: "Notes", href: "/notes" }, { label: "Earlier work", href: "/earlier-work" }, { label: "Start a project", href: "/contact" }] },
       { title: "Legal", links: [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "Security", href: "/security" }, { label: "Responsible use", href: "/legal/responsible-use" }] }
     ],
-    credits: "Paintings made in our own studio.",
+    label: "Footer",
+    credits: "Paintings generated on our own machines.",
     copyright: "© 2026 Random Walk K.K."
   },
   home: {
@@ -80,12 +106,13 @@ const en = {
   services: {
     kicker: "Services",
     title: "Ready-made, or made to measure.",
+    levelsLabel: "Two ways to work",
     lede: "Every project starts by learning the work. Then we decide together what it needs: a good existing model, fitted with care, or a model of your own. Most companies begin with the first and reach for the second where it pays.",
     levels: [
       {
         name: "Ready-made",
         title: "An existing model, fitted to your work",
-        body: "For work that general models already do well: drafting, summarising, answering from your own documents, filling in forms. The craft is in the fitting.",
+        body: "For work that general models already do well: drafting, summarizing, answering from your own documents, filling in forms. The craft is in the fitting.",
         items: [
           "We map the workflow and the data it touches.",
           "We choose the model and connect it to your documents and tools.",
@@ -98,7 +125,7 @@ const en = {
       {
         name: "Made to measure",
         title: "A model of your own",
-        body: "For work that depends on what only your company knows, its terms, procedures, formats and software, or for when you need a smaller model that lives on your own hardware.",
+        body: "For work that depends on what only your company knows (its terms, procedures, formats and software), or when you need a smaller model that runs on your own hardware.",
         lead: "Everything in Ready-made, plus:",
         items: [
           "a dataset built from your material, with a dataset card;",
@@ -127,8 +154,9 @@ const en = {
   datasets: {
     kicker: "Datasets",
     title: "Data no one else has.",
-    lede: "Public datasets teach models the software of a decade ago. We record the tools companies open every morning, and we can gather yours just as quickly.",
+    lede: "Public datasets teach models the software of a decade ago. We record the software companies use every day, and we can build a dataset from your own work just as quickly.",
     releaseTitle: "The macOS computer-use dataset",
+    release: "Release v2.1, 25 September 2026",
     facts: [
       { value: "15,854", label: "annotated steps" },
       { value: "450", label: "tasks" },
@@ -143,6 +171,7 @@ const en = {
       { topic: "Blender", action: "71%" },
       { topic: "Godot", action: "55%" }
     ],
+    byTopicHead: ["Topic", "Actions fully right"],
     byTopicNote: "Share of actions fully right, by topic. Blender and Godot were checked in batches of 30, so their figures are rougher.",
     honest: "Labels are made by models from tutorial videos and checked by sampling, not by hand.",
     pipelineTitle: "How a tutorial becomes training data",
@@ -156,6 +185,8 @@ const en = {
     kicker: "Work",
     title: "What we have made.",
     lede: "Our own projects, built the way we build for clients: a dataset, a model, a test it has to pass and the machine it runs on.",
+    facts: "In brief",
+    scores: "Scores",
     back: "All work"
   },
   melix: {
@@ -169,10 +200,11 @@ const en = {
       { title: "Benchmarks and evaluation", body: "Run repeatable benchmarks and evaluation suites and keep the results in a format you own." },
       { title: "Native Mac app", body: "A menu bar app and workspace for all of the above, backed by the same command line." }
     ],
-    source: "Melix is open source under the Apache 2.0 licence.",
+    source: "Melix is open source under the Apache 2.0 license.",
     loopTitle: "One loop, on one machine.",
-    window: { src: "/images/melix/window-ui.png", alt: "The Melix window on macOS: a local server running a model with a LoRA adapter, its gateway and serving settings.", width: 2880, height: 1920, caption: "The Melix workspace on macOS, serving a model with a LoRA adapter on the local machine." },
-    cover: { src: "/images/product-covers/melix.png", alt: "Melix product page: LoRA training and adapters with MLX, built for Apple Silicon.", width: 1536, height: 1024, caption: "Melix, from the product's own site." },
+    capabilitiesLabel: "What Melix does",
+    window: exhibit("melixWindow", "The Melix window on macOS: a local server running a model with a LoRA adapter, its gateway and serving settings.", "The Melix workspace on macOS, serving a model with a LoRA adapter on the local machine."),
+    cover: exhibit("melix", "Melix product page: LoRA training and adapters with MLX, built for Apple Silicon.", "Melix, from the product's own site."),
     repo: "View the repository"
   },
   company: {
@@ -182,7 +214,16 @@ const en = {
     tokenPlantTitle: "Token Plant",
     tokenPlant: "Token Plant is our public project group. TurnVector, a runtime for running several models on one Apple Silicon machine, comes from it.",
     eventsTitle: "Events",
+    eventsHead: ["Event", "Where", "When"],
     registeredTitle: "Registered details",
+    registered: {
+      name: "Registered name",
+      number: "Corporate number",
+      date: "Registered",
+      address: "Address",
+      email: "Email"
+    },
+    registeredOn: "14 September 2022",
     registeredNote: "The full registered address appears on the legal pages."
   },
   contact: {
@@ -190,7 +231,9 @@ const en = {
     title: "Every commission begins with a conversation.",
     lede: "Tell us what the work is, what data you keep and where it has to run. We reply within two business days.",
     formTitle: "Tell us about the work.",
+    formLabel: "Project form",
     writeTo: "Or write to",
+    writeToEnd: ".",
     mapTitle: "Where we are",
     mapBody: "Our studio is in Shinbori, Higashiyamato, on the western edge of Tokyo. We work with companies anywhere, and meet in person by appointment.",
     mapLink: "Open in Google Maps"
@@ -206,6 +249,7 @@ const en = {
     title: "Notes from the workshop.",
     lede: "Short pieces on how we choose, train, test and deploy models for companies, written from the work itself.",
     read: "Read the note",
+    date: "Date",
     back: "All notes",
     by: "By",
     topics: "Topics"
@@ -244,6 +288,13 @@ const en = {
     responsibleUse: "Responsible use",
     securityReview: "Security review"
   },
+  operator: {
+    title: "Operator",
+    company: "Company",
+    number: "Corporate number",
+    address: "Registered address",
+    contact: "Contact"
+  },
   document: {
     contents: "Contents",
     atGlance: "At a glance",
@@ -259,8 +310,23 @@ const en = {
 
 export type SiteCopy = typeof en;
 
-const copies: Record<Locale, SiteCopy> = { en, zh: en, ja: en, ko: en };
+const copies: Record<Locale, SiteCopy> = { en, zh: zh.site, ja: ja.site, ko: ko.site };
 
 export function getSiteCopy(locale: Locale): SiteCopy {
   return copies[locale];
 }
+
+export function getPaintings(locale: Locale): Record<PaintingKey, Painting> {
+  const alts = copies[locale].paintings;
+  return Object.fromEntries(
+    (Object.keys(paintingFiles) as PaintingKey[]).map((key) => [key, { src: `/paintings/${paintingFiles[key]}.jpg`, alt: alts[key], width: 1664, height: 1040 }])
+  ) as Record<PaintingKey, Painting>;
+}
+
+export function getNotePainting(locale: Locale, slug: string): Painting {
+  return getPaintings(locale)[notePaintingKeys[slug] ?? "company"];
+}
+
+/** English paintings, for places outside a language route. */
+export const paintings = getPaintings("en");
+export const notePaintings: Record<string, Painting> = Object.fromEntries(Object.keys(notePaintingKeys).map((slug) => [slug, getNotePainting("en", slug)]));

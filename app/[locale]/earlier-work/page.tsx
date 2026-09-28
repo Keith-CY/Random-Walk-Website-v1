@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageIntro } from "@/components/site/page-intro";
-import { earlierWork } from "@/lib/detail-copy";
+import { getEarlierWork } from "@/lib/detail-copy";
 import { isLocale, localizePath } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
 import { getSiteCopy } from "@/lib/site-copy";
@@ -13,7 +13,8 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/earlier-work", "Earlier work", getSiteCopy(locale).earlierWork.lede);
+  const copy = getSiteCopy(locale).earlierWork;
+  return localizedMetadata(locale, "/earlier-work", copy.kicker, copy.lede);
 }
 
 export default async function EarlierWorkPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,7 +29,8 @@ export default async function EarlierWorkPage({ params }: { params: Promise<{ lo
         <div className="s-wrap">
           <div className="s-cards">
             {earlierWorkSlugs.map((slug) => {
-              const page = earlierWork[slug];
+              const page = getEarlierWork(locale, slug);
+              if (!page) return null;
               return (
                 <Link className="s-card" key={slug} href={localizePath(locale, `/earlier-work/${slug}`)}>
                   {page.exhibit ? (

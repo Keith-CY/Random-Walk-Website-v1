@@ -8,7 +8,7 @@ import { getContentEntries, getContentEntry, getString, getStringArray } from "@
 import { isLocale, locales, localizePath } from "@/lib/i18n";
 import { localizedMetadata, ogImageFor } from "@/lib/metadata";
 import { articleData } from "@/lib/structured-data";
-import { getSiteCopy, notePaintings, paintings } from "@/lib/site-copy";
+import { getNotePainting, getSiteCopy } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -42,13 +42,13 @@ export default async function NotePage({ params }: { params: Promise<{ locale: s
 
   return (
     <main>
-      <JsonLd data={articleData({ url: `/${locale}/notes/${slug}/`, title, description: summary, published: date, modified: getString(entry.frontmatter, "updated", date), image: ogImageFor(`/notes/${slug}`, title).url, locale })} />
-      <PaintingHero painting={notePaintings[slug] ?? paintings.company} kicker={copy.kicker} title={getString(entry.frontmatter, "title")} lede={getString(entry.frontmatter, "summary")} titleId="note-title" />
+      <JsonLd data={articleData({ url: `/${locale}/notes/${slug}/`, title, description: summary, published: date, modified: getString(entry.frontmatter, "updated", date), image: ogImageFor(locale, `/notes/${slug}`, title).url, locale })} />
+      <PaintingHero painting={getNotePainting(locale, slug)} kicker={copy.kicker} title={getString(entry.frontmatter, "title")} lede={getString(entry.frontmatter, "summary")} titleId="note-title" />
       <section className="s-section" aria-label={getString(entry.frontmatter, "title")}>
         <div className="s-wrap s-split">
           <aside className="s-note-meta">
             <dl className="s-dl" style={{ marginTop: 0 }}>
-              <dt>Date</dt><dd><time className="s-num" dateTime={date}>{date}</time></dd>
+              <dt>{copy.date}</dt><dd><time className="s-num" dateTime={date}>{date}</time></dd>
               <dt>{copy.by}</dt><dd>{getString(entry.frontmatter, "author")}</dd>
               <dt>{copy.topics}</dt><dd>{getStringArray(entry.frontmatter, "tags").join(", ")}</dd>
             </dl>

@@ -1,12 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
-import { domains, highlighted, painting, steps } from "./examination/data";
+import { getExaminationContent, getExaminationCopy } from "./examination/content";
+import { painting } from "./examination/data";
+import { tokenize } from "./examination/text-layout";
 import { locales } from "./i18n";
+import { phraseParts } from "./phrases";
 import { localizedMetadata, ogImageFor, ogImageNames } from "./metadata";
-import { earlierWork } from "./detail-copy";
+import { earlierWork, getEarlierWork, getLegalDetail, legalDetails } from "./detail-copy";
 import { company, getSiteCopy, notePaintings, paintings } from "./site-copy";
-import { earlierWorkSlugs, workEntries } from "./work-entries";
+import { earlierWorkSlugs, getWorkEntries, workEntries } from "./work-entries";
 
 const root = process.cwd();
 const read = (...parts: string[]) => readFileSync(join(root, ...parts), "utf8");
@@ -66,18 +69,20 @@ describe("routes", () => {
 });
 
 describe("search and sharing", () => {
-  test("every indexed page has its own share image on disk", () => {
-    for (const name of [...ogImageNames, "default"]) expect(existsSync(join(root, "public", "og", `${name}.jpg`))).toBe(true);
+  test("every indexed page has its own share image on disk, in every language", () => {
+    expect(existsSync(join(root, "public", "og", "default.jpg"))).toBe(true);
+    for (const locale of locales) for (const name of ogImageNames) expect(existsSync(join(root, "public", "og", locale, `${name}.jpg`))).toBe(true);
     const pages = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms",
       ...workEntries.map((e) => `/work/${e.slug}`), ...earlierWorkSlugs.map((s) => `/earlier-work/${s}`), "/legal/responsible-use", "/legal/security-review",
       "/notes/evaluate-local-lora", "/notes/private-deployment-boundaries"];
-    for (const path of pages) expect(ogImageFor(path, "x").url).not.toBe("/og/default.jpg");
+    for (const path of pages) expect(ogImageFor("ko", path, "x").url).toBe(`/og/ko/${path.replace(/^\//, "").replace(/\//g, "-") || "home"}.jpg`);
   });
 
   test("pages declare an x-default language and a proper og:locale", () => {
-    const meta = localizedMetadata("ja", "/services", "Services");
+    const meta = localizedMetadata("ja", "/services", "Services", "Description");
     expect((meta.alternates?.languages as Record<string, string>)["x-default"]).toBe("/en/services/");
     expect((meta.openGraph as { locale?: string }).locale).toBe("ja_JP");
+    expect((meta.openGraph as { images?: { url: string }[] }).images?.[0].url).toBe("/og/ja/services.jpg");
   });
 });
 
@@ -136,10 +141,68 @@ describe("paintings", () => {
   });
 });
 
+describe("translations", () => {
+  const shape = (value: unknown): unknown =>
+    Array.isArray(value) ? value.map(shape) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, shape(v)])) : typeof value;
+
+  test("every language has the same site copy, in the same shape, with every string filled", () => {
+    const en = getSiteCopy("en");
+    for (const locale of locales) {
+      const copy = getSiteCopy(locale);
+      const strip = (c: typeof en) => ({ ...c, addressBlock: [] });
+      expect(shape(strip(copy))).toEqual(shape(strip(en)));
+      const empty = JSON.stringify(copy).match(/"[^"]+":""/g) ?? [];
+      expect(empty.filter((e) => !e.startsWith('"writeToEnd"'))).toEqual([]);
+    }
+  });
+
+  test("every language has every work entry, earlier-work page and legal page", () => {
+    for (const locale of locales) {
+      expect(getWorkEntries(locale).map((e) => e.slug)).toEqual(workEntries.map((e) => e.slug));
+      expect(getWorkEntries(locale).map((e) => Boolean(e.painting))).toEqual(workEntries.map((e) => Boolean(e.painting)));
+      for (const slug of earlierWorkSlugs) {
+        const page = getEarlierWork(locale, slug);
+        expect(page?.exhibit?.src).toBe(earlierWork[slug].exhibit?.src);
+        expect(page?.officialLink?.href).toBe(earlierWork[slug].officialLink?.href);
+      }
+      for (const slug of Object.keys(legalDetails)) expect(getLegalDetail(locale, slug)?.sections.length).toBe(legalDetails[slug as keyof typeof legalDetails].sections.length);
+    }
+  });
+
+  test("translated pages carry no English prose", () => {
+    const english = /\b(the|and|with|your|what|where|from|every)\b/i;
+    for (const locale of ["zh", "ja", "ko"] as const) {
+      const text = [JSON.stringify(getSiteCopy(locale)), JSON.stringify(getWorkEntries(locale)), JSON.stringify(getExaminationCopy(locale).steps)];
+      const sentences = text.join(" ").match(/"[^"]{24,}"/g) ?? [];
+      expect(sentences.filter((s) => english.test(s) && !/^"(Under our|Invoices from|System Settings|CapCut|Blender|Godot|Finder|iMovie)/.test(s))).toEqual([]);
+    }
+  });
+});
+
+describe("line breaks", () => {
+  test("Chinese headings break between words and never before punctuation", () => {
+    expect(phraseParts("一步一步走出来的路。")).toEqual(["一步", "一步", "走出来的路。"]);
+    expect(phraseParts("现成的，或量身定制的。")).toEqual(["现成的，", "或量身", "定制的。"]);
+    expect(phraseParts("微调适配器上线前，如何检查")).toEqual(["微调适配器", "上线前，", "如何", "检查"]);
+    expect(phraseParts("A model is made in layers.")).toEqual(["A model is made in layers."]);
+    expect(phraseParts("モデルは、層を重ねてつくられる。")).toEqual(["モデルは、層を重ねてつくられる。"]);
+  });
+});
+
 describe("examination", () => {
   test("has six layers in order, starting with visible light and the token map", () => {
-    expect(steps.map((s) => s.mode)).toEqual([0, 5, 1, 2, 3, 4]);
-    expect(steps[0].title).toBe("A model is made in layers.");
+    for (const locale of locales) expect(getExaminationContent(locale).steps.map((s) => s.mode)).toEqual([0, 5, 1, 2, 3, 4]);
+    expect(getExaminationContent("en").steps[0].title).toBe("A model is made in layers.");
+  });
+
+  test("every language labels every mark", () => {
+    for (const locale of locales) {
+      const { marks } = getExaminationCopy(locale);
+      expect(marks.boxes).toHaveLength(painting.boxes.length);
+      expect(marks.xray).toHaveLength(painting.xray.length);
+      expect(marks.raking).toHaveLength(painting.raking.length);
+      expect(marks.spots).toHaveLength(painting.spots.length);
+    }
   });
 
   test("places every mark inside the painting", () => {
@@ -151,14 +214,20 @@ describe("examination", () => {
     expect(painting.spots).toHaveLength(4);
   });
 
-  test("the trained model's top word is the highlighted one in every demo", () => {
-    for (const d of domains) {
-      const trainedTop = [...d.candidates].sort((a, b) => b[2] - a[2])[0][0];
-      const baseTop = [...d.candidates].sort((a, b) => b[1] - a[1])[0][0];
-      expect(highlighted.has(trainedTop)).toBe(true);
-      expect(baseTop).not.toBe(trainedTop);
-      for (const col of [1, 2]) expect(d.candidates.reduce((sum, c) => sum + (c[col] as number), 0)).toBeLessThanOrEqual(1);
-      expect(d.trained[0].startsWith(d.prompt)).toBe(true);
+  test("the trained model's top word is the highlighted one in every demo, and the lens reads it as one word", () => {
+    for (const locale of locales) {
+      const { domains, highlighted, lang } = getExaminationContent(locale);
+      expect(domains.map((d) => d.key)).toEqual(["contracts", "support", "accounts"]);
+      for (const d of domains) {
+        const trainedTop = [...d.candidates].sort((a, b) => b[2] - a[2])[0][0];
+        const baseTop = [...d.candidates].sort((a, b) => b[1] - a[1])[0][0];
+        expect(highlighted).toContain(trainedTop);
+        expect(baseTop).not.toBe(trainedTop);
+        for (const col of [1, 2]) expect(d.candidates.reduce((sum, c) => sum + (c[col] as number), 0)).toBeLessThanOrEqual(1);
+        expect(d.trained[0].startsWith(d.prompt)).toBe(true);
+        expect(tokenize(d.trained, lang).map((t) => t.t.replace(/[.,;:’']+$/, ""))).toContain(trainedTop);
+        expect(d.prompt).not.toContain("|");
+      }
     }
   });
 });

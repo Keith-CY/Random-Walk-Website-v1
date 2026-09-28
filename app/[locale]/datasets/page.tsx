@@ -1,9 +1,9 @@
 import { CloseSection } from "@/components/site/close-section";
 import { PaintingHero } from "@/components/site/painting-hero";
-import { corpora } from "@/lib/examination/data";
+import { datasetSteps } from "@/lib/examination/data";
 import { isLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { getSiteCopy, paintings } from "@/lib/site-copy";
+import { getPaintings, getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -11,24 +11,25 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/datasets", "Datasets", getSiteCopy(locale).datasets.lede);
+  const copy = getSiteCopy(locale).datasets;
+  return localizedMetadata(locale, "/datasets", copy.kicker, copy.lede);
 }
 
 export default async function DatasetsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const copy = getSiteCopy(locale).datasets;
-  const samples = corpora.infrared.slice(0, 8).map((line) => line.split(" · "));
+  const samples = datasetSteps.slice(0, 8).map((line) => line.split(" · "));
 
   return (
     <main>
-      <PaintingHero painting={paintings.datasets} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="datasets-title" />
+      <PaintingHero painting={getPaintings(locale).datasets} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="datasets-title" />
 
       <section className="s-section" aria-labelledby="release-title">
         <div className="s-wrap s-split">
           <div>
             <h2 className="s-h2" id="release-title">{copy.releaseTitle}</h2>
-            <p className="s-caption" style={{ marginTop: 12 }}>Release v2.1, 25 September 2026</p>
+            <p className="s-caption" style={{ marginTop: 12 }}>{copy.release}</p>
           </div>
           <div>
             <dl className="s-facts" style={{ marginTop: 0 }}>
@@ -47,7 +48,7 @@ export default async function DatasetsPage({ params }: { params: Promise<{ local
             <div className="s-table-wrap">
               <table className="s-table">
                 <caption>{copy.byTopicNote}</caption>
-                <thead><tr><th scope="col">Topic</th><th scope="col" className="s-r">Actions fully right</th></tr></thead>
+                <thead><tr><th scope="col">{copy.byTopicHead[0]}</th><th scope="col" className="s-r">{copy.byTopicHead[1]}</th></tr></thead>
                 <tbody>
                   {copy.byTopic.map((row) => (
                     <tr key={row.topic}><td>{row.topic}</td><td className="s-r">{row.action}</td></tr>

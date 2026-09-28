@@ -5,7 +5,7 @@ import { PageIntro } from "@/components/site/page-intro";
 import { getContentEntries, getString } from "@/lib/content";
 import { isLocale, localizePath } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { getSiteCopy, notePaintings, paintings } from "@/lib/site-copy";
+import { getNotePainting, getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -13,7 +13,8 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/notes", "Notes", getSiteCopy(locale).notes.lede);
+  const copy = getSiteCopy(locale).notes;
+  return localizedMetadata(locale, "/notes", copy.kicker, copy.lede);
 }
 
 export default async function NotesPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -29,7 +30,7 @@ export default async function NotesPage({ params }: { params: Promise<{ locale: 
         <div className="s-wrap">
           <div className="s-cards s-cards-2">
             {entries.map((entry) => {
-              const art = notePaintings[entry.slug] ?? paintings.company;
+              const art = getNotePainting(locale, entry.slug);
               const date = getString(entry.frontmatter, "date");
               return (
                 <Link className="s-card" key={entry.slug} href={localizePath(locale, `/notes/${entry.slug}`)}>

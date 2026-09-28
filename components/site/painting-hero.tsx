@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { Phrased } from "@/components/site/phrased";
 import type { Painting } from "@/lib/site-copy";
 
 export function PaintingHero({ painting, kicker, title, lede, children, titleId }: { painting: Painting; kicker?: string; title: string; lede?: string; children?: ReactNode; titleId?: string }) {
@@ -11,7 +12,7 @@ export function PaintingHero({ painting, kicker, title, lede, children, titleId 
       </div>
       <div className="s-hero-copy">
         {kicker ? <p className="s-kicker">{kicker}</p> : null}
-        <h1 className="s-h1" id={titleId}>{title}</h1>
+        <h1 className="s-h1 s-phrased" id={titleId}><Phrased text={title} /></h1>
         {lede ? <p className="s-lede">{lede}</p> : null}
         {children}
       </div>

@@ -1,143 +1,66 @@
 ---
-title: "如何在部署前评估本地 LoRA 适配器"
+title: "微调适配器上线前，如何检查"
 locale: "zh"
 date: "2026-05-16"
+updated: "2026-09-28"
 author: "Random Walk"
 tags:
-  - "local-ai"
   - "评估"
-  - "lora"
-summary: "fine-tuned 适配器 被用于客户可控环境之前，应当 评审 的内容。"
+  - "LoRA"
+  - "部署"
+summary: "训练跑完，不等于模型做完。适配器进入你的环境之前要回答的四个问题，以及应该随它一起交付的东西。"
 ---
 
-## Evaluation 是一个 工件 问题
+## 训练跑完，不等于模型做完
 
-训练完成，并不意味着一个 trained 适配器 已经可以部署。
+微调训练结束时，你得到的是一个文件。至于你的员工能不能依靠它，是另一个问题。
 
-在 LoRA 适配器 被用于客户可控环境之前，它应被作为 delivery 工件 来 评审：behavior、limits、activation path 与 rollback assumptions 都应保持可见。
+在适配器进入客户环境之前，我们会回答关于它的四个问题，并把每个答案背后的证据一起交付。只要有一个问题还没有答案，这个适配器就还没准备好。
 
-适配器 应随附一个小型 证据 pack：
+## 它能完成工作吗？
 
-- 它旨在改进什么 task
-- 哪些 examples 被用于 评审
-- 与 base behavior 相比发生了什么变化
-- 仍然存在哪些 weak cases
-- 它如何被 activated、disabled 或 replaced
+用它被训练来做的工作去测试，所用的样例在训练开始前就与你约定好。通用的质量分数，很难说明它能不能正确起草你的条款，或读懂你的屏幕。
 
-如果 适配器 无法被 评审，它就还不适合 customer-facing use。
+说清楚数字的含义。我们训练一个 Qwen3.5-9B 适配器来操作 Mac 软件时，它在一套固定的 477 步测试上的动作得分从 0.33 提高到了 0.77。其中一部分提升来自模型学会了答案格式，所以我们如实这样报告，并把它当作我们自己的离线测试，而不是对真实任务成功率的衡量。
 
-## 应评估什么
+## 它弄坏了什么？
 
-### Target behavior
+适配器可能让模型在一件事上变好，却在别的事上悄悄变差。拿它和基础模型比较，看看基础模型原本就做得好的工作：
 
-根据真实 工作流 检查 适配器，而不是用泛泛的 输出 quality 来衡量。
+- 变得更弱或更含糊的回答
+- 走样或出错的格式
+- 拒绝得太多，或在不该回答时回答
+- 基础模型原本没有的新的薄弱之处
 
-- Intended task behavior
-- Expected input and 输出 shape
-- 能代表真实使用的 examples
-- 应当能看见改进的 cases
+## 它能在必须运行的地方运行吗？
 
-### Regression behavior
+在它将来所在的那台机器上检查，按那台机器允许的内存、速度和上下文长度来测。只能在我们硬件上运行的适配器，等于没有测试过。
 
-检查 适配器 是否损害了 base model 原本已经能 acceptable 处理的 behavior。
+## 它能被关掉吗？
 
-- Baseline comparison examples
-- Output format stability
-- Refusal 或 over-answering 模式
-- 适配 引入的 weak cases
+在任何人依赖它之前，在真实的运行时里加载它、停用它、替换它、回滚它。事先决定什么情况会触发回滚，以及谁有权执行。
 
-### Boundary fit
+## 随适配器一起交付的东西
 
-检查 适配器 是否能在预期的 部署边界 内运行。
+适配器绝不应该以一个孤零零的文件交出去。它要附带一份简短的证据包：
 
-- Local 或 private 运行时 fit
-- Memory 与 latency expectations
-- 允许的 model 与 适配器 movement
-- Review 材料 保持靠近 工件
+- 它基于哪个基础模型训练
+- 哪些数据塑造了它，并注明对应的数据集卡片
+- 训练设置
+- 测试样例和结果
+- 它在哪里失败或变差
+- 如何启用、如何停用、如何回滚
+- 谁审查过它，是否已被接受
 
-### Activation path
+证据包不是为了让适配器显得好看，而是为了让任何人都能看清它的表现。
 
-检查 适配器 如何变为 active，以及如何被移除。
+## 上线前的六个问题
 
-- Loading path
-- Adapter selection
-- Disable path
-- Replacement 或 rollback path
+- 它要改进的是什么任务？哪些样例证明它做到了？
+- 哪些样例显示没有改进，或者出现了退步？
+- 测试用的是哪个基础模型和哪个运行时？
+- 如何启用？如何停用？
+- 什么情况会让我们回滚？
+- 谁批准它在你的员工或客户中使用？
 
-### Known limits
-
-记录在哪些情况下，适配器 不应在没有进一步 评审 的前提下被信任。
-
-- Unsupported input types
-- Unstable 输出 模式
-- Weak task examples
-- 需要 operator 评审 的 cases
-
-## 最小 证据 pack
-
-可部署的 适配器 不应作为一个 loose file 被 hand over。
-
-随 工件 保留一份紧凑的 证据 pack：
-
-- Adapter identity
-- Base model reference
-- Training data scope 或 dataset package reference
-- Configuration summary
-- Task examples 与 expected behavior
-- 与 baseline behavior 对照的 comparison examples
-- Failure 或 weak-case examples
-- Activation 与 回滚说明
-- Reviewer notes 或 acceptance status
-
-重点不是让 适配器 看起来更好。重点是让它的 behavior 可以被检查。
-
-## Review questions
-
-部署前，回答这些问题：
-
-- 这个 适配器 预计改进什么 task？
-- 哪些 examples 展示了这种改进？
-- 哪些 examples 显示没有改进或出现 regression？
-- Review 使用了什么 base model 与 运行时？
-- 哪个 来源 scope 或 dataset package 塑造了这个 适配器？
-- 适配器 如何被 activated？
-- 适配器 如何被 disabled 或 replaced？
-- 什么情况应触发 rollback？
-- 谁批准 customer-facing use？
-
-如果这些答案缺失，部署 就为时过早。
-
-## 一个有用的 评估 顺序
-
-### 1. Task examples
-
-从能代表 intended 工作流 的 examples 开始。
-
-Review 适配器 是否改进了它被训练所针对的 specific behavior。
-
-### 2. Regression checks
-
-与 baseline behavior 进行比较。
-
-寻找 formatting drift、更弱的 answers、不稳定的 结构，或让 评审 变得更困难的 behavior。
-
-### 3. Activation 评审
-
-确认 适配器 可以在预期 运行时 内被 loaded、disabled、replaced 与 rolled back。
-
-只有当 operational path 清晰时，评审 才算完成。
-
-## Takeaway
-
-不要单独部署 适配器。
-
-将 适配器 与它的 证据 pack 一起部署：
-
-- Target behavior
-- Comparison examples
-- Weak cases
-- Activation notes
-- Rollback path
-- Review status
-
-只有当一个本地 LoRA 适配器 能在客户可控环境内被 评审、activated，并且可 reversed 时，它才算准备就绪。
+六个问题都有了答案，适配器就可以进入你的环境，并且在那里可以被审查、启用和撤回。

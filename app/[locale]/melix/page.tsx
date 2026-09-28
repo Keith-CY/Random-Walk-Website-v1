@@ -3,7 +3,7 @@ import { Exhibit } from "@/components/site/exhibit";
 import { PaintingHero } from "@/components/site/painting-hero";
 import { isLocale } from "@/lib/i18n";
 import { localizedMetadata } from "@/lib/metadata";
-import { getSiteCopy, paintings } from "@/lib/site-copy";
+import { getPaintings, getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
@@ -13,7 +13,8 @@ const repository = "https://github.com/Keith-CY/melix";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/melix", "Melix", getSiteCopy(locale).melix.lede);
+  const copy = getSiteCopy(locale).melix;
+  return localizedMetadata(locale, "/melix", copy.kicker, copy.lede);
 }
 
 export default async function MelixPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -23,7 +24,7 @@ export default async function MelixPage({ params }: { params: Promise<{ locale: 
 
   return (
     <main>
-      <PaintingHero painting={paintings.melix} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="melix-title">
+      <PaintingHero painting={getPaintings(locale).melix} kicker={copy.kicker} title={copy.title} lede={copy.lede} titleId="melix-title">
         <div className="s-actions">
           <a className="s-btn" href={repository} rel="noopener noreferrer" target="_blank">{copy.repo}</a>
         </div>
@@ -33,7 +34,7 @@ export default async function MelixPage({ params }: { params: Promise<{ locale: 
         <div className="s-wrap"><Exhibit image={copy.window} /></div>
       </section>
 
-      <section className="s-section" aria-label="What Melix does">
+      <section className="s-section" aria-label={copy.capabilitiesLabel}>
         <div className="s-wrap s-split">
           <div>
             <h2 className="s-h2">{copy.loopTitle}</h2>

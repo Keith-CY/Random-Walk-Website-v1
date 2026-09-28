@@ -8,12 +8,51 @@ export type Layout = { lines: { y: number; words: LaidWord[] }[]; count: number 
 export type FlowOptions = { W: number; H: number; top: number; side: number; lh: number; font: string; stretch?: string; tokens: Token[]; excl: Rect[]; blue?: Set<string> };
 
 const cjk = /[぀-ヿ一-鿿가-힯]/;
+const trailing = /[.,;:’'。、，；：]+$/u;
 
-export function tokenize(paragraphs: readonly string[]): Token[] {
+type Segmenter = { segment: (input: string) => Iterable<{ segment: string }> };
+const segmenters = new Map<string, Segmenter | null>();
+
+function segmenterFor(lang: string): Segmenter | null {
+  if (!segmenters.has(lang)) {
+    const Ctor = (Intl as unknown as { Segmenter?: new (lang: string, o: { granularity: "word" }) => Segmenter }).Segmenter;
+    segmenters.set(lang, Ctor ? new Ctor(lang, { granularity: "word" }) : null);
+  }
+  return segmenters.get(lang) ?? null;
+}
+
+/** Words of a CJK run: the browser's word breaker when it has one, three characters at a time when not. */
+function pieces(run: string, lang: string): string[] {
+  const seg = segmenterFor(lang);
+  if (seg) return [...seg.segment(run)].map((s) => s.segment);
+  const out: string[] = [];
+  for (const part of run.split(/(\s+)/)) {
+    if (/^\s+$/.test(part)) out.push(part);
+    else for (let i = 0; i < part.length; i += 3) out.push(part.slice(i, i + 3));
+  }
+  return out;
+}
+
+/**
+ * Splits paragraphs into the words the lens reads. Latin text breaks at spaces. Chinese, Japanese and
+ * Korean break at word edges; text between a pair of "|" stays one word, so a highlighted word always stands on its own.
+ */
+export function tokenize(paragraphs: readonly string[], lang = "en"): Token[] {
   const out: Token[] = [];
   for (const p of paragraphs) {
     if (cjk.test(p)) {
-      for (let i = 0; i < p.length; i += 3) out.push({ t: p.slice(i, i + 3), cjk: i + 3 < p.length });
+      const start = out.length;
+      for (const [i, run] of p.split("|").entries()) {
+        for (const piece of i % 2 ? [run] : pieces(run, lang)) {
+          if (!piece) continue;
+          if (/^\s+$/.test(piece)) {
+            if (out.length > start) out[out.length - 1].cjk = false;
+          } else {
+            out.push({ t: piece, cjk: true });
+          }
+        }
+      }
+      if (out.length > start) out[out.length - 1].cjk = false;
     } else {
       for (const w of p.split(/\s+/)) if (w) out.push({ t: w });
     }
@@ -66,7 +105,7 @@ export function flow(ctx: CanvasRenderingContext2D, o: FlowOptions): Layout {
         const tk = o.tokens[k % n];
         const w = measure(tk.t);
         if (x + w > b) break;
-        words.push({ x, w, t: tk.t, blue: Boolean(o.blue?.has(tk.t.replace(/[.,;:’']+$/, ""))) });
+        words.push({ x, w, t: tk.t, blue: Boolean(o.blue?.has(tk.t.replace(trailing, ""))) });
         x += w + (tk.cjk ? 0 : space);
         k++;
       }

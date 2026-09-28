@@ -3,15 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { languageName, locales, localizePath, localizedPathForCurrentRoute, type Locale } from "@/lib/i18n";
-import { getSiteCopy } from "@/lib/site-copy";
+import type { SiteCopy } from "@/lib/site-copy";
 
 function isCurrent(pathname: string, locale: Locale, href: string) {
   const target = localizePath(locale, href);
   return pathname === target || pathname.startsWith(`${target}/`);
 }
 
-export function SiteNav({ locale, tone = "paper" }: { locale: Locale; tone?: "paper" | "night" }) {
-  const copy = getSiteCopy(locale).nav;
+export function SiteNav({ locale, copy, tone = "paper" }: { locale: Locale; copy: SiteCopy["nav"]; tone?: "paper" | "night" }) {
   const pathname = usePathname() ?? "/";
 
   const languages = (
@@ -34,7 +33,7 @@ export function SiteNav({ locale, tone = "paper" }: { locale: Locale; tone?: "pa
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/brand/logo-wordmark.svg" alt="Random Walk" width={150} height={26} />
       </Link>
-      <nav className="s-nav-links" aria-label="Primary">
+      <nav className="s-nav-links" aria-label={copy.primary}>
         {copy.items.map((item) => (
           <Link key={item.href} href={localizePath(locale, item.href)} aria-current={isCurrent(pathname, locale, item.href) ? "page" : undefined}>
             {item.label}

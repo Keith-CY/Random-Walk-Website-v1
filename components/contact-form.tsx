@@ -5,98 +5,20 @@ import { contactFieldOptions, validateContactPayload } from "@/lib/contact-schem
 import type { Locale } from "@/lib/i18n";
 import { speakingContactCopy } from "@/lib/site-data";
 
-const labels = {
-  industry: {
-    "legal-ip": "Research / IP",
-    "manufacturing-industrial": "Content / Design / Production",
-    "finance-insurance": "Operations / Internal Tools",
-    other: "Other"
-  },
-  use_case: {
-    "dataset-package": "Dataset Package",
-    "lora-adapter": "LoRA Adapter",
-    "private-deployment": "Private Deployment",
-    "evaluation-evidence": "Evaluation Evidence",
-    "air-gapped": "Air-gapped",
-    "speaking-workshop-panel": "Speaking / workshop / panel",
-    other: "Other"
-  },
-  deployment_target: {
-    "apple-silicon": "Apple Silicon",
-    "on-prem-gpu": "On-prem GPU",
-    "private-cloud": "Private Cloud",
-    "customer-vpc": "Customer VPC",
-    "air-gapped": "Air-gapped",
-    "edge-devices": "Edge Devices"
-  },
-  data_sensitivity: {
-    "trade-secrets": "Trade secrets",
-    "customer-data": "Customer data",
-    "legal-ip": "Legal / IP",
-    "regulated-records": "Regulated records",
-    "internal-knowledge": "Internal knowledge",
-    other: "Other"
-  },
-  air_gapped_required: {
-    yes: "Yes",
-    no: "No",
-    unsure: "Not sure"
-  },
-  onsite_intro: {
-    yes: "Yes",
-    no: "No",
-    unsure: "Not sure"
-  },
-  timeline: {
-    exploratory: "Exploratory",
-    "0-30-days": "0-30 days",
-    "1-3-months": "1-3 months",
-    "3-6-months": "3-6 months"
-  },
-  support_preference: {
-    "on-site": "On-site",
-    remote: "Remote",
-    hybrid: "Hybrid",
-    "continuous-tuning": "Continuous tuning"
-  }
-} as const;
-
 type ContactOptionLabels = {
   [Field in keyof typeof contactFieldOptions]: Record<(typeof contactFieldOptions)[Field][number], string>;
 };
 
-const contactFormCopy: Record<Locale, {
+type ContactFormCopy = {
   confidentialityTitle: string;
   confidentialityBody: string;
-  sections: {
-    contact: string;
-    useCase: string;
-    deploymentTarget: string;
-    sensitivitySupport: string;
-    message: string;
-  };
+  sections: { contact: string; useCase: string; deploymentTarget: string; sensitivitySupport: string; message: string };
   fields: {
-    name: string;
-    email: string;
-    company: string;
-    role: string;
-    industry: string;
-    useCase: string;
-    deploymentTarget: string;
-    dataSensitivity: string;
-    airGappedRequired: string;
-    onsiteIntro: string;
-    timeline: string;
-    supportPreference: string;
-    complianceConstraints: string;
-    message: string;
-    consent: string;
+    name: string; email: string; company: string; role: string; industry: string; useCase: string; deploymentTarget: string;
+    dataSensitivity: string; airGappedRequired: string; onsiteIntro: string; timeline: string; supportPreference: string;
+    complianceConstraints: string; message: string; consent: string;
   };
-  placeholders: {
-    selectOne: string;
-    complianceConstraints: string;
-    message: string;
-  };
+  placeholders: { selectOne: string; complianceConstraints: string; message: string };
   inlineWarning: string;
   sent: string;
   error: string;
@@ -105,187 +27,150 @@ const contactFormCopy: Record<Locale, {
   submitConfigured: string;
   submitFallback: string;
   emailSubject: string;
-  fallbackBodyLabels: {
-    name: string;
-    company: string;
-    useCase: string;
-    deployment: string;
-  };
+  fallbackBodyLabels: { name: string; company: string; useCase: string; deployment: string };
   options: ContactOptionLabels;
-}> = {
+};
+
+// Option values are validated by lib/contact-schema.ts and must not change; only the labels people read do.
+const contactFormCopy: Record<Locale, ContactFormCopy> = {
   en: {
-    confidentialityTitle: "Confidentiality warning",
-    confidentialityBody: "Please do not include confidential files, source code, customer records, patent drafts, legally privileged material, or trade secrets in this first-contact form.",
-    sections: { contact: "Contact", useCase: "Use case", deploymentTarget: "Deployment target", sensitivitySupport: "Sensitivity and support", message: "Message" },
+    confidentialityTitle: "Keep this first message general",
+    confidentialityBody: "Describe the kind of work and data, not the material itself. Please leave out confidential files, source code, customer records, patent drafts, privileged legal material and trade secrets.",
+    sections: { contact: "About you", useCase: "The work", deploymentTarget: "Where it has to run", sensitivitySupport: "Data and support", message: "Your message" },
     fields: {
-      name: "Name *",
-      email: "Work email *",
-      company: "Company *",
-      role: "Role",
-      industry: "Industry",
-      useCase: "Use case",
-      deploymentTarget: "Deployment target",
-      dataSensitivity: "Data sensitivity",
-      airGappedRequired: "Air-gapped required",
-      onsiteIntro: "FDE support mode",
-      timeline: "Timeline",
-      supportPreference: "Support preference",
-      complianceConstraints: "Compliance constraints",
-      message: "Message *",
-      consent: "I agree that Random Walk may use this information to review and respond to this inquiry. *"
+      name: "Name *", email: "Work email *", company: "Company *", role: "Role", industry: "Industry", useCase: "What you need",
+      deploymentTarget: "Where it has to run", dataSensitivity: "The most sensitive data involved", airGappedRequired: "Must it run with no outside connection?",
+      onsiteIntro: "Would you like to meet in person?", timeline: "When you would like to start", supportPreference: "How you would like us to work",
+      complianceConstraints: "Compliance requirements", message: "Message *", consent: "I agree that Random Walk may use this information to review and reply to my inquiry. *"
     },
     placeholders: {
-      selectOne: "Select one",
-      complianceConstraints: "Describe categories, constraints, and review requirements only. Do not include confidential details.",
-      message: "Describe the task, data category, deployment target, review needs, and support expectations. Do not include confidential material."
+      selectOne: "Choose one",
+      complianceConstraints: "The kinds of rules you work under, such as data residency or industry regulation. No confidential details.",
+      message: "What the work is, what data you keep, where the model has to run and how you review changes. No confidential material."
     },
-    inlineWarning: "Do not include confidential files, records, source code, or privileged material in this message.",
-    sent: "Thank you. We received your request and will review the deployment environment, data sensitivity category, and support needs before responding.",
-    error: "The form could not be submitted. Please check",
+    inlineWarning: "Please leave out confidential files, records, source code and privileged material.",
+    sent: "Thank you. We have your message and will reply within two business days.",
+    error: "We could not send the form. Please check",
     fieldError: "Please check this field.",
-    sending: "Sending...",
-    submitConfigured: "Submit project constraints",
-    submitFallback: "Prepare project inquiry",
-    emailSubject: "Private AI project scoping request",
-    fallbackBodyLabels: { name: "Name", company: "Company", useCase: "Use case", deployment: "Deployment" },
-    options: labels
+    sending: "Sending…",
+    submitConfigured: "Send",
+    submitFallback: "Write the email",
+    emailSubject: "Project inquiry",
+    fallbackBodyLabels: { name: "Name", company: "Company", useCase: "What you need", deployment: "Where it has to run" },
+    options: {
+      industry: { "legal-ip": "Research / IP", "manufacturing-industrial": "Content / Design / Production", "finance-insurance": "Operations / Internal Tools", other: "Other" },
+      use_case: { "dataset-package": "Build a dataset", "lora-adapter": "Train a model of our own", "private-deployment": "Deploy an existing model", "evaluation-evidence": "Test or review a model", "air-gapped": "Offline or air-gapped work", "speaking-workshop-panel": "A talk, workshop or panel", other: "Something else" },
+      deployment_target: { "apple-silicon": "Our Macs", "on-prem-gpu": "Our server room", "private-cloud": "Our private cloud", "customer-vpc": "Our cloud account", "air-gapped": "An air-gapped room", "edge-devices": "Devices in the field" },
+      data_sensitivity: { "trade-secrets": "Trade secrets", "customer-data": "Customer data", "legal-ip": "Legal or IP material", "regulated-records": "Regulated records", "internal-knowledge": "Internal knowledge", other: "Other" },
+      air_gapped_required: { yes: "Yes", no: "No", unsure: "Not sure" },
+      onsite_intro: { yes: "Yes", no: "No", unsure: "Not sure" },
+      timeline: { exploratory: "Just exploring", "0-30-days": "Within a month", "1-3-months": "In 1 to 3 months", "3-6-months": "In 3 to 6 months" },
+      support_preference: { "on-site": "On site", remote: "Remote", hybrid: "A mix of both", "continuous-tuning": "Ongoing retraining" }
+    }
   },
   zh: {
-    confidentialityTitle: "保密提示",
-    confidentialityBody: "请不要在首次联系表单中包含机密文件、源代码、客户记录、专利草稿、受法律特权保护的材料或商业秘密。",
-    sections: { contact: "联系信息", useCase: "使用场景", deploymentTarget: "部署目标", sensitivitySupport: "敏感度与支持", message: "消息" },
+    confidentialityTitle: "第一次联系，概括说明即可",
+    confidentialityBody: "请描述工作和数据的类型，不要提交材料本身。请勿附上机密文件、源代码、客户记录、专利草稿、受法律特权保护的材料或商业秘密。",
+    sections: { contact: "关于你", useCase: "工作内容", deploymentTarget: "需要在哪里运行", sensitivitySupport: "数据与合作方式", message: "留言" },
     fields: {
-      name: "姓名 *",
-      email: "工作邮箱 *",
-      company: "公司 *",
-      role: "职位",
-      industry: "行业",
-      useCase: "使用场景",
-      deploymentTarget: "部署目标",
-      dataSensitivity: "数据敏感度",
-      airGappedRequired: "是否需要隔离环境",
-      onsiteIntro: "FDE 支持方式",
-      timeline: "时间计划",
-      supportPreference: "支持偏好",
-      complianceConstraints: "合规约束",
-      message: "消息 *",
-      consent: "我同意 Random Walk 使用这些信息来评审并回复本次咨询。*"
+      name: "姓名 *", email: "工作邮箱 *", company: "公司 *", role: "职位", industry: "行业", useCase: "你需要什么",
+      deploymentTarget: "需要在哪里运行", dataSensitivity: "涉及的最敏感数据", airGappedRequired: "是否必须在完全断网的环境中运行？",
+      onsiteIntro: "希望当面沟通吗？", timeline: "希望何时开始", supportPreference: "希望的合作方式",
+      complianceConstraints: "合规要求", message: "留言 *", consent: "我同意 Random Walk 使用以上信息来评估并回复本次咨询。*"
     },
     placeholders: {
       selectOne: "请选择",
-      complianceConstraints: "只描述类别、约束和评审要求。不要包含机密细节。",
-      message: "描述任务、数据类别、部署目标、评审需求和支持预期。不要包含机密材料。"
+      complianceConstraints: "你们需要遵守的规则类型，例如数据存放地点或行业监管。请勿填写机密细节。",
+      message: "是什么工作、有哪些数据、模型需要在哪里运行、你们如何审查变更。请勿附上机密材料。"
     },
-    inlineWarning: "请勿在消息中包含机密文件、记录、源代码或受特权保护的材料。",
-    sent: "谢谢。我们已收到请求，会在回复前评审部署环境、数据敏感度类别和支持需求。",
-    error: "表单未能提交。请检查",
+    inlineWarning: "请勿在留言中附上机密文件、记录、源代码或受特权保护的材料。",
+    sent: "谢谢。我们已收到你的留言，会在两个工作日内回复。",
+    error: "表单未能发送，请检查",
     fieldError: "请检查此项。",
-    sending: "发送中...",
-    submitConfigured: "提交项目约束",
-    submitFallback: "准备项目咨询",
-    emailSubject: "私有 AI 项目界定请求",
-    fallbackBodyLabels: { name: "姓名", company: "公司", useCase: "使用场景", deployment: "部署目标" },
+    sending: "发送中…",
+    submitConfigured: "发送",
+    submitFallback: "生成邮件",
+    emailSubject: "项目咨询",
+    fallbackBodyLabels: { name: "姓名", company: "公司", useCase: "你需要什么", deployment: "需要在哪里运行" },
     options: {
       industry: { "legal-ip": "研究 / IP", "manufacturing-industrial": "内容 / 设计 / 生产", "finance-insurance": "运营 / 内部工具", other: "其他" },
-      use_case: { "dataset-package": "数据集包", "lora-adapter": "LoRA 适配器", "private-deployment": "私有部署", "evaluation-evidence": "评估证据", "air-gapped": "隔离环境", "speaking-workshop-panel": "演讲 / workshop / 圆桌", other: "其他" },
-      deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "本地 GPU", "private-cloud": "私有云", "customer-vpc": "客户 VPC", "air-gapped": "隔离环境", "edge-devices": "边缘设备" },
-      data_sensitivity: { "trade-secrets": "商业秘密", "customer-data": "客户数据", "legal-ip": "法律 / IP", "regulated-records": "受监管记录", "internal-knowledge": "内部知识", other: "其他" },
+      use_case: { "dataset-package": "构建数据集", "lora-adapter": "训练自己的模型", "private-deployment": "部署现有模型", "evaluation-evidence": "测试或评审模型", "air-gapped": "离线或隔离环境中的工作", "speaking-workshop-panel": "演讲、工作坊或圆桌", other: "其他" },
+      deployment_target: { "apple-silicon": "我们的 Mac", "on-prem-gpu": "我们的机房", "private-cloud": "我们的私有云", "customer-vpc": "我们的云账号", "air-gapped": "隔离机房", "edge-devices": "现场设备" },
+      data_sensitivity: { "trade-secrets": "商业秘密", "customer-data": "客户数据", "legal-ip": "法律或知识产权材料", "regulated-records": "受监管的记录", "internal-knowledge": "内部知识", other: "其他" },
       air_gapped_required: { yes: "是", no: "否", unsure: "不确定" },
       onsite_intro: { yes: "是", no: "否", unsure: "不确定" },
-      timeline: { exploratory: "探索阶段", "0-30-days": "0-30 天", "1-3-months": "1-3 个月", "3-6-months": "3-6 个月" },
-      support_preference: { "on-site": "现场", remote: "远程", hybrid: "混合", "continuous-tuning": "持续调优" }
+      timeline: { exploratory: "先了解看看", "0-30-days": "一个月内", "1-3-months": "1 到 3 个月内", "3-6-months": "3 到 6 个月内" },
+      support_preference: { "on-site": "现场", remote: "远程", hybrid: "两者结合", "continuous-tuning": "持续再训练" }
     }
   },
   ja: {
-    confidentialityTitle: "機密情報に関する注意",
-    confidentialityBody: "初回連絡フォームには、機密ファイル、ソースコード、顧客記録、特許草案、法的秘匿特権のある資料、営業秘密を含めないでください。",
-    sections: { contact: "連絡先", useCase: "用途", deploymentTarget: "配備先", sensitivitySupport: "感度とサポート", message: "メッセージ" },
+    confidentialityTitle: "最初のご連絡は概要だけで結構です",
+    confidentialityBody: "資料そのものではなく、業務やデータの種類をお書きください。機密ファイル、ソースコード、顧客記録、特許の草案、法的秘匿特権のある資料、営業秘密は含めないでください。",
+    sections: { contact: "ご連絡先", useCase: "ご依頼の内容", deploymentTarget: "稼働させる場所", sensitivitySupport: "データと進め方", message: "メッセージ" },
     fields: {
-      name: "氏名 *",
-      email: "業務用メール *",
-      company: "会社名 *",
-      role: "役割",
-      industry: "業界",
-      useCase: "用途",
-      deploymentTarget: "配備先",
-      dataSensitivity: "データ感度",
-      airGappedRequired: "エアギャップ要否",
-      onsiteIntro: "FDE 支援方式",
-      timeline: "時期",
-      supportPreference: "サポート希望",
-      complianceConstraints: "コンプライアンス制約",
-      message: "メッセージ *",
-      consent: "Random Walk が本問い合わせの確認と返信のためにこの情報を利用することに同意します。*"
+      name: "氏名 *", email: "業務用メールアドレス *", company: "会社名 *", role: "役職", industry: "業界", useCase: "必要なこと",
+      deploymentTarget: "稼働させる場所", dataSensitivity: "扱うデータのうち最も機密性の高いもの", airGappedRequired: "外部と完全に切り離して動かす必要がありますか？",
+      onsiteIntro: "対面での打ち合わせをご希望ですか？", timeline: "開始のご希望時期", supportPreference: "ご希望の進め方",
+      complianceConstraints: "コンプライアンス上の要件", message: "メッセージ *", consent: "本件の確認とご返信のために、Random Walk がこの情報を利用することに同意します。*"
     },
     placeholders: {
       selectOne: "選択してください",
-      complianceConstraints: "カテゴリ、制約、レビュー要件のみを記載してください。機密詳細は含めないでください。",
-      message: "タスク、データ分類、配備先、レビュー要件、サポート期待値を記載してください。機密資料は含めないでください。"
+      complianceConstraints: "データの保管場所や業界の規制など、守る必要のあるルールの種類。機密の詳細は含めないでください。",
+      message: "どのような業務か、どのようなデータをお持ちか、モデルをどこで動かす必要があるか、変更をどう確認されているか。機密資料は含めないでください。"
     },
-    inlineWarning: "このメッセージに機密ファイル、記録、ソースコード、秘匿特権のある資料を含めないでください。",
-    sent: "ありがとうございます。配備環境、データ感度区分、サポート要件を確認したうえで返信します。",
-    error: "フォームを送信できませんでした。確認してください",
-    fieldError: "この項目を確認してください。",
-    sending: "送信中...",
-    submitConfigured: "プロジェクト制約を送信",
-    submitFallback: "プロジェクト相談を準備",
-    emailSubject: "プライベート AI プロジェクト相談",
-    fallbackBodyLabels: { name: "氏名", company: "会社名", useCase: "用途", deployment: "配備先" },
+    inlineWarning: "機密ファイル、記録、ソースコード、秘匿特権のある資料は含めないでください。",
+    sent: "ありがとうございます。メッセージを受け取りました。2 営業日以内にご返信します。",
+    error: "送信できませんでした。次の項目をご確認ください",
+    fieldError: "この項目をご確認ください。",
+    sending: "送信中…",
+    submitConfigured: "送信する",
+    submitFallback: "メールを作成する",
+    emailSubject: "プロジェクトのご相談",
+    fallbackBodyLabels: { name: "氏名", company: "会社名", useCase: "必要なこと", deployment: "稼働させる場所" },
     options: {
-      industry: { "legal-ip": "研究 / IP", "manufacturing-industrial": "コンテンツ / デザイン / 制作", "finance-insurance": "運用 / 内部ツール", other: "その他" },
-      use_case: { "dataset-package": "データセットパッケージ", "lora-adapter": "LoRA アダプター", "private-deployment": "プライベート配備", "evaluation-evidence": "評価証拠", "air-gapped": "エアギャップ", "speaking-workshop-panel": "登壇 / ワークショップ / パネル", other: "その他" },
-      deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "オンプレ GPU", "private-cloud": "プライベートクラウド", "customer-vpc": "顧客 VPC", "air-gapped": "エアギャップ", "edge-devices": "エッジデバイス" },
-      data_sensitivity: { "trade-secrets": "営業秘密", "customer-data": "顧客データ", "legal-ip": "法律 / IP", "regulated-records": "規制対象記録", "internal-knowledge": "内部知識", other: "その他" },
+      industry: { "legal-ip": "研究 / IP", "manufacturing-industrial": "コンテンツ / デザイン / 制作", "finance-insurance": "運用 / 社内ツール", other: "その他" },
+      use_case: { "dataset-package": "データセットの構築", "lora-adapter": "自社専用モデルの学習", "private-deployment": "既存モデルの導入", "evaluation-evidence": "モデルの評価・レビュー", "air-gapped": "オフライン・エアギャップ環境での作業", "speaking-workshop-panel": "講演・ワークショップ・パネル", other: "その他" },
+      deployment_target: { "apple-silicon": "自社の Mac", "on-prem-gpu": "自社のサーバールーム", "private-cloud": "自社のプライベートクラウド", "customer-vpc": "自社のクラウドアカウント", "air-gapped": "エアギャップ環境", "edge-devices": "現場の端末" },
+      data_sensitivity: { "trade-secrets": "営業秘密", "customer-data": "顧客データ", "legal-ip": "法務・知的財産の資料", "regulated-records": "規制対象の記録", "internal-knowledge": "社内のナレッジ", other: "その他" },
       air_gapped_required: { yes: "はい", no: "いいえ", unsure: "未定" },
       onsite_intro: { yes: "はい", no: "いいえ", unsure: "未定" },
-      timeline: { exploratory: "検討段階", "0-30-days": "0-30 日", "1-3-months": "1-3 か月", "3-6-months": "3-6 か月" },
-      support_preference: { "on-site": "オンサイト", remote: "リモート", hybrid: "ハイブリッド", "continuous-tuning": "継続調整" }
+      timeline: { exploratory: "まずは情報収集", "0-30-days": "1 か月以内", "1-3-months": "1〜3 か月以内", "3-6-months": "3〜6 か月以内" },
+      support_preference: { "on-site": "オンサイト", remote: "リモート", hybrid: "両方の組み合わせ", "continuous-tuning": "継続的な再学習" }
     }
   },
   ko: {
-    confidentialityTitle: "기밀 정보 안내",
-    confidentialityBody: "최초 연락 양식에는 기밀 파일, 소스 코드, 고객 기록, 특허 초안, 법적 특권 자료 또는 영업 비밀을 포함하지 마세요.",
-    sections: { contact: "연락처", useCase: "사용 사례", deploymentTarget: "배포 대상", sensitivitySupport: "민감도와 지원", message: "메시지" },
+    confidentialityTitle: "첫 문의는 개요만 적어 주세요",
+    confidentialityBody: "자료 자체가 아니라 업무와 데이터의 종류를 설명해 주세요. 기밀 파일, 소스 코드, 고객 기록, 특허 초안, 법적 특권 자료, 영업 비밀은 포함하지 마세요.",
+    sections: { contact: "연락처", useCase: "업무 내용", deploymentTarget: "실행 위치", sensitivitySupport: "데이터와 진행 방식", message: "메시지" },
     fields: {
-      name: "이름 *",
-      email: "업무용 이메일 *",
-      company: "회사 *",
-      role: "역할",
-      industry: "산업",
-      useCase: "사용 사례",
-      deploymentTarget: "배포 대상",
-      dataSensitivity: "데이터 민감도",
-      airGappedRequired: "에어갭 필요 여부",
-      onsiteIntro: "FDE 지원 방식",
-      timeline: "일정",
-      supportPreference: "지원 선호",
-      complianceConstraints: "컴플라이언스 제약",
-      message: "메시지 *",
-      consent: "Random Walk가 이 문의를 검토하고 응답하기 위해 이 정보를 사용하는 데 동의합니다. *"
+      name: "이름 *", email: "업무용 이메일 *", company: "회사 *", role: "직책", industry: "업종", useCase: "필요한 것",
+      deploymentTarget: "실행 위치", dataSensitivity: "관련 데이터 중 가장 민감한 것", airGappedRequired: "외부와 완전히 분리된 환경에서 실행해야 하나요?",
+      onsiteIntro: "직접 만나서 이야기하고 싶으신가요?", timeline: "희망 시작 시기", supportPreference: "희망하는 진행 방식",
+      complianceConstraints: "컴플라이언스 요건", message: "메시지 *", consent: "Random Walk가 이 문의를 검토하고 답변하기 위해 위 정보를 사용하는 데 동의합니다. *"
     },
     placeholders: {
       selectOne: "선택하세요",
-      complianceConstraints: "범주, 제약, 검토 요구사항만 설명하세요. 기밀 세부 정보는 포함하지 마세요.",
-      message: "작업, 데이터 범주, 배포 대상, 검토 필요, 지원 기대치를 설명하세요. 기밀 자료는 포함하지 마세요."
+      complianceConstraints: "데이터 보관 위치나 업계 규제처럼 지켜야 하는 규칙의 종류. 기밀 세부 정보는 적지 마세요.",
+      message: "어떤 업무인지, 어떤 데이터가 있는지, 모델을 어디에서 실행해야 하는지, 변경 사항을 어떻게 검토하는지. 기밀 자료는 포함하지 마세요."
     },
-    inlineWarning: "이 메시지에 기밀 파일, 기록, 소스 코드 또는 특권 자료를 포함하지 마세요.",
-    sent: "감사합니다. 배포 환경, 데이터 민감도 범주, 지원 요구를 검토한 후 응답하겠습니다.",
-    error: "양식을 제출할 수 없습니다. 확인하세요",
-    fieldError: "이 항목을 확인하세요.",
-    sending: "전송 중...",
-    submitConfigured: "프로젝트 제약 제출",
-    submitFallback: "프로젝트 문의 준비",
-    emailSubject: "프라이빗 AI 프로젝트 범위화 요청",
-    fallbackBodyLabels: { name: "이름", company: "회사", useCase: "사용 사례", deployment: "배포 대상" },
+    inlineWarning: "기밀 파일, 기록, 소스 코드, 특권 자료는 포함하지 마세요.",
+    sent: "감사합니다. 메시지를 받았으며 영업일 기준 2일 이내에 답변드리겠습니다.",
+    error: "양식을 보내지 못했습니다. 다음 항목을 확인해 주세요",
+    fieldError: "이 항목을 확인해 주세요.",
+    sending: "보내는 중…",
+    submitConfigured: "보내기",
+    submitFallback: "이메일 작성",
+    emailSubject: "프로젝트 문의",
+    fallbackBodyLabels: { name: "이름", company: "회사", useCase: "필요한 것", deployment: "실행 위치" },
     options: {
-      industry: { "legal-ip": "연구 / IP", "manufacturing-industrial": "콘텐츠 / 디자인 / 제작", "finance-insurance": "운영 / 내부 도구", other: "기타" },
-      use_case: { "dataset-package": "데이터셋 패키지", "lora-adapter": "LoRA 어댑터", "private-deployment": "프라이빗 배포", "evaluation-evidence": "평가 증거", "air-gapped": "에어갭", "speaking-workshop-panel": "발표 / 워크숍 / 패널", other: "기타" },
-      deployment_target: { "apple-silicon": "Apple Silicon", "on-prem-gpu": "온프레미스 GPU", "private-cloud": "프라이빗 클라우드", "customer-vpc": "고객 VPC", "air-gapped": "에어갭", "edge-devices": "엣지 디바이스" },
-      data_sensitivity: { "trade-secrets": "영업 비밀", "customer-data": "고객 데이터", "legal-ip": "법률 / IP", "regulated-records": "규제 기록", "internal-knowledge": "내부 지식", other: "기타" },
+      industry: { "legal-ip": "연구 / IP", "manufacturing-industrial": "콘텐츠 / 디자인 / 제작", "finance-insurance": "운영 / 사내 도구", other: "기타" },
+      use_case: { "dataset-package": "데이터셋 구축", "lora-adapter": "자체 모델 학습", "private-deployment": "기존 모델 도입", "evaluation-evidence": "모델 테스트 또는 검토", "air-gapped": "오프라인·에어갭 환경 작업", "speaking-workshop-panel": "강연·워크숍·패널", other: "기타" },
+      deployment_target: { "apple-silicon": "우리 회사의 Mac", "on-prem-gpu": "우리 회사의 서버실", "private-cloud": "우리 회사의 프라이빗 클라우드", "customer-vpc": "우리 회사의 클라우드 계정", "air-gapped": "에어갭 환경", "edge-devices": "현장 기기" },
+      data_sensitivity: { "trade-secrets": "영업 비밀", "customer-data": "고객 데이터", "legal-ip": "법률·지식재산 자료", "regulated-records": "규제 대상 기록", "internal-knowledge": "사내 지식", other: "기타" },
       air_gapped_required: { yes: "예", no: "아니요", unsure: "미정" },
       onsite_intro: { yes: "예", no: "아니요", unsure: "미정" },
-      timeline: { exploratory: "검토 단계", "0-30-days": "0-30일", "1-3-months": "1-3개월", "3-6-months": "3-6개월" },
-      support_preference: { "on-site": "온사이트", remote: "원격", hybrid: "하이브리드", "continuous-tuning": "지속 튜닝" }
+      timeline: { exploratory: "우선 알아보는 중", "0-30-days": "한 달 이내", "1-3-months": "1~3개월 이내", "3-6-months": "3~6개월 이내" },
+      support_preference: { "on-site": "현장 방문", remote: "원격", hybrid: "둘 다", "continuous-tuning": "지속적인 재학습" }
     }
   }
 };

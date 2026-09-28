@@ -11,7 +11,8 @@ export const dynamic = "force-static";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return localizedMetadata(locale, "/security", "Security", getSiteCopy(locale).security.lede);
+  const copy = getSiteCopy(locale).security;
+  return localizedMetadata(locale, "/security", copy.kicker, copy.lede);
 }
 
 export default async function SecurityPage({ params }: { params: Promise<{ locale: string }> }) {

@@ -3,12 +3,15 @@ import { MotionController } from "@/components/motion-controller";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { isLocale, locales, type Locale } from "@/lib/i18n";
-import { fontVariables } from "@/lib/fonts";
-import { ogImage, ogLocales } from "@/lib/metadata";
+import { cjkSerif, fontVariables } from "@/lib/fonts";
+import { ogImageFor, ogLocales } from "@/lib/metadata";
 import { getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-static";
+
+// Simplified Chinese needs its script named so browsers pick the right glyphs and fonts.
+const htmlLang: Record<Locale, string> = { en: "en", zh: "zh-Hans", ja: "ja", ko: "ko" };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -19,11 +22,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const siteDescription = getSiteCopy(locale).home.description;
+  const copy = getSiteCopy(locale);
+  const siteDescription = copy.home.description;
+  const siteTitle = `Random Walk - ${copy.meta.siteTitle}`;
+  const image = ogImageFor(locale, "/", siteTitle);
 
   return {
     title: {
-      default: "An AI lab for growing companies",
+      default: copy.meta.siteTitle,
       template: "%s - Random Walk"
     },
     description: siteDescription,
@@ -32,18 +38,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       languages: { ...Object.fromEntries(locales.map((item) => [item, `/${item}/`])), "x-default": "/en/" }
     },
     openGraph: {
-      title: "Random Walk - An AI lab for growing companies",
+      title: siteTitle,
       description: siteDescription,
       type: "website",
       siteName: "Random Walk",
       locale: ogLocales[locale],
-      images: [ogImage]
+      images: [image]
     },
     twitter: {
       card: "summary_large_image",
-      title: "Random Walk - An AI lab for growing companies",
+      title: siteTitle,
       description: siteDescription,
-      images: [ogImage.url]
+      images: [image.url]
     }
   };
 }
@@ -54,11 +60,12 @@ export default async function LocaleLayout({ children, params }: Readonly<{ chil
   const locale = rawLocale as Locale;
 
   return (
-    <html lang={locale} className={fontVariables}>
+    <html lang={htmlLang[locale]} className={fontVariables}>
+      <head>{cjkSerif[locale] ? <link rel="stylesheet" href={cjkSerif[locale]} /> : null}</head>
       <body>
         <div className="flex min-h-dvh flex-col">
           <MotionController />
-          <SiteHeader locale={locale} />
+          <SiteHeader locale={locale} nav={getSiteCopy(locale).nav} />
           <div className="flex-1">{children}</div>
           <SiteFooter locale={locale} />
         </div>

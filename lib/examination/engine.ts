@@ -1,4 +1,4 @@
-import { candidatesFor, corpora, domains, highlighted, painting, steps, type Domain } from "./data";
+import { candidatesFor, painting, type Domain, type ExaminationContent } from "./data";
 import { fragmentShader, uniformNames, vertexShader, type UniformName } from "./shaders";
 import { drawMask, flow, tokenize, type Layout, type Rect } from "./text-layout";
 
@@ -47,7 +47,9 @@ function loadImage(src: string) {
   });
 }
 
-export function createExamination(el: ExaminationElements, cb: ExaminationCallbacks, opts: { reduce: boolean; fontFamily: string }): Examination | null {
+export function createExamination(el: ExaminationElements, cb: ExaminationCallbacks, opts: { reduce: boolean; fontFamily: string; content: ExaminationContent }): Examination | null {
+  const { steps, domains, corpora, lexicon } = opts.content;
+  const highlighted = new Set(opts.content.highlighted);
   const gl = el.canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false, preserveDrawingBuffer: false });
   if (!gl) return null;
 
@@ -142,7 +144,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     target.height = Math.round(H * dpr);
     const ctx = target.getContext("2d");
     if (!ctx) return;
-    const o = { W, H, top: TOP, side: 8, lh: LINE_HEIGHT, font, stretch: "semi-condensed", tokens: tokenize(paragraphs), excl: rectsOf(el.obstacles(current), 14), blue: highlighted };
+    const o = { W, H, top: TOP, side: 8, lh: LINE_HEIGHT, font, stretch: "semi-condensed", tokens: tokenize(paragraphs, opts.content.lang), excl: rectsOf(el.obstacles(current), 14), blue: highlighted };
     const l = flow(ctx, o);
     drawMask(target, l, o, dpr);
     upload(target, into === "B" ? tB : tA, into === "B" ? 3 : 2);
@@ -255,7 +257,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
   function showTip(x: number, y: number, word: string) {
     const r = el.stage.getBoundingClientRect();
     el.tip.replaceChildren(
-      ...candidatesFor(word).map(([w, p]) => {
+      ...candidatesFor(word, lexicon).map(([w, p]) => {
         const row = document.createElement("div");
         row.className = "x-tip-row";
         const label = document.createElement("span");
@@ -267,7 +269,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
         row.append(label, bar, value);
         return row;
       }),
-      Object.assign(document.createElement("p"), { textContent: "Odds for the next word" })
+      Object.assign(document.createElement("p"), { textContent: opts.content.tip })
     );
     const left = x > r.width * 0.55 ? x - 124 - 220 : x + 124;
     el.tip.style.left = `${left}px`;
@@ -292,7 +294,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     const m = coverRect(r.width, r.height, imageSize[0], imageSize[1], painting.focus[0], painting.focus[1]);
     el.xy.textContent = `x ${clamp((x - m.x) / m.w, 0, 1).toFixed(3)} · y ${clamp((y - m.y) / m.h, 0, 1).toFixed(3)}`;
     const word = wordAt(x, y);
-    if (!word || !/[a-z]{2}/i.test(word.t)) {
+    if (!word || !/\p{L}{2}/u.test(word.t)) {
       delete el.tip.dataset.on;
       return;
     }

@@ -6,7 +6,7 @@ import { getSiteCopy } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
 
-export const metadata = localizedMetadata(defaultLocale, "/services", "Services", getSiteCopy(defaultLocale).services.lede);
+export const metadata = localizedMetadata(defaultLocale, "/services", getSiteCopy(defaultLocale).services.kicker, getSiteCopy(defaultLocale).services.lede);
 
 export default async function ServicesAliasPage() {
   return (

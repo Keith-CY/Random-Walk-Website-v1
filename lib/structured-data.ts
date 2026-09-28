@@ -1,10 +1,11 @@
+import { locales, type Locale } from "./i18n";
 import { siteUrl } from "./metadata";
-import { company } from "./site-copy";
+import { company, getSiteCopy } from "./site-copy";
 
 const organizationId = `${siteUrl}/#organization`;
 
 // The public site gives the address to the neighbourhood only; the street address lives on the legal pages.
-export function organizationData() {
+export function organizationData(locale: Locale) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -17,8 +18,8 @@ export function organizationData() {
         url: `${siteUrl}/`,
         logo: `${siteUrl}/apple-touch-icon.png`,
         email: company.email,
-        foundingDate: "2022-09-14",
-        description: "An AI lab for growing companies: model selection, datasets, training, deployment on your own machines and upkeep.",
+        foundingDate: company.registeredIso,
+        description: getSiteCopy(locale).home.description,
         address: { "@type": "PostalAddress", addressLocality: "Higashiyamato", addressRegion: "Tokyo", addressCountry: "JP" },
         knowsAbout: ["Custom language models", "Datasets", "Fine-tuning", "Model evaluation", "On-premises AI deployment", "Apple Silicon inference"]
       },
@@ -27,7 +28,7 @@ export function organizationData() {
         "@id": `${siteUrl}/#website`,
         name: "Random Walk",
         url: `${siteUrl}/`,
-        inLanguage: ["en", "zh", "ja", "ko"],
+        inLanguage: [...locales],
         publisher: { "@id": organizationId }
       }
     ]
