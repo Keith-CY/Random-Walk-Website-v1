@@ -8,6 +8,8 @@ export type ExaminationElements = {
   exam: HTMLElement;
   stage: HTMLElement;
   canvas: HTMLCanvasElement;
+  /** The magnifier: a small 2D canvas that follows the pointer and sets the words at full resolution. */
+  lens: HTMLCanvasElement;
   map: HTMLElement;
   tip: HTMLElement;
   xy: HTMLElement;
@@ -27,6 +29,7 @@ export type Examination = {
 
 const LINE_HEIGHT = 10;
 const TOP = 6;
+const MAG = 2.3;
 const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
@@ -286,13 +289,13 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     const y = e.clientY - r.top;
     const target = e.target as Element | null;
     if (target?.closest("a, button, [data-lens-off]")) {
-      if (lens[2]) requestRender();
       lens = [0, 0, 0];
+      drawLens();
       delete el.tip.dataset.on;
       return;
     }
     lens = [x, y, window.innerWidth < 600 ? 66 : 104];
-    requestRender();
+    drawLens();
     const m = coverRect(r.width, r.height, imageSize[0], imageSize[1], painting.focus[0], painting.focus[1]);
     el.xy.textContent = `x ${clamp((x - m.x) / m.w, 0, 1).toFixed(3)} · y ${clamp((y - m.y) / m.h, 0, 1).toFixed(3)}`;
     const word = wordAt(x, y);
@@ -304,8 +307,78 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
   }
   function onLeave() {
     lens = [0, 0, 0];
+    drawLens();
     delete el.tip.dataset.on;
-    requestRender();
+  }
+
+  // The magnifier sets the words as text at the screen's own resolution, so they stay sharp at any
+  // magnification: clean dark glass, the words 2.3 times larger, and the blue rim with its four ticks.
+  function drawLens() {
+    const [lx, ly, r] = lens;
+    const canvas = el.lens;
+    if (!r || !layA || current < 0 || !ready) {
+      canvas.style.visibility = "hidden";
+      return;
+    }
+    const pad = 12;
+    const size = (r + pad) * 2;
+    const ldpr = Math.min(3, window.devicePixelRatio || 1);
+    if (canvas.width !== Math.round(size * ldpr)) {
+      canvas.width = canvas.height = Math.round(size * ldpr);
+      canvas.style.width = canvas.style.height = `${size}px`;
+    }
+    canvas.style.transform = `translate(${lx - r - pad}px, ${ly - r - pad}px)`;
+    canvas.style.visibility = "visible";
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const c = r + pad;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(ldpr, 0, 0, ldpr, 0, 0);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(c, c, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#0e0c0a";
+    ctx.fill();
+    ctx.clip();
+    ctx.translate(c, c);
+    ctx.scale(MAG, MAG);
+    ctx.translate(-lx, -ly);
+    ctx.font = font;
+    if ("fontStretch" in ctx) ctx.fontStretch = "semi-condensed";
+    const swapping = swapStart > 0 && layB;
+    const first = Math.max(0, Math.floor((ly - r / MAG - TOP) / LINE_HEIGHT) - 1);
+    const last = Math.floor((ly + r / MAG - TOP) / LINE_HEIGHT) + 1;
+    for (let i = first; i <= last; i++) {
+      for (const [lay, before] of swapping ? ([[layB, true], [layA, false]] as const) : ([[layA, false]] as const)) {
+        const line = lay?.lines[i];
+        if (!line) continue;
+        for (const w of line.words) {
+          const pos = i + w.x / W;
+          if (swapping && (pos < swap) !== before) continue;
+          if (writing && pos >= reveal) continue;
+          if (w.x + w.w < lx - r / MAG - 4 || w.x > lx + r / MAG + 4) continue;
+          ctx.fillStyle = w.blue ? "#8c98ff" : "#efe8da";
+          ctx.fillText(w.t, w.x, line.y + LINE_HEIGHT * 0.78);
+        }
+      }
+    }
+    ctx.restore();
+
+    ctx.strokeStyle = "#2437ff";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(c, c, r, 0, Math.PI * 2);
+    ctx.moveTo(c + r, c);
+    ctx.lineTo(c + r + 9, c);
+    ctx.moveTo(c - r, c);
+    ctx.lineTo(c - r - 9, c);
+    ctx.moveTo(c, c + r);
+    ctx.lineTo(c, c + r + 9);
+    ctx.moveTo(c, c - r);
+    ctx.lineTo(c, c - r - 9);
+    ctx.stroke();
   }
 
   // Draw only when something changed: a scroll, the lens, a demo switch, or while a transition runs.
@@ -366,8 +439,6 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     g.uniform2fv(u.uGSize, ghostSize);
     g.uniform2fv(u.uFocus, painting.focus);
     g.uniform2f(u.uGOff, 0, 0);
-    g.uniform3f(u.uLens, lens[0] * dpr, lens[1] * dpr, lens[2] * dpr);
-    g.uniform1f(u.uLensMode, steps[current].mode);
     g.uniform1f(u.uA, from);
     g.uniform1f(u.uB, to);
     g.uniform1f(u.uSweep, sweep);
@@ -378,7 +449,6 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     g.uniform1f(u.uLh, LINE_HEIGHT * dpr);
     g.uniform1f(u.uBlur, blur);
     g.uniform2fv(u.uSSize, softSize);
-    g.uniform1f(u.uMag, 2.3);
     g.uniform1f(u.uGam, 1);
     g.uniform1f(u.uGain, 1.3);
     g.uniform1f(u.uUnder, 0.74);
@@ -391,6 +461,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
       g.bindTexture(g.TEXTURE_2D, t);
     });
     g.drawArrays(g.TRIANGLE_STRIP, 0, 4);
+    drawLens();
     if (!ready) {
       ready = true;
       el.stage.dataset.ready = "true";

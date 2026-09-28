@@ -16,8 +16,7 @@ export const fragmentShader = common + `
 uniform sampler2D uImg, uGhost, uMaskA, uMaskB, uSoft;
 uniform vec2 uSSize;
 uniform vec2 uRes, uSize, uGSize, uFocus, uGOff;
-uniform vec3 uLens;
-uniform float uA, uB, uSweep, uTime, uLensMode, uDpr, uWriting, uReveal, uSwap, uTop, uLh, uBlur, uMag, uGam, uGain, uUnder;
+uniform float uA, uB, uSweep, uTime, uDpr, uWriting, uReveal, uSwap, uTop, uLh, uBlur, uGam, uGain, uUnder;
 uniform vec4 uSpot0, uSpot1, uSpot2, uSpot3, uClear0;
 vec2 cover(vec2 uv){
   float ar = uRes.x / uRes.y, ir = uSize.x / uSize.y;
@@ -116,23 +115,12 @@ void main(){
     float dh = abs(fp.x - sx) / uDpr;
     col += vec3(.55, .62, 1.) * exp(-dh * .8) * .9 + vec3(.14, .22, 1.) * exp(-dh * .04) * .06;
   }
-  if (uLens.z > 0.) {
-    float ld = distance(fp, uLens.xy);
-    if (ld < uLens.z) {
-      vec2 sp = uLens.xy + (fp - uLens.xy) / uMag;
-      vec3 m = msk(sp); vec3 c = layer(cover(sp / uRes), uLensMode);
-      col = mix(mix(c * .16, clamp(c * 1.2 + .3, 0., 1.), m.r), vec3(.35, .45, 1.), m.b);
-    }
-    col = mix(col, vec3(.14, .22, 1.), (1. - smoothstep(0., 1.4 * uDpr, abs(ld - uLens.z))) * .95);
-    float out9 = step(uLens.z, ld) * step(ld, uLens.z + 9. * uDpr);
-    col = mix(col, vec3(.14, .22, 1.), clamp(out9 * (step(abs(fp.y - uLens.y), .7 * uDpr) + step(abs(fp.x - uLens.x), .7 * uDpr)), 0., 1.));
-  }
   vec2 q = (v - .5) * vec2(uRes.x / uRes.y, 1.);
   col *= mix(1., smoothstep(1.3, .3, length(q)), .35);
   col += (h(fp + fract(uTime * 11.) * 97.) - .5) * .035;
   gl_FragColor = vec4(col, 1.);
 }`;
 
-export const uniformNames = ["uSoft", "uSSize", "uImg", "uGhost", "uMaskA", "uMaskB", "uRes", "uSize", "uGSize", "uFocus", "uGOff", "uLens", "uA", "uB", "uSweep", "uTime", "uLensMode", "uDpr", "uWriting", "uReveal", "uSwap", "uTop", "uLh", "uBlur", "uMag", "uGam", "uGain", "uUnder", "uSpot0", "uSpot1", "uSpot2", "uSpot3", "uClear0"] as const;
+export const uniformNames = ["uSoft", "uSSize", "uImg", "uGhost", "uMaskA", "uMaskB", "uRes", "uSize", "uGSize", "uFocus", "uGOff", "uA", "uB", "uSweep", "uTime", "uDpr", "uWriting", "uReveal", "uSwap", "uTop", "uLh", "uBlur", "uGam", "uGain", "uUnder", "uSpot0", "uSpot1", "uSpot2", "uSpot3", "uClear0"] as const;
 
 export type UniformName = (typeof uniformNames)[number];

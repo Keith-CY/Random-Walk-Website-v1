@@ -28,6 +28,7 @@ export function Examination({ locale, nav, lensHint, email, still, content, mark
   const examRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lensRef = useRef<HTMLCanvasElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
   const xyRef = useRef<HTMLElement>(null);
@@ -38,8 +39,8 @@ export function Examination({ locale, nav, lensHint, email, still, content, mark
   const [model, setModel] = useState<Model>("base");
 
   useEffect(() => {
-    const exam = examRef.current, stage = stageRef.current, canvas = canvasRef.current, map = mapRef.current, tip = tipRef.current, xy = xyRef.current;
-    if (!exam || !stage || !canvas || !map || !tip || !xy) return;
+    const exam = examRef.current, stage = stageRef.current, canvas = canvasRef.current, lens = lensRef.current, map = mapRef.current, tip = tipRef.current, xy = xyRef.current;
+    if (!exam || !stage || !canvas || !lens || !map || !tip || !xy) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fontFamily = getComputedStyle(document.documentElement).getPropertyValue("--font-text").trim() || "Archivo, sans-serif";
     let marksTimer = 0;
@@ -48,6 +49,7 @@ export function Examination({ locale, nav, lensHint, email, still, content, mark
         exam,
         stage,
         canvas,
+        lens,
         map,
         tip,
         xy,
@@ -122,6 +124,7 @@ export function Examination({ locale, nav, lensHint, email, still, content, mark
           ))}
         </div>
         <div className="x-veil" />
+        <canvas className="x-lens" ref={lensRef} aria-hidden="true" />
         <div className="x-nav">
           <SiteNav locale={locale} copy={nav} tone={current.tone === "day" ? "paper" : "night"} />
         </div>
