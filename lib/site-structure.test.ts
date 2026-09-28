@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import { getExaminationContent, getExaminationCopy } from "./examination/content";
 import { painting } from "./examination/data";
-import { tokenize } from "./examination/text-layout";
+import { tokenStream, tokenize } from "./examination/text-layout";
 import { locales } from "./i18n";
 import { phraseParts } from "./phrases";
 import { localizedMetadata, ogImageFor, ogImageNames } from "./metadata";
@@ -175,6 +175,23 @@ describe("translations", () => {
       const text = [JSON.stringify(getSiteCopy(locale)), JSON.stringify(getWorkEntries(locale)), JSON.stringify(getExaminationCopy(locale).steps)];
       const sentences = text.join(" ").match(/"[^"]{24,}"/g) ?? [];
       expect(sentences.filter((s) => english.test(s) && !/^"(Under our|Invoices from|System Settings|CapCut|Blender|Godot|Finder|iMovie)/.test(s))).toEqual([]);
+    }
+  });
+});
+
+describe("token wall", () => {
+  test("words never fall into a fixed period, so a highlighted word cannot stack into a column", () => {
+    const { domains } = getExaminationContent("en");
+    for (const d of domains) {
+      const tokens = tokenStream(d.trained, "en", 6000);
+      expect(tokens.length).toBeGreaterThanOrEqual(6000);
+      const top = [...d.candidates].sort((a, b) => b[2] - a[2])[0][0];
+      const at = tokens.flatMap((t, i) => (t.t.replace(/[.,;:’']+$/, "") === top ? [i] : []));
+      const gaps = new Set(at.slice(1).map((p, i) => p - at[i]));
+      expect(at.length).toBeGreaterThan(20);
+      expect(gaps.size).toBeGreaterThan(1);
+      // Same text, same wall.
+      expect(tokenStream(d.trained, "en", 6000).map((t) => t.t)).toEqual(tokens.map((t) => t.t));
     }
   });
 });

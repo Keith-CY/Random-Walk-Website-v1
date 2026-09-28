@@ -1,6 +1,6 @@
 import { candidatesFor, painting, type Domain, type ExaminationContent } from "./data";
 import { fragmentShader, uniformNames, vertexShader, type UniformName } from "./shaders";
-import { drawMask, flow, tokenize, type Layout, type Rect } from "./text-layout";
+import { drawMask, flow, tokenStream, type Layout, type Rect } from "./text-layout";
 
 export type Model = "base" | "trained";
 
@@ -147,7 +147,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     target.height = Math.round(H * dpr);
     const ctx = target.getContext("2d");
     if (!ctx) return;
-    const o = { W, H, top: TOP, side: 8, lh: LINE_HEIGHT, font, stretch: "semi-condensed", tokens: tokenize(paragraphs, opts.content.lang), excl: rectsOf(el.obstacles(current), 14), blue: highlighted };
+    const o = { W, H, top: TOP, side: 8, lh: LINE_HEIGHT, font, stretch: "semi-condensed", tokens: tokenStream(paragraphs, opts.content.lang, Math.ceil((W * H) / (LINE_HEIGHT * 14))), excl: rectsOf(el.obstacles(current), 14), blue: highlighted };
     const l = flow(ctx, o);
     drawMask(target, l, o, dpr);
     upload(target, into === "B" ? tB : tA, into === "B" ? 3 : 2);

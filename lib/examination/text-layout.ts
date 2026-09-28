@@ -58,6 +58,42 @@ export function tokenize(paragraphs: readonly string[], lang = "en"): Token[] {
   return out;
 }
 
+/** A small seeded generator, so the same text always lays out the same way. */
+function seeded(text: string) {
+  let s = 2166136261;
+  for (let i = 0; i < text.length; i++) s = Math.imul(s ^ text.charCodeAt(i), 16777619);
+  return () => {
+    s = Math.imul(s ^ (s >>> 15), 2246822507);
+    s = Math.imul(s ^ (s >>> 13), 3266489909);
+    return ((s ^= s >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * The words to fill a wall with, at least `min` of them. Repeating the paragraphs in one fixed order
+ * lets every row start on the same word whenever a row holds a whole number of repeats, so the rows
+ * come out identical and a highlighted word stacks into a column. Each round shuffles the paragraphs
+ * instead, and never repeats the paragraph it just ended on.
+ */
+export function tokenStream(paragraphs: readonly string[], lang: string, min: number): Token[] {
+  const each = paragraphs.map((p) => tokenize([p], lang)).filter((t) => t.length);
+  if (!each.length) return [];
+  const random = seeded(paragraphs.join("\n"));
+  const out: Token[] = [];
+  let previous = -1;
+  while (out.length < min) {
+    const order = each.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    if (order.length > 1 && order[0] === previous) [order[0], order[1]] = [order[1], order[0]];
+    for (const i of order) out.push(...each[i]);
+    previous = order[order.length - 1];
+  }
+  return out;
+}
+
 function setFont(ctx: CanvasRenderingContext2D, o: Pick<FlowOptions, "font" | "stretch">) {
   ctx.font = o.font;
   if ("fontStretch" in ctx && o.stretch) ctx.fontStretch = o.stretch as CanvasFontStretch;
