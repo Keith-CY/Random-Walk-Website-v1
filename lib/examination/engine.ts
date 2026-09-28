@@ -118,6 +118,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
   let clearRect: Rect | null = null;
   let ready = false;
   let raf = 0;
+  let lastWidth = 0;
   let destroyed = false;
   const timers: number[] = [];
 
@@ -183,7 +184,10 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
   function place() {
     W = el.stage.clientWidth;
     H = el.stage.clientHeight;
-    dpr = Math.min(1.75, window.devicePixelRatio || 1);
+    // The shader runs per pixel, so cap the pixel count: phones render at 1x, large screens at up to ~2.2 MP.
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    dpr = Math.min(coarse ? 1 : 1.5, window.devicePixelRatio || 1);
+    dpr = Math.min(dpr, Math.sqrt(2_200_000 / Math.max(1, W * H)));
     el.canvas.width = Math.round(W * dpr);
     el.canvas.height = Math.round(H * dpr);
     gl!.viewport(0, 0, el.canvas.width, el.canvas.height);
@@ -278,11 +282,13 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     const y = e.clientY - r.top;
     const target = e.target as Element | null;
     if (target?.closest("a, button, [data-lens-off]")) {
+      if (lens[2]) requestRender();
       lens = [0, 0, 0];
       delete el.tip.dataset.on;
       return;
     }
     lens = [x, y, window.innerWidth < 600 ? 66 : 104];
+    requestRender();
     const m = coverRect(r.width, r.height, imageSize[0], imageSize[1], painting.focus[0], painting.focus[1]);
     el.xy.textContent = `x ${clamp((x - m.x) / m.w, 0, 1).toFixed(3)} · y ${clamp((y - m.y) / m.h, 0, 1).toFixed(3)}`;
     const word = wordAt(x, y);
@@ -295,10 +301,18 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
   function onLeave() {
     lens = [0, 0, 0];
     delete el.tip.dataset.on;
+    requestRender();
   }
 
+  // Draw only when something changed: a scroll, the lens, a demo switch, or while a transition runs.
+  // A continuous loop kept phones busy (and hot) even when the painting sat still.
+  function requestRender() {
+    if (!raf && !destroyed && imageSize !== painting.size) raf = requestAnimationFrame(frame);
+  }
+  const animating = () => writing || sweepStart > 0 || swapStart > 0;
+
   function frame(now: number) {
-    raf = requestAnimationFrame(frame);
+    raf = 0;
     const ex = el.exam.getBoundingClientRect();
     if (ex.bottom < 0 || ex.top > window.innerHeight) return;
     setStep(stepAt(), now);
@@ -364,7 +378,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
     g.uniform1f(u.uGam, 1);
     g.uniform1f(u.uGain, 1.3);
     g.uniform1f(u.uUnder, 0.74);
-    g.uniform1f(u.uTime, opts.reduce ? 0 : now / 1000);
+    g.uniform1f(u.uTime, 0);
     g.uniform1f(u.uDpr, dpr);
     g.uniform4f(u.uClear0, clearRect ? clearRect.x1 * dpr : -9, clearRect ? clearRect.y1 * dpr : -9, clearRect ? clearRect.x2 * dpr : -9, clearRect ? clearRect.y2 * dpr : -9);
     painting.spots.forEach((s, i) => g.uniform4f(u[`uSpot${i}` as UniformName], s[0], s[1], s[2], s[3]));
@@ -377,21 +391,31 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
       ready = true;
       el.stage.dataset.ready = "true";
     }
+    if (animating()) requestRender();
   }
 
   let resizeTimer = 0;
   const onResize = () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
+      // Mobile browsers change the height as their toolbars slide in and out during a scroll.
+      // Re-laying thousands of words for that is wasted work, so only react to real size changes.
+      const width = el.stage.clientWidth;
+      if (width === lastWidth && Math.abs(el.stage.clientHeight - H) < 160) return;
+      lastWidth = width;
       place();
       if (current >= 0 && swapStart < 0 && !writing) layout(corpusFor(current), "A");
-    }, 120);
+      requestRender();
+    }, 150);
   };
+  const onScroll = () => requestRender();
 
   el.stage.addEventListener("pointermove", onMove);
   el.stage.addEventListener("pointerleave", onLeave);
   window.addEventListener("resize", onResize);
+  window.addEventListener("scroll", onScroll, { passive: true });
   place();
+  lastWidth = W;
 
   Promise.all([loadImage(painting.src), loadImage(painting.ghost), document.fonts?.load(font).catch(() => undefined)]).then(([img, ghost]) => {
     if (destroyed) return;
@@ -422,7 +446,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
       ghostSize = [ghost.naturalWidth, ghost.naturalHeight];
     }
     place();
-    if (img) raf = requestAnimationFrame(frame);
+    if (img) requestRender();
   });
 
   return {
@@ -433,6 +457,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
       domain = next;
       model = nextModel;
       rewrite();
+      requestRender();
     },
     destroy() {
       destroyed = true;
@@ -442,6 +467,7 @@ export function createExamination(el: ExaminationElements, cb: ExaminationCallba
       el.stage.removeEventListener("pointermove", onMove);
       el.stage.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     }
   };
