@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import { domains, highlighted, painting, steps } from "./examination/data";
 import { locales } from "./i18n";
+import { localizedMetadata, ogImageFor, ogImageNames } from "./metadata";
 import { earlierWork } from "./detail-copy";
 import { company, getSiteCopy, notePaintings, paintings } from "./site-copy";
 import { earlierWorkSlugs, workEntries } from "./work-entries";
@@ -61,6 +62,22 @@ describe("routes", () => {
     expect(read("app", "page.tsx")).toContain("HomeContent");
     expect(read("components", "site-header.tsx")).toContain("homePath");
     expect(read("components", "home", "examination.tsx")).toContain("<SiteNav");
+  });
+});
+
+describe("search and sharing", () => {
+  test("every indexed page has its own share image on disk", () => {
+    for (const name of [...ogImageNames, "default"]) expect(existsSync(join(root, "public", "og", `${name}.jpg`))).toBe(true);
+    const pages = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms",
+      ...workEntries.map((e) => `/work/${e.slug}`), ...earlierWorkSlugs.map((s) => `/earlier-work/${s}`), "/legal/responsible-use", "/legal/security-review",
+      "/notes/evaluate-local-lora", "/notes/private-deployment-boundaries"];
+    for (const path of pages) expect(ogImageFor(path, "x").url).not.toBe("/og/default.jpg");
+  });
+
+  test("pages declare an x-default language and a proper og:locale", () => {
+    const meta = localizedMetadata("ja", "/services", "Services");
+    expect((meta.alternates?.languages as Record<string, string>)["x-default"]).toBe("/en/services/");
+    expect((meta.openGraph as { locale?: string }).locale).toBe("ja_JP");
   });
 });
 

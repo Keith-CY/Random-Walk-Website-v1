@@ -2,10 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentRenderer } from "@/components/content-renderer";
 import { CloseSection } from "@/components/site/close-section";
+import { JsonLd } from "@/components/site/json-ld";
 import { PaintingHero } from "@/components/site/painting-hero";
 import { getContentEntries, getContentEntry, getString, getStringArray } from "@/lib/content";
 import { isLocale, locales, localizePath } from "@/lib/i18n";
-import { localizedMetadata } from "@/lib/metadata";
+import { localizedMetadata, ogImageFor } from "@/lib/metadata";
+import { articleData } from "@/lib/structured-data";
 import { getSiteCopy, notePaintings, paintings } from "@/lib/site-copy";
 
 export const dynamic = "force-static";
@@ -20,7 +22,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) notFound();
   const entry = getContentEntry("notes", locale, slug);
   if (!entry) notFound();
-  return localizedMetadata(locale, `/notes/${slug}`, getString(entry.frontmatter, "title"), getString(entry.frontmatter, "summary"));
+  return localizedMetadata(locale, `/notes/${slug}`, getString(entry.frontmatter, "title"), getString(entry.frontmatter, "summary"), {
+    type: "article",
+    publishedTime: getString(entry.frontmatter, "date"),
+    modifiedTime: getString(entry.frontmatter, "updated", getString(entry.frontmatter, "date"))
+  });
 }
 
 export default async function NotePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -31,8 +37,12 @@ export default async function NotePage({ params }: { params: Promise<{ locale: s
   const copy = getSiteCopy(locale).notes;
   const date = getString(entry.frontmatter, "date");
 
+  const title = getString(entry.frontmatter, "title");
+  const summary = getString(entry.frontmatter, "summary");
+
   return (
     <main>
+      <JsonLd data={articleData({ url: `/${locale}/notes/${slug}/`, title, description: summary, published: date, modified: getString(entry.frontmatter, "updated", date), image: ogImageFor(`/notes/${slug}`, title).url, locale })} />
       <PaintingHero painting={notePaintings[slug] ?? paintings.company} kicker={copy.kicker} title={getString(entry.frontmatter, "title")} lede={getString(entry.frontmatter, "summary")} titleId="note-title" />
       <section className="s-section" aria-label={getString(entry.frontmatter, "title")}>
         <div className="s-wrap s-split">

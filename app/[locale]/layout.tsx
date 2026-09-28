@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { isLocale, locales, type Locale } from "@/lib/i18n";
 import { fontVariables } from "@/lib/fonts";
-import { ogImage } from "@/lib/metadata";
+import { ogImage, ogLocales } from "@/lib/metadata";
 import { getSiteCopy } from "@/lib/site-copy";
 import { notFound } from "next/navigation";
 
@@ -29,13 +29,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: siteDescription,
     alternates: {
       canonical: `/${locale}/`,
-      languages: Object.fromEntries(locales.map((item) => [item, `/${item}/`]))
+      languages: { ...Object.fromEntries(locales.map((item) => [item, `/${item}/`])), "x-default": "/en/" }
     },
     openGraph: {
       title: "Random Walk - An AI lab for growing companies",
       description: siteDescription,
       type: "website",
-      locale,
+      siteName: "Random Walk",
+      locale: ogLocales[locale],
       images: [ogImage]
     },
     twitter: {
