@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://random-walk.co.jp").replace(/\/$/, "");
 
-// Canonical localized routes only: unprefixed compatibility routes canonicalize to these,
+// Canonical routes: unprefixed compatibility routes canonicalize to localized routes,
 // retired routes redirect (vercel.json), and /meet is shared by direct link and left out.
 const staticPaths = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms"];
 
@@ -40,6 +40,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...workEntries.flatMap(({ slug }) => entry(`/work/${slug}`)),
     ...earlierWorkSlugs.flatMap((slug) => entry(`/earlier-work/${slug}`)),
     ...legalDetailSlugs.flatMap((slug) => entry(`/legal/${slug}`)),
-    ...contentPaths("notes")
+    ...contentPaths("notes"),
+    { url: `${siteUrl}/sop-keyword-research/` },
+    { url: `${siteUrl}/sop-keyword-research/privacy/` }
   ];
 }
