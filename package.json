@@ -23,7 +23,7 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "motion": "^12.40.0",
-    "next": "15.5.16",
+    "next": "15.5.28",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -34,8 +34,11 @@
     "@types/react": "19.2.11",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.1",
-    "eslint-config-next": "15.5.16",
+    "eslint-config-next": "15.5.28",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
   }
 }
