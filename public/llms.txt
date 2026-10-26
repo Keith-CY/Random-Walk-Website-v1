@@ -1,0 +1,45 @@
+# Random Walk
+
+> Random Walk は成長企業のための AI ラボです。最適なモデルを選び、データをつくり、採算が合うときには学習させ、御社のクラウド、サーバールーム、Mac で動かし続けます。
+
+Random Walk株式会社（Random Walk K.K.、東京都東大和市）の会社サイトです。日本語、英語、中国語、韓国語で公開しています。以下は日本語版のページです。お問い合わせは「プロジェクトの相談」ページから。
+
+## 会社とサービス
+- [モデルは層を重ねてつくられる](https://random-walk.co.jp/ja/): Random Walk は成長企業のための AI ラボです。最適なモデルを選び、データをつくり、採算が合うときには学習させ、御社のクラウド、サーバールーム、Mac で動かし続けます。
+- [サービス](https://random-walk.co.jp/ja/services/): どのプロジェクトも、まず業務を理解するところから始めます。そのうえで、何が必要かを一緒に決めます。丁寧に調整した優れた既存モデルか、御社専用のモデルか。多くの企業は前者から始め、採算が合うところで後者に進みます。
+- [データセット](https://random-walk.co.jp/ja/datasets/): 公開データセットがモデルに教えるのは、10 年前のソフトウェアです。私たちは企業が毎日使っているソフトウェアを記録しています。同じ速さで、御社自身の業務からデータセットをつくることもできます。
+- [会社概要](https://random-walk.co.jp/ja/company/): ランダムウォークとは、小さな一歩の積み重ねでできる道のこと。一歩一歩が選択です。言語モデルが文章を書くのも同じで、一語ずつ進みます。Random Walk は、業務を理解したモデルとともに、成長企業がその一歩を踏み出すのを支える AI ラボです。
+- [セキュリティ](https://random-walk.co.jp/ja/security/): モデルの作業を始める前に、境界を一緒に決めます。データをどこに置くか、誰がアクセスできるか、モデルに何を許すか、各リリースを誰が承認するか。データを社外に出せない場合は、自社の機材を持ち込み、現地でオフラインで作業します。
+- [プロジェクトの相談](https://random-walk.co.jp/ja/contact/): どんな業務か、どんなデータをお持ちか、どこで動かす必要があるかをお聞かせください。2 営業日以内にご返信します。
+
+## 実績とプロダクト
+- [実績](https://random-walk.co.jp/ja/work/): 自社のプロジェクトも、お客様向けと同じやり方でつくっています。データセット、モデル、合格すべきテスト、そして動かすマシン。
+- [Mac を使いこなすモデルを育てる](https://random-walk.co.jp/ja/work/mac-computer-use/): 企業がいま使っている Mac ソフトウェアのためのデータセットと、それで学習させた Qwen3.5-9B モデル。
+- [勘定所の机に向かうモデル](https://random-walk.co.jp/ja/work/business-arenas/): モデルが実際の事務作業をこなすライブの 3D アリーナ。それぞれルールベースのツールと比べて採点します。
+- [たくさんのモデルを、1 台のマシンで](https://random-walk.co.jp/ja/work/turnvector/): TurnVector は、複数の AI モデルが 1 台の Apple Silicon マシンを分け合いながら、どの会話も軽快に保てるようにします。
+- [SayIt](https://random-walk.co.jp/ja/work/sayit/): Mac の外に出ない音声入力。
+- [Melix](https://random-walk.co.jp/ja/melix/): Melix は、Apple Silicon にデプロイする企業のための推論エンジンです。モデルの登録、提供、LoRA によるファインチューニング、ベンチマークと評価まで、ネイティブの Mac アプリでもコマンドラインでも行えます。データがマシンの外に出ることはありません。
+
+## ノート
+- [ノート](https://random-walk.co.jp/ja/notes/): 企業のためにモデルを選び、学習させ、テストし、デプロイする方法について、実際の仕事から書いた短い文章です。
+- [モデルを選ぶ前に、どこで動かすかを決める](https://random-walk.co.jp/ja/notes/private-deployment-boundaries/): リーダーボードで一番のモデルが、御社にとっては間違ったモデルかもしれません。どこで動くか、何に触れてよいか、誰が面倒を見るかを決めてから選びます。
+- [ファインチューニングしたアダプターを出荷前に確かめる方法](https://random-walk.co.jp/ja/notes/evaluate-local-lora/): 学習が終わっても、モデルが完成したわけではありません。アダプターを御社の環境に入れる前に答えるべき 4 つの問いと、一緒に引き渡すべきもの。
+
+## 方針と規約
+- [責任ある利用](https://random-walk.co.jp/ja/legal/responsible-use/): どのプロジェクトも、短い書面の取り決めから始まります。モデルが何から学んでよいか、何をすべきで何をすべきでないか、どこで御社が作業を確認するか、誰が決めるか。このページでは、その中身を説明します。
+- [セキュリティレビュー](https://random-walk.co.jp/ja/legal/security-review/): 御社の環境でモデルを稼働させる前に、セキュリティチームやアドバイザーのレビューに必要なものを用意します。どこで動くか、誰がアクセスできるか、何がどこへ流れるか、どのようにテストしたか。
+- [プライバシーポリシー](https://random-walk.co.jp/ja/privacy/): このウェブサイトを通じてお送りいただいた情報を、最初のお問い合わせからプロジェクトの開始まで、Random Walk がどのように取り扱うかを説明します。
+- [利用規約](https://random-walk.co.jp/ja/terms/): このウェブサイト、その資料、お問い合わせフォームの利用に関する規約です。
+
+## 他の言語
+- [English](https://random-walk.co.jp/en/): Random Walk is an AI lab for growing companies. We choose the right model, build the data, train it when it pays and keep it running in your own cloud, server room or Macs.
+- [中文](https://random-walk.co.jp/zh/): Random Walk 是为成长型企业服务的 AI 实验室。我们选定合适的模型，构建数据，在值得时进行训练，并让它在你的云、机房或 Mac 上持续运行。
+- [한국어](https://random-walk.co.jp/ko/): Random Walk는 성장하는 기업을 위한 AI 랩입니다. 알맞은 모델을 고르고, 데이터를 만들고, 가치가 있을 때 학습시키고, 귀사의 클라우드, 서버실, Mac에서 계속 돌아가게 합니다.
+
+## Optional
+- [過去のプロダクト](https://random-walk.co.jp/ja/earlier-work/): Random Walk が AI ラボになる前、私たちは Nervos CKB ブロックチェーン向けにウォレット、決済ツール、データサービスをつくっていました。記録としてここに掲載し、それぞれの現在の所在へのリンクを添えています。
+- [Neuron](https://random-walk.co.jp/ja/earlier-work/neuron/): Nervos CKB のためのオープンソースのデスクトップウォレット。資産の保管、ガバナンスへの参加、CKB スクリプトの操作をひとつのアプリで行えます。
+- [1-TOK](https://random-walk.co.jp/ja/earlier-work/1-tok/): AI エージェントの仕事のためのマーケットプレイス。エージェントが生成したトークンで利用量を計測し、支払いは仕事の進行に合わせてストリーミングで行われます。
+- [Fiber Link](https://random-walk.co.jp/ja/earlier-work/fiber-link/): コミュニティプラットフォーム向けの投げ銭、クリエイター報酬、残高、出金の仕組み。CKB の Fiber Network で決済し、メンバーがオンチェーンの操作をする必要はありません。
+- [UTXO Data](https://random-walk.co.jp/ja/earlier-work/utxo-data/): UTXO 型ブロックチェーンのアクティビティをインデックス化し、API と分析で提供。監視、調査、プロダクト開発に使えます。
+- [Distributed Paradigm](https://random-walk.co.jp/ja/earlier-work/distributed-paradigm/): Kuai：CKB 上の分散アプリケーションを、メッセージをやり取りして協調するアクターとして構築するフレームワーク。
