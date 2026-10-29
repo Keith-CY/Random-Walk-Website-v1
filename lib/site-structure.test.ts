@@ -53,6 +53,12 @@ describe("routes", () => {
     }
   });
 
+  test("lab pages without a locale go to the English page", () => {
+    for (const path of ["/datasets", "/work", "/melix", "/notes", "/earlier-work", "/products"]) {
+      expect(redirects.some((r) => r.source === `${path}{/}?` && r.destination === `/en${path}/`)).toBe(true);
+    }
+  });
+
   test("the sitemap lists the new routes and keeps the visit page private", () => {
     const sitemap = read("app", "sitemap.ts");
     for (const path of ["/services", "/datasets", "/work", "/melix", "/products", "/company", "/earlier-work"]) expect(sitemap).toContain(`"${path}"`);

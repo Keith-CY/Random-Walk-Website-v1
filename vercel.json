@@ -126,6 +126,11 @@
       "source": "/earlier-work{/}?",
       "destination": "/en/earlier-work/",
       "permanent": true
+    },
+    {
+      "source": "/products{/}?",
+      "destination": "/en/products/",
+      "permanent": true
     }
   ]
 }
