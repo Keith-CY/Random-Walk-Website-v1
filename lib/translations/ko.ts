@@ -24,7 +24,11 @@ export const ko: Translation = {
       contact: "흑금 칠기 문갑 위에서 의뢰 편지를 쓰는 상인을 그린 유화.",
       notFound: "바니타스 정물화. 빈 금박 액자, 꺼진 초, 모래시계, 회중시계, 시든 튤립.",
       noteAssay: "분석소를 그린 유화. 분석관이 황동 저울 옆에서 시금석으로 금괴를 시험하고, 추들 사이에 작은 현대식 USB 드라이브가 놓여 있다.",
-      noteAlcove: "시계를 맞춰 짜기 전에 빈 벽감을 황동 끝 자로 재는 가구 장인을 그린 유화. 바닥에는 현대식 레이저 측정기가 놓여 있다."
+      noteAlcove: "시계를 맞춰 짜기 전에 빈 벽감을 황동 끝 자로 재는 가구 장인을 그린 유화. 바닥에는 현대식 레이저 측정기가 놓여 있다.",
+      products: "학자의 집 앞방을 그린 유화. 남색 가운을 입은 여인이 작은 황동 혼천의를 들고 있고 아이가 그것을 올려다본다. 젊은 남자는 덮은 책을 안고 있고, 지구의와 이마리 사발 옆 탁자에는 현대식 스마트폰이 놓여 있다.",
+      miniWorld: "촛불 아래 자연철학자가 세 아이에게 황동 태양계의를 보여 주는 유화. 탁자 위에는 불꽃을 비추는 현대식 태블릿이 놓여 있다.",
+      linan: "중국 화가가 긴 두루마리에 서호와 탑을 수묵으로 그리고, 수염 난 유럽 학자가 지켜보는 유화. 벼루 옆에 현대식 컴퓨터 마우스가 놓여 있다.",
+      sketchbook: "남색 가운을 입은 디자이너가 펼친 스케치북 위에 놓인 현대식 러닝화를 그리는 유화. 벽에는 그 신발의 스케치가 붙어 있다."
     },
     addressBlock: ["東京都東大和市新堀1丁目", "일본 도쿄도 히가시야마토시 신보리 1초메"],
     nav: {
@@ -33,6 +37,7 @@ export const ko: Translation = {
         { label: "데이터셋", href: "/datasets" },
         { label: "작업", href: "/work" },
         { label: "Melix", href: "/melix" },
+        { label: "제품", href: "/products" },
         { label: "회사", href: "/company" }
       ],
       cta,
@@ -44,8 +49,8 @@ export const ko: Translation = {
     footer: {
       line: "성장하는 기업을 위한 AI 랩. 모델을 고르고, 데이터를 만들고, 가치가 있을 때 학습시키고, 귀사의 장비에서 계속 돌아가게 합니다.",
       groups: [
-        { title: "랩", links: [{ label: "서비스", href: "/services" }, { label: "데이터셋", href: "/datasets" }, { label: "작업", href: "/work" }, { label: "Melix", href: "/melix" }] },
-        { title: "회사", links: [{ label: "회사 소개", href: "/company" }, { label: "노트", href: "/notes" }, { label: "이전 작업", href: "/earlier-work" }, { label: cta, href: "/contact" }] },
+        { title: "랩", links: [{ label: "서비스", href: "/services" }, { label: "데이터셋", href: "/datasets" }, { label: "작업", href: "/work" }, { label: "Melix", href: "/melix" }, { label: "제품", href: "/products" }] },
+        { title: "회사", links: [{ label: "회사 소개", href: "/company" }, { label: "노트", href: "/notes" }, { label: "이전 작업", href: "/earlier-work" }, { label: "Japanese Skills", href: "https://japaneseskills.com/ko/" }, { label: cta, href: "/contact" }] },
         { title: "법적 고지", links: [{ label: "개인정보처리방침", href: "/privacy" }, { label: "이용약관", href: "/terms" }, { label: "보안", href: "/security" }, { label: "책임 있는 사용", href: "/legal/responsible-use" }] }
       ],
       label: "푸터",
@@ -165,6 +170,26 @@ export const ko: Translation = {
       window: exhibit("melixWindow", "macOS의 Melix 창: LoRA 어댑터를 단 모델을 실행하는 로컬 서버와 게이트웨이, 서빙 설정.", "macOS의 Melix 작업 공간. 로컬 장비에서 LoRA 어댑터를 단 모델을 서비스하고 있습니다."),
       cover: exhibit("melix", "Melix 제품 페이지: Apple Silicon을 위한 MLX 기반 LoRA 학습과 어댑터.", "Melix 공식 사이트에서."),
       repo: "저장소 보기"
+    },
+    products: {
+      kicker: "제품",
+      title: "공개로 만들고, 무료로 씁니다.",
+      lede: "기업을 위해 모델을 만드는 일 외에도, 작은 연구소 Lapla SI를 후원합니다. Lapla SI는 만든 것을 공개하며, 과학 모델과 엔진은 누구나 무료로 쓸 수 있습니다.",
+      newTab: "새 탭에서 열림",
+      lapla: {
+        note: "Random Walk가 후원하는 연구소입니다.",
+        name: "Lapla SI",
+        title: "지능을, 손이 닿는 곳에.",
+        body: "Lapla SI는 손 가까이 있는 기기에서 돌아가는 작고 효율적이며 보정이 잘 된 AI를 연구하고, 그 성과를 공개합니다. 이 사이트에서 소개하는 Melix와 SayIt도 Lapla SI에서 공개했습니다. 공개 프로젝트는 모두 무료로 쓸 수 있습니다.",
+        cta: "lapla.si 방문",
+        href: "https://lapla.si/",
+        projects: [
+          { painting: "miniWorld", name: "Laplace's Mini World", line: "어린 독자를 위한, 움직여 볼 수 있는 과학 모델.", meta: "world.lapla.si · 중국어, 영어 · CC BY-NC 4.0", body: "어린 독자를 위한, 직접 움직여 볼 수 있는 과학 모델 154개. 각각 그림이 들어간 짧은 글과, 돌리고 작동시키고 분해해 볼 수 있는 3D 모델로 되어 있습니다. 가입도 광고도 없습니다.", href: "https://world.lapla.si/en/" },
+          { painting: "linan", name: "수묵의 임안", line: "코드로 그린 수묵의 남송 임안.", meta: "linan.lapla.si · MIT", body: "남송의 도읍 임안(지금의 항저우)과 서호를 브라우저에서 걸어 다닐 수 있는 수묵 세계로 만들었습니다. 건물도 붓질도 질감도 모두 코드로 생성합니다. 이를 그리는 WebGPU 엔진 Mo(墨)는 오픈 소스입니다.", href: "https://linan.lapla.si/" },
+          { painting: "sketchbook", name: "sketchbook-style", line: "어떤 물건이든 디자이너 스케치북의 한 페이지로.", meta: "GitHub · Apache 2.0", body: "어떤 물건이든 산업 디자이너 스케치북의 한 페이지로 그려 주는 에이전트 스킬. 펜, 마커, 잉크, 하이 콘트라스트 네 가지를 오픈 이미지 모델로 그립니다.", href: "https://github.com/Keith-CY/sketchbook-style" }
+        ]
+      },
+      band: { more: "전체 제품" }
     },
     company: {
       kicker: "회사",

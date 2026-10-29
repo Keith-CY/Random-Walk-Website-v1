@@ -11,7 +11,8 @@ const motionSelector = [
   ".rw-provenance-panel",
   ".rw-obsidian-panel",
   ".rw-metadata-strip",
-  ".rw-form-section"
+  ".rw-form-section",
+  "[data-reveal]"
 ].join(",");
 
 export function MotionController() {

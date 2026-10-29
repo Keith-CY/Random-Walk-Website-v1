@@ -21,7 +21,11 @@ export function SiteFooter({ locale }: { locale: Locale }) {
                 <ul>
                   {group.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={localizePath(locale, link.href)}>{link.label}</Link>
+                      {link.href.startsWith("https://") ? (
+                        <a href={link.href} target="_blank" rel="noopener">{link.label}<span className="s-out" aria-hidden="true">↗</span></a>
+                      ) : (
+                        <Link href={localizePath(locale, link.href)}>{link.label}</Link>
+                      )}
                     </li>
                   ))}
                 </ul>

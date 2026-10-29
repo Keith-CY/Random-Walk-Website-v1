@@ -20,6 +20,13 @@ Random Walk株式会社（Random Walk K.K.、東京都東大和市）の会社�
 - [SayIt](https://random-walk.co.jp/ja/work/sayit/): Mac の外に出ない音声入力。
 - [Melix](https://random-walk.co.jp/ja/melix/): Melix は、Apple Silicon にデプロイする企業のための推論エンジンです。モデルの登録、提供、LoRA によるファインチューニング、ベンチマークと評価まで、ネイティブの Mac アプリでもコマンドラインでも行えます。データがマシンの外に出ることはありません。
 
+## 支援しているラボ
+- [プロダクト](https://random-walk.co.jp/ja/products/): 企業のためにモデルをつくるほか、小さなラボ Lapla SI を支援しています。Lapla SI はつくったものを公開していて、科学モデルやエンジンは誰でも無料で使えます。
+- [Lapla SI](https://lapla.si/): Random Walk が資金を出しているラボ。手元のマシンで動く小さな AI を研究し、成果を公開しています（Melix、SayIt もここから公開）。
+- [Laplace's Mini World](https://world.lapla.si/en/): Lapla SI の、若い読者のための動かせる科学モデル 154 本（中国語・英語、CC BY-NC 4.0）。MCP サーバー: https://world.lapla.si/mcp
+- [水墨の臨安](https://linan.lapla.si/): 南宋の臨安と西湖を、ブラウザで歩ける水墨の世界に。WebGPU エンジン「墨」は MIT ライセンスで公開（https://github.com/Keith-CY/mo-engine）。
+- [sketchbook-style](https://github.com/Keith-CY/sketchbook-style): どんな物でも工業デザイナーのスケッチブックの 1 ページに描き起こすエージェントスキル（Apache 2.0）。
+
 ## ノート
 - [ノート](https://random-walk.co.jp/ja/notes/): 企業のためにモデルを選び、学習させ、テストし、デプロイする方法について、実際の仕事から書いた短い文章です。
 - [モデルを選ぶ前に、どこで動かすかを決める](https://random-walk.co.jp/ja/notes/private-deployment-boundaries/): リーダーボードで一番のモデルが、御社にとっては間違ったモデルかもしれません。どこで動くか、何に触れてよいか、誰が面倒を見るかを決めてから選びます。

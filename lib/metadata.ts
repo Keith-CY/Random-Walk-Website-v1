@@ -9,7 +9,7 @@ export const ogLocales: Record<Locale, string> = { en: "en_US", zh: "zh_CN", ja:
 // Share images rendered for each public page in each language (public/og/<locale>/<name>.jpg), named after the page's path.
 export const ogImageNames = [
   "home", "services", "datasets", "work", "work-mac-computer-use", "work-business-arenas", "work-turnvector", "work-sayit",
-  "melix", "company", "contact", "notes", "notes-evaluate-local-lora", "notes-private-deployment-boundaries",
+  "melix", "products", "company", "contact", "notes", "notes-evaluate-local-lora", "notes-private-deployment-boundaries",
   "earlier-work", "earlier-work-neuron", "earlier-work-1-tok", "earlier-work-fiber-link", "earlier-work-utxo-data", "earlier-work-distributed-paradigm",
   "security", "privacy", "terms", "legal-responsible-use", "legal-security-review"
 ] as const;

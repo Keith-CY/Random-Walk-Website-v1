@@ -24,7 +24,11 @@ export const ja: Translation = {
       contact: "黒と金の漆塗りの文箱で依頼状を書く商人を描いた油彩画。",
       notFound: "ヴァニタスの静物画。空の金縁の額、火の消えたろうそく、砂時計、懐中時計、しおれたチューリップ。",
       noteAssay: "試金所を描いた油彩画。真鍮の天秤のそばで試金師が試金石で金の延べ棒を調べ、分銅の間に小さな現代の USB メモリが置かれている。",
-      noteAlcove: "空いた壁のくぼみを、真鍮の先端がついた物差しで測る家具職人を描いた油彩画。そこに合う時計をつくる前の採寸で、床には現代のレーザー距離計がある。"
+      noteAlcove: "空いた壁のくぼみを、真鍮の先端がついた物差しで測る家具職人を描いた油彩画。そこに合う時計をつくる前の採寸で、床には現代のレーザー距離計がある。",
+      products: "学者の家の表の間を描いた油彩画。藍色のガウンの女性が小さな真鍮の天球儀を手に持ち、子どもがそれを見上げている。若い男性は閉じた本を抱え、地球儀と伊万里の鉢のそばのテーブルには現代のスマートフォンが置かれている。",
+      miniWorld: "ろうそくの明かりで、自然哲学者が 3 人の子どもに真鍮の太陽系儀を見せている油彩画。テーブルには現代のタブレットがあり、炎を映している。",
+      linan: "中国の画家が長い巻物に西湖と塔を水墨で描き、ひげのあるヨーロッパの学者が見守る油彩画。硯のそばに現代のマウスが置かれている。",
+      sketchbook: "藍色のガウンのデザイナーが、開いたスケッチブックの上に置いた現代のランニングシューズを描いている油彩画。壁にはその靴のスケッチが留められている。"
     },
     addressBlock: ["東京都東大和市新堀1丁目"],
     nav: {
@@ -33,6 +37,7 @@ export const ja: Translation = {
         { label: "データセット", href: "/datasets" },
         { label: "実績", href: "/work" },
         { label: "Melix", href: "/melix" },
+        { label: "プロダクト", href: "/products" },
         { label: "会社概要", href: "/company" }
       ],
       cta,
@@ -44,8 +49,8 @@ export const ja: Translation = {
     footer: {
       line: "成長企業のための AI ラボ。モデルを選び、データをつくり、採算が合うときには学習させ、御社自身のマシンで動かし続けます。",
       groups: [
-        { title: "ラボ", links: [{ label: "サービス", href: "/services" }, { label: "データセット", href: "/datasets" }, { label: "実績", href: "/work" }, { label: "Melix", href: "/melix" }] },
-        { title: "会社", links: [{ label: "会社概要", href: "/company" }, { label: "ノート", href: "/notes" }, { label: "過去のプロダクト", href: "/earlier-work" }, { label: cta, href: "/contact" }] },
+        { title: "ラボ", links: [{ label: "サービス", href: "/services" }, { label: "データセット", href: "/datasets" }, { label: "実績", href: "/work" }, { label: "Melix", href: "/melix" }, { label: "プロダクト", href: "/products" }] },
+        { title: "会社", links: [{ label: "会社概要", href: "/company" }, { label: "ノート", href: "/notes" }, { label: "過去のプロダクト", href: "/earlier-work" }, { label: "Japanese Skills", href: "https://japaneseskills.com/en/" }, { label: cta, href: "/contact" }] },
         { title: "法務", links: [{ label: "プライバシーポリシー", href: "/privacy" }, { label: "利用規約", href: "/terms" }, { label: "セキュリティ", href: "/security" }, { label: "責任ある利用", href: "/legal/responsible-use" }] }
       ],
       label: "フッター",
@@ -165,6 +170,26 @@ export const ja: Translation = {
       window: exhibit("melixWindow", "macOS 上の Melix ウィンドウ。LoRA アダプター付きのモデルを動かすローカルサーバーと、そのゲートウェイやサービング設定。", "macOS 上の Melix ワークスペース。LoRA アダプター付きのモデルをローカルで提供しています。"),
       cover: exhibit("melix", "Melix の製品ページ。MLX による LoRA 学習とアダプター、Apple Silicon 向け。", "Melix の公式サイトより。"),
       repo: "リポジトリを見る"
+    },
+    products: {
+      kicker: "プロダクト",
+      title: "公開でつくり、無料で使える。",
+      lede: "企業のためにモデルをつくるほか、小さなラボ Lapla SI を支援しています。Lapla SI はつくったものを公開していて、科学モデルやエンジンは誰でも無料で使えます。",
+      newTab: "新しいタブで開きます",
+      lapla: {
+        note: "Random Walk が資金を出しているラボです。",
+        name: "Lapla SI",
+        title: "知能を、手の届くところに。",
+        body: "Lapla SI は、手元のマシンで動く、小さく効率がよく、確信度の正確な AI を研究し、その成果を公開しています。このサイトで紹介している Melix と SayIt も、Lapla SI から公開しています。公開プロジェクトはどれも無料で使えます。",
+        cta: "lapla.si を見る",
+        href: "https://lapla.si/",
+        projects: [
+          { painting: "miniWorld", name: "Laplace's Mini World", line: "若い読者のための、動かせる科学モデル。", meta: "world.lapla.si · 中国語・英語 · CC BY-NC 4.0", body: "若い読者のための、動かせる科学モデル 154 本。どれも挿絵入りの短い文章と、回したり動かしたり分解したりできる 3D モデルでできています。登録不要、広告なし。", href: "https://world.lapla.si/en/" },
+          { painting: "linan", name: "水墨の臨安", line: "コードで描いた、水墨の南宋・臨安。", meta: "linan.lapla.si · MIT", body: "南宋の都・臨安（いまの杭州）と西湖を、ブラウザで歩ける水墨の世界にしました。建物も筆致もテクスチャも、すべてコードで生成しています。描画する WebGPU エンジン「墨」はオープンソースです。", href: "https://linan.lapla.si/" },
+          { painting: "sketchbook", name: "sketchbook-style", line: "どんな物も、デザイナーのスケッチブックの 1 ページに。", meta: "GitHub · Apache 2.0", body: "どんな物でも、工業デザイナーのスケッチブックの 1 ページに描き起こすエージェントスキル。ペン、マーカー、インク、ハイコントラストの 4 種類を、オープンな画像モデルで描きます。", href: "https://github.com/Keith-CY/sketchbook-style" }
+        ]
+      },
+      band: { more: "プロダクト一覧" }
     },
     company: {
       kicker: "会社概要",

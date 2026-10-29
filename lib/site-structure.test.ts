@@ -21,7 +21,7 @@ const redirects: Redirect[] = JSON.parse(read("vercel.json")).redirects;
 describe("routes", () => {
   test("every navigation and footer link has a page", () => {
     const copy = getSiteCopy("en");
-    const links = [...copy.nav.items, ...copy.footer.groups.flatMap((g) => g.links)].map((l) => l.href);
+    const links = [...copy.nav.items, ...copy.footer.groups.flatMap((g) => g.links)].map((l) => l.href).filter((href) => !href.startsWith("https://"));
     for (const href of links) expect(existsSync(pageFor(href)) || existsSync(join(root, "app", "[locale]", "legal", "[slug]", "page.tsx"))).toBe(true);
     for (const href of copy.nav.items.map((i) => i.href)) expect(existsSync(pageFor(href))).toBe(true);
   });
@@ -55,7 +55,7 @@ describe("routes", () => {
 
   test("the sitemap lists the new routes and keeps the visit page private", () => {
     const sitemap = read("app", "sitemap.ts");
-    for (const path of ["/services", "/datasets", "/work", "/melix", "/company", "/earlier-work"]) expect(sitemap).toContain(`"${path}"`);
+    for (const path of ["/services", "/datasets", "/work", "/melix", "/products", "/company", "/earlier-work"]) expect(sitemap).toContain(`"${path}"`);
     expect(sitemap).not.toContain('"/meet"');
     expect(read("app", "[locale]", "meet", "page.tsx")).toContain("index: false");
   });
@@ -68,11 +68,36 @@ describe("routes", () => {
   });
 });
 
+describe("products", () => {
+  test("every language names the same projects, links them to the same sites and paints every card", () => {
+    const en = getSiteCopy("en").products;
+    for (const locale of locales) {
+      const copy = getSiteCopy(locale).products;
+      const host = (href: string) => new URL(href).host;
+      expect(host(copy.lapla.href)).toBe(host(en.lapla.href));
+      expect(copy.lapla.projects.map((p) => [host(p.href), p.painting])).toEqual(en.lapla.projects.map((p) => [host(p.href), p.painting]));
+    }
+    for (const p of en.lapla.projects) expect(existsSync(join(root, "public", paintings[p.painting].src))).toBe(true);
+  });
+
+  test("Japanese Skills is a small footer link in every language, not a product on the page", () => {
+    for (const locale of locales) {
+      const copy = getSiteCopy(locale);
+      expect(copy.footer.groups.flatMap((g) => g.links).filter((l) => new URL(l.href, "https://random-walk.co.jp").host === "japaneseskills.com")).toHaveLength(1);
+      expect(JSON.stringify(copy.products)).not.toContain("japaneseskills");
+    }
+  });
+
+  test("the home page points to the products page", () => {
+    expect(read("components", "home", "home-content.tsx")).toContain("<ProductsBand");
+  });
+});
+
 describe("search and sharing", () => {
   test("every indexed page has its own share image on disk, in every language", () => {
     expect(existsSync(join(root, "public", "og", "default.jpg"))).toBe(true);
     for (const locale of locales) for (const name of ogImageNames) expect(existsSync(join(root, "public", "og", locale, `${name}.jpg`))).toBe(true);
-    const pages = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms",
+    const pages = ["/", "/services", "/datasets", "/work", "/melix", "/products", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms",
       ...workEntries.map((e) => `/work/${e.slug}`), ...earlierWorkSlugs.map((s) => `/earlier-work/${s}`), "/legal/responsible-use", "/legal/security-review",
       "/notes/evaluate-local-lora", "/notes/private-deployment-boundaries"];
     for (const path of pages) expect(ogImageFor("ko", path, "x").url).toBe(`/og/ko/${path.replace(/^\//, "").replace(/\//g, "-") || "home"}.jpg`);
@@ -102,7 +127,7 @@ describe("booking functions", () => {
 
 describe("copy", () => {
   test("every locale has site copy", () => {
-    for (const locale of locales) expect(getSiteCopy(locale).nav.items.length).toBe(5);
+    for (const locale of locales) expect(getSiteCopy(locale).nav.items.length).toBe(6);
   });
 
   test("the site shows the address to the block, and only the legal pages carry the room number", () => {

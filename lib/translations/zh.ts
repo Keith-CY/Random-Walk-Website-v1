@@ -24,7 +24,11 @@ export const zh: Translation = {
       contact: "一幅油画：一位商人在黑金漆器文具盒上书写委托信。",
       notFound: "一幅虚空派静物画：空的镀金画框、熄灭的蜡烛、沙漏、怀表和一朵凋谢的郁金香。",
       noteAssay: "一幅油画：化验所里，一位化验师在黄铜天平旁用试金石检验金条，砝码之间放着一个小小的现代 U 盘。",
-      noteAlcove: "一幅油画：一位细木工在打造合适的座钟之前，用铜头量杆测量空着的壁龛，地上放着一个现代激光测距仪。"
+      noteAlcove: "一幅油画：一位细木工在打造合适的座钟之前，用铜头量杆测量空着的壁龛，地上放着一个现代激光测距仪。",
+      products: "一幅油画：学者家的前厅里，身穿靛蓝长袍的女子手持一个小小的黄铜浑天仪，一个孩子抬头看着它，年轻男子抱着一本合上的书；桌上的地球仪和伊万里瓷碗旁，放着一部现代智能手机。",
+      miniWorld: "一幅油画：烛光下，一位自然哲学家给三个孩子演示黄铜太阳系仪，桌上放着一台现代平板电脑，映着烛火。",
+      linan: "一幅油画：一位中国画家在长卷上用水墨画西湖和湖边的塔，一位留着胡子的欧洲学者在旁观看，砚台边放着一只现代电脑鼠标。",
+      sketchbook: "一幅油画：一位身穿靛蓝长袍的设计师在速写本上画一只现代跑鞋，鞋就放在摊开的本子上，墙上钉着这只鞋的速写。"
     },
     addressBlock: ["日本东京都东大和市新堀1丁目"],
     nav: {
@@ -33,6 +37,7 @@ export const zh: Translation = {
         { label: "数据集", href: "/datasets" },
         { label: "作品", href: "/work" },
         { label: "Melix", href: "/melix" },
+        { label: "产品", href: "/products" },
         { label: "公司", href: "/company" }
       ],
       cta,
@@ -44,8 +49,8 @@ export const zh: Translation = {
     footer: {
       line: "为成长型企业服务的 AI 实验室。我们选定模型、构建数据，在值得时训练，并让它在你自己的机器上持续运行。",
       groups: [
-        { title: "实验室", links: [{ label: "服务", href: "/services" }, { label: "数据集", href: "/datasets" }, { label: "作品", href: "/work" }, { label: "Melix", href: "/melix" }] },
-        { title: "公司", links: [{ label: "关于我们", href: "/company" }, { label: "笔记", href: "/notes" }, { label: "早期项目", href: "/earlier-work" }, { label: cta, href: "/contact" }] },
+        { title: "实验室", links: [{ label: "服务", href: "/services" }, { label: "数据集", href: "/datasets" }, { label: "作品", href: "/work" }, { label: "Melix", href: "/melix" }, { label: "产品", href: "/products" }] },
+        { title: "公司", links: [{ label: "关于我们", href: "/company" }, { label: "笔记", href: "/notes" }, { label: "早期项目", href: "/earlier-work" }, { label: "Japanese Skills", href: "https://japaneseskills.com/" }, { label: cta, href: "/contact" }] },
         { title: "法律", links: [{ label: "隐私政策", href: "/privacy" }, { label: "服务条款", href: "/terms" }, { label: "安全", href: "/security" }, { label: "负责任的使用", href: "/legal/responsible-use" }] }
       ],
       label: "页脚",
@@ -165,6 +170,26 @@ export const zh: Translation = {
       window: exhibit("melixWindow", "macOS 上的 Melix 窗口：本地服务正在运行一个带 LoRA 适配器的模型，显示其网关和服务设置。", "macOS 上的 Melix 工作区，在本机上运行带 LoRA 适配器的模型。"),
       cover: exhibit("melix", "Melix 产品页：基于 MLX 的 LoRA 训练与适配器，为 Apple Silicon 打造。", "Melix，截自产品官网。"),
       repo: "查看代码仓库"
+    },
+    products: {
+      kicker: "产品",
+      title: "公开做，免费用。",
+      lede: "除了为企业做模型，我们还资助小型实验室 Lapla SI。它公开发布自己做的东西，科学模型和引擎谁都可以免费用。",
+      newTab: "在新标签页打开",
+      lapla: {
+        note: "由 Random Walk 资助的实验室。",
+        name: "Lapla SI",
+        title: "让智能触手可及。",
+        body: "Lapla SI 研究小而高效、校准良好、能在手边的机器上运行的 AI，并公开发布它的成果。本站介绍的 Melix 和 SayIt 也由它发布。它的公开项目都可以免费使用。",
+        cta: "访问 lapla.si",
+        href: "https://lapla.si/zh/",
+        projects: [
+          { painting: "miniWorld", name: "拉普拉斯的迷你世界", line: "给年轻读者的、能动手玩的科学模型。", meta: "world.lapla.si · 中文和英文 · CC BY-NC 4.0", body: "154 个能动手玩的科学模型，写给年轻读者。每一个都是一篇带插图的短文，配一个可以转动、运行、拆开来看的 3D 模型。不用注册，没有广告。", href: "https://world.lapla.si/zh/" },
+          { painting: "linan", name: "水墨临安", line: "用代码画出的水墨南宋临安。", meta: "linan.lapla.si · MIT", body: "南宋临安和西湖，做成可以在浏览器里漫步的水墨世界。每座建筑、每一笔、每种纹理都由代码生成；绘制它的 WebGPU 引擎「墨」已经开源。", href: "https://linan.lapla.si/" },
+          { painting: "sketchbook", name: "sketchbook-style", line: "把任何物件画成设计师速写本里的一页。", meta: "GitHub · Apache 2.0", body: "一个智能体技能：用开源图像模型，把任何物件画成工业设计师速写本里的一页，有钢笔、马克笔、墨水和高对比四种画法。", href: "https://github.com/Keith-CY/sketchbook-style" }
+        ]
+      },
+      band: { more: "全部产品" }
     },
     company: {
       kicker: "公司",

@@ -1,6 +1,7 @@
 import { Examination } from "@/components/home/examination";
 import { CloseSection } from "@/components/site/close-section";
 import { JsonLd } from "@/components/site/json-ld";
+import { ProductsBand } from "@/components/site/products-band";
 import { getExaminationContent, getExaminationCopy } from "@/lib/examination/content";
 import type { Locale } from "@/lib/i18n";
 import { company, getPaintings, getSiteCopy } from "@/lib/site-copy";
@@ -22,6 +23,7 @@ export function HomeContent({ locale }: { locale: Locale }) {
         marks={exam.marks}
         ui={exam.ui}
       />
+      <ProductsBand locale={locale} />
       <CloseSection locale={locale} />
     </main>
   );

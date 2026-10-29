@@ -97,7 +97,7 @@ body {
 .s-nav-logo { display: inline-flex; align-items: center; }
 .s-nav-logo img { display: block; height: 24px; width: auto; }
 .s-nav-links { display: flex; align-items: center; gap: 28px; font-size: 15px; }
-.s-nav-links a { color: inherit; text-decoration: none; }
+.s-nav-links a { color: inherit; text-decoration: none; white-space: nowrap; }
 .s-nav-links a:hover, .s-nav-links a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 .s-nav-actions { display: flex; align-items: center; gap: 10px; }
 .s-nav-menu { position: relative; }
@@ -130,6 +130,7 @@ body {
 .s-nav-pop a:hover, .s-nav-pop a[aria-current="true"] { background: var(--s-ivory); }
 .s-nav-pop .s-caption { font-size: 12px; }
 .s-nav-mobile { display: none; }
+@media (max-width: 1080px) { .s-nav-links { gap: 18px; } }
 .s-header { position: sticky; top: 0; z-index: 50; background: var(--s-paper); border-bottom: 1px solid var(--s-line); }
 
 /* ---------- Painting hero ---------- */
@@ -247,6 +248,27 @@ body {
 .s-exhibit figcaption { margin-top: 10px; }
 .s-card-shot { background: var(--s-ivory); border: 1px solid var(--s-line); }
 .s-card-shot img { object-fit: cover; object-position: top center; }
+
+/* ---------- Products ---------- */
+.s-out { display: inline-block; margin-left: 0.35em; font-family: var(--s-text-face); font-size: 0.8em; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+a:hover > .s-out, a:hover .s-h3 .s-out { transform: translate(2px, -2px); }
+.s-projects { margin-top: clamp(48px, 6vw, 80px); }
+.s-projects .s-card-art { background: var(--s-night); }
+.s-band-rows a { display: grid; grid-template-columns: 128px minmax(0, 5fr) minmax(0, 6fr) auto; gap: 8px 28px; align-items: center; color: inherit; text-decoration: none; }
+.s-band-art { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--s-night); }
+.s-band-art img { object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.s-band-rows a:hover .s-band-art img { transform: scale(1.06); }
+.s-band-rows a:hover .s-h3, .s-band-rows a:hover .s-out { color: var(--s-blue); }
+.s-band-rows p { margin: 0; line-height: 1.6; }
+.s-band .s-actions { margin-top: 24px; }
+@media (max-width: 760px) {
+  .s-band-rows a { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; }
+  .s-band-art { display: none; }
+  .s-band-rows p { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .s-out, .s-band-art img { transition: none; }
+}
 
 /* ---------- Visit map ---------- */
 .s-map { margin: 40px 0 0; }

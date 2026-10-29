@@ -19,3 +19,9 @@ The style is an Enlightenment-era oil painting in the manner of Joseph Wright of
 | `not-found.webp` | 404 | Vanitas with an empty gilded frame | none | 6109 |
 | `note-assay.webp` | Note: checking an adapter before it ships | An assayer tests a gold bar on a touchstone (mirrored so the figures sit right) | a USB flash drive among the weights | 6301 |
 | `note-alcove.webp` | Note: deciding where the model runs | A cabinetmaker measures an empty alcove before building a clock to fit it | a laser distance meter on the floor | 6302 |
+| `products.webp` | Products | A scholar's front room opened to visitors: a woman shows a child a small armillary sphere, a young man holds a closed book | a smartphone lying on the table | 7211 |
+| `mini-world.webp` | Products: Laplace's Mini World | A natural philosopher shows three children an orrery by candlelight, after Wright of Derby | a tablet reflecting the flame | 7313 |
+| `linan.webp` | Products: Lin'an, in ink | A Chinese painter brushes a handscroll of West Lake while a European scholar watches | a computer mouse beside the inkstone | 7104 |
+| `sketchbook.webp` | Products: sketchbook-style | A designer sketches the object in front of him | the object is a running shoe | 7105 |
+
+The products series was painted on 2026-10-29 with the same settings. Each prompt is the scene, then the shared style line: "An Enlightenment-era oil painting in the manner of Joseph Wright of Derby and Jean-Simeon Chardin, about 1785. Warm window or candle light, deep umber shadows, rich glazes and visible brushwork, a museum-quality old master canvas. Scholars wear indigo silk banyans; Japanese touches such as Imari porcelain and black and gold lacquer. The left third of the canvas is calm dark space with nothing in it. No lettering, no readable text, no signature, no frame."

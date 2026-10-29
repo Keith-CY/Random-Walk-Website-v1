@@ -10,7 +10,7 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://random-walk.co.jp"
 
 // Canonical routes: unprefixed compatibility routes canonicalize to localized routes,
 // retired routes redirect (vercel.json), and /meet is shared by direct link and left out.
-const staticPaths = ["/", "/services", "/datasets", "/work", "/melix", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms"];
+const staticPaths = ["/", "/services", "/datasets", "/work", "/melix", "/products", "/company", "/contact", "/notes", "/earlier-work", "/security", "/privacy", "/terms"];
 
 function absoluteUrl(locale: Locale, path: string) {
   return `${siteUrl}${localizePath(locale, path)}/`;

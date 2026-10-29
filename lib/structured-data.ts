@@ -50,3 +50,20 @@ export function articleData(note: { url: string; title: string; description: str
     publisher: { "@id": organizationId, "@type": "Organization", name: "Random Walk", logo: { "@type": "ImageObject", url: `${siteUrl}/apple-touch-icon.png` } }
   };
 }
+
+// The products page: the lab Random Walk funds, and that lab's public projects.
+export function productsData(locale: Locale) {
+  const { lapla } = getSiteCopy(locale).products;
+  const lab = { "@type": "Organization", name: lapla.name, url: lapla.href, funder: { "@id": organizationId } };
+  const items = [
+    lab,
+    ...lapla.projects.map((p) => (p.href.startsWith("https://github.com/")
+      ? { "@type": "SoftwareSourceCode", name: p.name, codeRepository: p.href, creator: lab }
+      : { "@type": "WebSite", name: p.name, url: p.href, publisher: lab }))
+  ];
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: items.map((item, i) => ({ "@type": "ListItem", position: i + 1, item }))
+  };
+}

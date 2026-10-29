@@ -22,7 +22,11 @@ const paintingFiles = {
   contact: "contact",
   notFound: "not-found",
   noteAssay: "note-assay",
-  noteAlcove: "note-alcove"
+  noteAlcove: "note-alcove",
+  products: "products",
+  miniWorld: "mini-world",
+  linan: "linan",
+  sketchbook: "sketchbook"
 } as const;
 
 export type PaintingKey = keyof typeof paintingFiles;
@@ -64,7 +68,11 @@ const en = {
     contact: "An oil painting of a merchant writing a letter of commission at a black and gold lacquer writing box.",
     notFound: "A vanitas still life: an empty gilded frame, a snuffed candle, an hourglass, a pocket watch and a wilting tulip.",
     noteAssay: "An oil painting of an assay office: an assayer tests a gold bar on a touchstone beside a brass balance, a small modern flash drive among the weights.",
-    noteAlcove: "An oil painting of a cabinetmaker measuring an empty alcove with a brass-tipped rod before building a clock to fit it, a modern laser measure on the floor."
+    noteAlcove: "An oil painting of a cabinetmaker measuring an empty alcove with a brass-tipped rod before building a clock to fit it, a modern laser measure on the floor.",
+    products: "An oil painting of a scholar's front room: a woman in an indigo banyan holds a small brass armillary sphere while a child looks up at it, a young man holds a closed book, and a modern smartphone lies on the table beside a globe and an Imari bowl.",
+    miniWorld: "An oil painting of a natural philosopher showing three children a brass orrery by candlelight, a modern tablet lying on the table and reflecting the flame.",
+    linan: "An oil painting of a Chinese painter brushing a long ink handscroll of West Lake and its pagoda while a bearded European scholar watches, a modern computer mouse beside the inkstone.",
+    sketchbook: "An oil painting of a designer in an indigo banyan sketching a modern running shoe that sits on his open sketchbook, studies of the shoe pinned to the wall."
   } satisfies Record<PaintingKey, string>,
   /** The neighbourhood, as the public pages show it. */
   addressBlock: [company.addressBlock, company.addressBlockLatin] as string[],
@@ -74,6 +82,7 @@ const en = {
       { label: "Datasets", href: "/datasets" },
       { label: "Work", href: "/work" },
       { label: "Melix", href: "/melix" },
+      { label: "Products", href: "/products" },
       { label: "Company", href: "/company" }
     ],
     cta: "Start a project",
@@ -85,8 +94,8 @@ const en = {
   footer: {
     line: "An AI lab for growing companies. We choose the model, build the data, train it when it pays and keep it running on your own machines.",
     groups: [
-      { title: "The lab", links: [{ label: "Services", href: "/services" }, { label: "Datasets", href: "/datasets" }, { label: "Work", href: "/work" }, { label: "Melix", href: "/melix" }] },
-      { title: "Company", links: [{ label: "About", href: "/company" }, { label: "Notes", href: "/notes" }, { label: "Earlier work", href: "/earlier-work" }, { label: "Start a project", href: "/contact" }] },
+      { title: "The lab", links: [{ label: "Services", href: "/services" }, { label: "Datasets", href: "/datasets" }, { label: "Work", href: "/work" }, { label: "Melix", href: "/melix" }, { label: "Products", href: "/products" }] },
+      { title: "Company", links: [{ label: "About", href: "/company" }, { label: "Notes", href: "/notes" }, { label: "Earlier work", href: "/earlier-work" }, { label: "Japanese Skills", href: "https://japaneseskills.com/en/" }, { label: "Start a project", href: "/contact" }] },
       { title: "Legal", links: [{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "Security", href: "/security" }, { label: "Responsible use", href: "/legal/responsible-use" }] }
     ],
     label: "Footer",
@@ -206,6 +215,49 @@ const en = {
     window: exhibit("melixWindow", "The Melix window on macOS: a local server running a model with a LoRA adapter, its gateway and serving settings.", "The Melix workspace on macOS, serving a model with a LoRA adapter on the local machine."),
     cover: exhibit("melix", "Melix product page: LoRA training and adapters with MLX, built for Apple Silicon.", "Melix, from the product's own site."),
     repo: "View the repository"
+  },
+  products: {
+    kicker: "Products",
+    title: "Made in the open, free to use.",
+    lede: "Besides the models we build for companies, we fund Lapla SI, a small lab that publishes what it makes. Its science models and engines are free for anyone to use.",
+    newTab: "opens in a new tab",
+    lapla: {
+      note: "A lab Random Walk funds.",
+      name: "Lapla SI",
+      title: "Intelligence within reach.",
+      body: "Lapla SI builds small, well-calibrated AI for hardware people already own, and publishes what it makes. Melix and SayIt, shown on this site, are released through it too. Its public projects are free to use.",
+      cta: "Visit lapla.si",
+      href: "https://lapla.si/",
+      projects: [
+        {
+          painting: "miniWorld",
+          name: "Laplace's Mini World",
+          line: "Working science models for young readers.",
+          meta: "world.lapla.si · Chinese and English · CC BY-NC 4.0",
+          body: "154 working science models for young readers. Each is a short illustrated essay with a 3D model to turn, run and take apart. No accounts, no ads.",
+          href: "https://world.lapla.si/en/"
+        },
+        {
+          painting: "linan",
+          name: "Lin'an, in ink",
+          line: "Southern Song Hangzhou, in ink, drawn in code.",
+          meta: "linan.lapla.si · MIT",
+          body: "Southern Song Hangzhou and West Lake as a world you walk through in the browser, painted in Chinese ink. Every building, stroke and texture is generated in code, and Mo, the WebGPU engine that paints it, is open source.",
+          href: "https://linan.lapla.si/"
+        },
+        {
+          painting: "sketchbook",
+          name: "sketchbook-style",
+          line: "Any object, as a page from a designer's sketchbook.",
+          meta: "GitHub · Apache 2.0",
+          body: "An agent skill that turns any object into a page from an industrial designer's sketchbook, in pen, marker, ink or high contrast, with open image models.",
+          href: "https://github.com/Keith-CY/sketchbook-style"
+        }
+      ] as { painting: PaintingKey; name: string; line: string; meta: string; body: string; href: string }[]
+    },
+    band: {
+      more: "All products"
+    }
   },
   company: {
     kicker: "Company",
